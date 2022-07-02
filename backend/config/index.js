@@ -1,9 +1,9 @@
-const port = require('./port')
-const morganFormant = require('./morgan-format')
+const port = require('./port');
+const morganFormat = require('./morgan-format');
 
 const CONFIG = {
   port,
-  morganFormant
-}
+  morganFormat
+};
 
-module.exports = CONFIG
+module.exports = CONFIG;
