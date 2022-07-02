@@ -1,0 +1,24 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Backend API server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DKozachenko/task-manager.git"
+  },
+  "keywords": [
+    "task-manager",
+    "node",
+    "express"
+  ],
+  "author": "DKozachenko",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DKozachenko/task-manager/issues"
+  },
+  "homepage": "https://github.com/DKozachenko/task-manager#readme"
+}
