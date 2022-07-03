@@ -14,16 +14,8 @@ jobs:
         node-version: [14.x, 15.x, 16.x]
 
     steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: Moved in folder
-        run: cd ../../backend
-      - name: Install dependencies
-        run: npm ci
-      - name: Start lint
-        run: npm run lint
-      - name: Start server
-        run: npm run start
+      - name: "Say Hello Mona it's Monday"
+        if: ${{ env.DAY_OF_WEEK == 'Monday' }}
+        run: echo "$Greeting $First_Name. Today is $DAY_OF_WEEK! $GITHUB_ACTION_PATH $GITHUB_WORKSPACE"
+        env:
+          First_Name: Mona
