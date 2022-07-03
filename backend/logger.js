@@ -16,7 +16,13 @@ const colorsAndTime = winston.format.combine(
     info => `${info.label} ${info.timestamp} ${info.message}`
   )
 );
-    
+
+winston.addColors({
+  info: 'white blueBG',
+  warn: 'black yellowBG',
+  error: 'white redBG'
+});
+
 const logger = winston.createLogger({
   level: 'info',
   transports: [
