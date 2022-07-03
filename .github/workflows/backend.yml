@@ -19,12 +19,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Move in folder
-        run: cd /home
-      - name: dfsd
+      - name: folder
+        working-directory: ./backend
         run: pwd
-      - name: dfsd2
-        run: ls -la
         
 
         
