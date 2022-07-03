@@ -23,8 +23,12 @@ jobs:
         run: cd backend
       - name: Install dependencies
         run: npm i
+      - name: Move in folder
+        run: cd backend
       - name: Start lint
         run: npm run lint
+      - name: Move in folder
+        run: cd backend
       - name: Start server
         run: npm run start
         
@@ -44,8 +48,12 @@ jobs:
         run: cd backend
       - name: Install dependencies
         run: npm i
+      - name: Move in folder
+        run: cd backend
       - name: Start lint
         run: npm run lint
+      - name: Move in folder
+        run: cd backend
       - name: Start server
         run: npm run start
         
@@ -65,7 +73,11 @@ jobs:
         run: cd backend
       - name: Install dependencies
         run: npm i
+      - name: Move in folder
+        run: cd backend
       - name: Start lint
         run: npm run lint
+      - name: Move in folder
+        run: cd backend
       - name: Start server
         run: npm run start
