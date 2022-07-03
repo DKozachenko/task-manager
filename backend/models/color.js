@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
+/**
+ * Модель сущности Цвета
+ */
 const colorSchema = new mongoose.Schema({
+  /** Hex Code */
   hexCode: {
     type: String,
     required: true
