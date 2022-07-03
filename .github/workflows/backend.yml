@@ -28,13 +28,15 @@ jobs:
         run: npm run lint
       - name: Start tests
         run: npm run test
-        
-        
+               
   start-on-windows:
     runs-on: windows-latest
+    defaults:
+        run:
+          working-directory: ./backend
     strategy:
       matrix:
-        node-version: [15.x]
+        node-version: [16.x]
 
     steps:
       - uses: actions/checkout@v3
@@ -42,24 +44,21 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Move in folder
-        run: cd backend
       - name: Install dependencies
-        run: npm i
-      - name: Move in folder
-        run: cd backend
+        run: npm ci
       - name: Start lint
         run: npm run lint
-      - name: Move in folder
-        run: cd backend
-      - name: Start server
-        run: npm run start
+      - name: Start tests
+        run: npm run test
         
   start-on-macos:
     runs-on: macos-latest
+    defaults:
+        run:
+          working-directory: ./backend
     strategy:
       matrix:
-        node-version: [15.x]
+        node-version: [16.x]
 
     steps:
       - uses: actions/checkout@v3
@@ -67,15 +66,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Move in folder
-        run: cd backend
       - name: Install dependencies
-        run: npm i
-      - name: Move in folder
-        run: cd backend
+        run: npm ci
       - name: Start lint
         run: npm run lint
-      - name: Move in folder
-        run: cd backend
-      - name: Start server
-        run: npm run start
+      - name: Start tests
+        run: npm run test
