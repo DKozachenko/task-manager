@@ -1,3 +1,4 @@
+/* eslint-disable array-bracket-newline */
 const mongoose = require('mongoose');
 
 /**
@@ -27,7 +28,21 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true
-  }
+  },
+  /** Id's меток */
+  labelIds: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Label'
+    }
+  ],
+  /** Id's задач */
+  taskIds: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Task'
+    }
+  ]
 });
 
 module.exports = mongoose.model('User', userSchema);
