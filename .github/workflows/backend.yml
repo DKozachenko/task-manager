@@ -8,11 +8,11 @@ on:
 
 jobs:
   start:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [14.x, 15.x, 16.x]
 
     steps:
       - name: "Comm"
-        run: echo "$GITHUB_PATH"
+        run: ls -la
