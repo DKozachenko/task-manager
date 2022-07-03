@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index",
     "dev": "nodemon index",
-    "lint": "npx eslint **/*.js"
+    "lint": "npx eslint \"**/*.js\""
   },
   "repository": {
     "type": "git",
