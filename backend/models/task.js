@@ -22,7 +22,7 @@ const taskSchema = new mongoose.Schema({
       ref: 'Label'
     }
   ],
-  /** Id Пользователя */
+  /** Id пользователя */
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'

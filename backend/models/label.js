@@ -10,12 +10,12 @@ const labelSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  /** Id Цвета */
+  /** Id цвета */
   colorId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Color'
   },
-  /** Id Пользователя */
+  /** Id пользователя */
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
