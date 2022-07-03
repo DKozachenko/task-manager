@@ -1,7 +1,6 @@
 /* eslint-disable no-undef */
 const supertest = require('supertest');
 const app = require('./app');
-
 const request = supertest(app);
 
 describe('/test endpoint', () => {
