@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index",
     "dev": "nodemon index",
-    "lint": "npx eslint \"**/*.js\""
+    "lint": "npx eslint \"**/*.js\"",
+    "test": "jest app.test.js"
   },
   "repository": {
     "type": "git",
@@ -35,6 +36,8 @@
   },
   "devDependencies": {
     "eslint": "^8.19.0",
-    "nodemon": "^2.0.18"
+    "jest": "^28.1.2",
+    "nodemon": "^2.0.18",
+    "supertest": "^6.2.4"
   }
 }
