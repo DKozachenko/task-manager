@@ -22,7 +22,7 @@ jobs:
       - name: "Comm"
         run: ls -la
       - name: "Cd"
-        run: cd ~
+        run: cd backend
       - name: "is"
         run: pwd
       - name: "Comm 2"
