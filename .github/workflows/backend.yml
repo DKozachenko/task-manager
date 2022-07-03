@@ -20,17 +20,13 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Move in folder
-        run: cd backend
-      - name: Install dependencies
-        run: npm i
-      - name: Move in folder
-        run: cd backend
-      - name: Start lint
-        run: npm run
-      - name: Move in folder
-        run: cd backend
-      - name: Start server
-        run: npm run start
+        run: cd /home
+      - name: dfsd
+        run: pwd
+      - name: dfsd2
+        run: ls -la
+        
+
         
   start-on-windows:
     runs-on: windows-latest
