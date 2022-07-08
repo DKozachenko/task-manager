@@ -2,9 +2,9 @@ name: Backend CI
 
 on:
   push:
-    branches: [ "master", "develop", "release/rc-1" ]
+    branches: [ "master", "develop", "release/*", "feature/*" ]
   pull_request:
-    branches: [ "master", "develop", "release/rc-1" ]
+    branches: [ "master", "develop", "release/*", "feature/*" ]
 
 jobs:
   start-on-ubuntu:

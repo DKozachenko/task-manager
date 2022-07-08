@@ -1,11 +1,11 @@
 const router = require('express').Router();
 
-/** Роутер для логина */
+/** Роут для логина */
 router.post('/login', () => {
 
 });
 
-/** Роутер для регистрации */
+/** Роут для регистрации */
 router.post('/register', () => {
 
 });
