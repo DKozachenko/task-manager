@@ -4,8 +4,9 @@ const mongoose = require('mongoose');
 
 const CONFIG = require('../config/index');
 const logger = require('../logger/logger');
+
 const authRoutes = require('../routes/auth');
-const colorsRoutes = require('../routes/colors');
+const tasksRoutes = require('../routes/tasks');
 const labelsRoutes = require('../routes/labels');
 
 const app = express();
@@ -22,7 +23,8 @@ mongoose.connect(CONFIG.mongoUrl)
 
 app.use(morgan(CONFIG.morganFormat));
 app.use(`/${CONFIG.prefix}/auth`, authRoutes);
-app.use(`/${CONFIG.prefix}/colors`, colorsRoutes);
+
+app.use(`/${CONFIG.prefix}/tasks`, tasksRoutes);
 app.use(`/${CONFIG.prefix}/labels`, labelsRoutes);
 
 module.exports = app;
