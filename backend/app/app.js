@@ -2,9 +2,9 @@ const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 
-const CONFIG = require('./config/index');
-
-const logger = require('./logger');
+const CONFIG = require('../config/index');
+const logger = require('../logger/logger');
+const authRoutes = require('../routes/auth');
 
 const app = express();
 
@@ -19,5 +19,6 @@ mongoose.connect(CONFIG.mongoUrl)
   .catch(error => logger.error('Connection to MongoDb failed', error));
 
 app.use(morgan(CONFIG.morganFormat));
+app.use(`/${CONFIG.prefix}/auth`, authRoutes);
 
 module.exports = app;
