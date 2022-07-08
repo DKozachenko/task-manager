@@ -2,9 +2,12 @@ const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 
-const CONFIG = require('./config/index');
+const CONFIG = require('../config/index');
+const logger = require('../logger/logger');
 
-const logger = require('./logger');
+const authRoutes = require('../routes/auth');
+const tasksRoutes = require('../routes/tasks');
+const labelsRoutes = require('../routes/labels');
 
 const app = express();
 
@@ -19,5 +22,9 @@ mongoose.connect(CONFIG.mongoUrl)
   .catch(error => logger.error('Connection to MongoDb failed', error));
 
 app.use(morgan(CONFIG.morganFormat));
+app.use(`/${CONFIG.prefix}/auth`, authRoutes);
+
+app.use(`/${CONFIG.prefix}/tasks`, tasksRoutes);
+app.use(`/${CONFIG.prefix}/labels`, labelsRoutes);
 
 module.exports = app;
