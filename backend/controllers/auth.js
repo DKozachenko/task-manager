@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable object-curly-newline */
 const bcrypt = require('bcryptjs');
 
 const Users = require('../models/user');
@@ -50,7 +52,7 @@ const register = async (req, res) => {
    * и создаем пользователя
    */
 
-  const existedMailUser = Users.findOne({
+  const existedMailUser = await Users.findOne({
     mail: req.body.mail
   });
 
@@ -58,9 +60,10 @@ const register = async (req, res) => {
     res.status(403).json({
       message: `User with mail ${req.body.mail} is already exists`
     });
+    return;
   }
 
-  const existedNicknameUser = Users.findOne({
+  const existedNicknameUser = await Users.findOne({
     nickname: req.body.nickname
   });
 
@@ -68,14 +71,13 @@ const register = async (req, res) => {
     res.status(403).json({
       message: `User with nickname ${req.body.nickname} is already exists`
     });
+    return;
   }
-
   const hashPassword = await bcrypt.hash(req.body.password, 10);
 
   const newUser = new Users({
     fullName: req.body.fullName,
     mail: req.body.mail,
-    dateRegistration: req.body.dateRegistration,
     nickname: req.body.nickname,
     password: hashPassword,
     labelIds: [],
