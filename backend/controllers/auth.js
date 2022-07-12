@@ -79,9 +79,7 @@ const register = async (req, res) => {
     fullName: req.body.fullName,
     mail: req.body.mail,
     nickname: req.body.nickname,
-    password: hashPassword,
-    labelIds: [],
-    taskIds: []
+    password: hashPassword
   });
 
   /** Сохраняем пользователя, если удалось, отправляем его клиенту, если нет - отправляем сообщение */
