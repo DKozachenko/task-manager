@@ -11,8 +11,8 @@ const logger = require('../logger/logger');
  * @param {ответ} res - ответ 
  */
 const login = async (req, res) => {
-  /** Поиск существуеющего пользователя */
-  const requiredUser = Users.findOne({
+  /** Поиск существующего пользователя */
+  const requiredUser = await Users.findOne({
     nickname: req.body.nickname
   });
 
