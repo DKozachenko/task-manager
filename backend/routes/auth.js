@@ -1,13 +1,11 @@
 const router = require('express').Router();
 
-/** Роут для логина */
-router.post('/login', () => {
+const authControllers = require('../controllers/auth');
 
-});
+/** Роут для логина */
+router.post('/login', authControllers.login);
 
 /** Роут для регистрации */
-router.post('/register', () => {
-
-});
+router.post('/register', authControllers.register);
 
 module.exports = router;

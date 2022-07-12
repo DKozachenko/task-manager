@@ -7,7 +7,7 @@
     "start": "node index",
     "dev": "nodemon index",
     "lint": "npx eslint \"**/*.js\"",
-    "test": "jest app.test.js --forceExit"
+    "test": "jest .*.test.js --forceExit"
   },
   "repository": {
     "type": "git",
@@ -27,6 +27,7 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.0",
+    "cors": "^2.8.5",
     "express": "^4.18.1",
     "mongoose": "^6.4.2",
     "morgan": "^1.10.0",
