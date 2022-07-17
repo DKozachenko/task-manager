@@ -13,7 +13,13 @@ const getById = async (req, res) => {
   const labelId = req.params.id;
   const requiredLabel = await Labels.findById(labelId);
 
-  res.status(200).json(requiredLabel);
+  if (requiredLabel) {
+    res.status(200).json(requiredLabel);
+  } else {
+    res.status(404).json({
+      message: `Label with id ${labelId} was not found`
+    });
+  }
 };
 
 const add = async (req, res) => {

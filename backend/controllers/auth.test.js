@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 const supertest = require('supertest');
@@ -17,7 +16,7 @@ const testUser = {
 };
 
 /** Тесты для регистрации */
-describe('/register endpoint', () => {
+describe('/register controller', () => {
   let testUserId = '';
   
   /** Тест регистрация нового пользователя с проверкой ответа и хэшированного пароля */
@@ -65,7 +64,7 @@ describe('/register endpoint', () => {
 });
 
 /** Тесты для логина */
-describe('/login endpoint', () => {
+describe('/login controller', () => {
   let testUserId = '';
 
   /** Перед всеми тестами регистрация нового пользователя */
