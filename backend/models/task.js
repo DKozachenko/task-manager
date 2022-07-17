@@ -15,6 +15,11 @@ const taskSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  /** Дата создания */
+  dateCreation: {
+    type: Date,
+    default: Date.now
+  },
   /** Id's меток */
   labelIds: [
     {

@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 const Labels = require('../models/label');
 const Colors = require('../models/color');
+const Tasks = require('../models/task');
 const logger = require('../logger/logger');
 
 const getAll = async (req, res) => {
@@ -105,9 +106,23 @@ const deleteById = async (req, res) => {
   const labelId = req.params.id;
   const existedLabel = await Labels.findById(labelId);
 
+  /** Удаление связи с задачами и цветом */
+  const relatedTaskIds = existedLabel.taskIds;
+  for (const relatedTaskId of relatedTaskIds) {
+    const existedTask = await Tasks.findById(relatedTaskId);
+    existedTask.labelIds = existedTask.labelIds.filter(id => id.toString() !== labelId);
+    await existedTask.save(); 
+  }
+
+  const relatedColorId = existedLabel.colorId;
+  const existedColor = await Colors.findById(relatedColorId);
+  existedColor.labelIds = existedColor.labelIds.filter(id => id.toString() !== labelId);
+  await existedColor.save();
   /** Если метка существует - удаляем, если нет - посылаем клиенту сообщение */
   if (existedLabel) {
     await Labels.findByIdAndRemove(labelId);
+
+    logger.info(`Label with name ${existedLabel.name} was deleted`);
     res.status(200).json({
       message: `Label with id ${labelId} was deleted`
     });
