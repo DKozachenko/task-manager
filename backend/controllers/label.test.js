@@ -8,6 +8,7 @@ const Labels = require('../models/label');
 const Colors = require('../models/color');
 const request = supertest(app);
 
+/** Тестовый объект метки для тестов */
 const testLabel = {
   name: 'test label',
   color: {
@@ -17,7 +18,7 @@ const testLabel = {
 
 /** Изначальное кол-во меток до тестов */
 let initialLabelsLength = 0;
-/** Все id меток, что будут добавлено во время тестов */
+/** Все id меток, что будут добавлены во время тестов */
 const labelIds = [];
 /** Id добавленного цвета */
 let colorId = '';
@@ -49,6 +50,7 @@ beforeAll(async () => {
   labelIds.push(testDbLabel2._id);
 });
 
+/** Тесты для получения всех записей */
 describe('/getAll controller', () => {
   /** Тест получения всех меток */
   it('should return labels', async () => {
@@ -60,6 +62,7 @@ describe('/getAll controller', () => {
   });
 });
 
+/** Тесты для получения записи */
 describe('/getById controller', () => {
   /** Тест получения метки по существующему id */
   it('should return label by id if label exists', async () => {
@@ -79,6 +82,7 @@ describe('/getById controller', () => {
   });
 });
 
+/** Тесты для добавления записи */
 describe('/add controller', () => {
   /** Тест добавления метки */
   it('should return added label if is was added', async () => {
@@ -94,6 +98,7 @@ describe('/add controller', () => {
   });
 });
 
+/** Тесты для обновления записи */
 describe('/updateById controller', () => {
 /** Тест обновления метки с существующим id */
   it('should return updated label if label exists', async () => {
@@ -123,6 +128,7 @@ describe('/updateById controller', () => {
   });
 });
 
+/** Тесты для удаления записей */
 describe('/deleteById controller', () => {
   /** Тест удаления метки с существующим id */
   it('should return success message if label exists', async () => {
