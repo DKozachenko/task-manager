@@ -7,7 +7,7 @@
     "start": "node index",
     "dev": "nodemon index",
     "lint": "npx eslint \"**/*.js\"",
-    "test": "jest .*.test.js --forceExit"
+    "test": "jest .*.test.js --forceExit --runInBand"
   },
   "repository": {
     "type": "git",
