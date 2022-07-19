@@ -4,6 +4,7 @@ const supertest = require('supertest');
 
 const app = require('../app/app');
 const CONFIG = require('../config/index');
+const Colors = require('../models/color');
 const Labels = require('../models/label');
 const Tasks = require('../models/task');
 const request = supertest(app);
@@ -11,7 +12,8 @@ const request = supertest(app);
 /** Тестовый объект задачи для тестов */
 const testTask = {
   name: 'test task',
-  description: 'test description'
+  description: 'test description',
+  labelIds: []
 };
 
 /** Тестовый объект метки для тестов */
@@ -38,14 +40,14 @@ beforeAll(async () => {
   const allTasks = await Tasks.find();
   initialTasksLength = allTasks.length;
 
-  /** Сохранение тестовый цвет */
+  /** Сохранение тестового цвета */
   const testDbColor = new Colors({ 
     hexCode: testLabel.color.hexCode 
   });
   await testDbColor.save();
   colorId = testDbColor._id.toString();
   
-  /** Сохранение тестовую метку, организация связи */
+  /** Сохранение тестовой метки, организация связи */
   const testDbLabel = new Labels({ 
     name: testLabel.name,
     colorId: colorId 
@@ -78,8 +80,8 @@ beforeAll(async () => {
 
 /** Тесты для получения всех записей */
 describe('/getAll controller', () => {
-  /** Тест получения всех меток */
-  it('should return task', async () => {
+  /** Тест получения всех задач */
+  it('should return tasks', async () => {
     const response = await request
       .get(`/${CONFIG.prefix}/tasks`);
     
@@ -90,7 +92,7 @@ describe('/getAll controller', () => {
 
 /** Тесты для получения записи */
 describe('/getById controller', () => {
-  /** Тест получения метки по существующему id */
+  /** Тест получения задачи по существующему id */
   it('should return task by id if task exists', async () => {
     const response = await request
       .get(`/${CONFIG.prefix}/tasks/${taskIds[0]}`);
@@ -98,89 +100,153 @@ describe('/getById controller', () => {
     expect(response.status).toBe(200);
   });
 
-  /** Тест получения метки по несуществующему id */
+  /** Тест получения задачи по несуществующему id */
   it('should return task by id if task does not exist', async () => {
     const response = await request
       .get(`/${CONFIG.prefix}/tasks/${nonExistentId}`);
     
     expect(response.status).toBe(404);
-    expect(response.body.message).toBe(`Label with id ${nonExistentId} was not found`);
+    expect(response.body.message).toBe(`Task with id ${nonExistentId} was not found`);
   });
 });
 
 /** Тесты для добавления записи */
 describe('/add controller', () => {
-  /** Тест добавления метки */
-  // it('should return added label if is was added', async () => {
-  //   const response = await request
-  //     .post(`/${CONFIG.prefix}/labels`).
-  //     send(testLabel);
+  /** Тест добавления задачи без меток */
+  it('should return added task if is was added (without labels)', async () => {
+    const response = await request
+      .post(`/${CONFIG.prefix}/tasks`)
+      .send(testTask);
 
-  //   labelIds.push(response.body._id);
+    taskIds.push(response.body._id);
 
-  //   expect(response.status).toBe(200);
-  //   expect(response.body).toHaveProperty('_id');
-  //   expect(response.body.colorId).toBe(colorId);
-  // });
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('_id');
+  });
+
+  /** Тест добавления задачи c меткой */
+  it('should return added task if is was added (with labels)', async () => {
+    const response = await request
+      .post(`/${CONFIG.prefix}/tasks`)
+      .send({
+        ...testTask,
+        labelIds: labelIds
+      });
+
+    taskIds.push(response.body._id);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('_id');
+    expect(response.body.labelIds).toHaveLength(1);
+    expect(response.body.labelIds.map(item => item.toString())).toStrictEqual(labelIds);
+  });
+
+  /** Тест добавления задачи c несуществующей меткой */
+  it('should return added task if is was added (with non-existend labels)', async () => {
+    const response = await request
+      .post(`/${CONFIG.prefix}/tasks`)
+      .send({
+        ...testTask,
+        labelIds: [nonExistentId]
+      });
+
+    expect(response.status).toBe(404);
+    expect(response.body.message).toBe(`Label with id ${nonExistentId} was not found`);
+  });
 });
 
 /** Тесты для обновления записи */
 describe('/updateById controller', () => {
-/** Тест обновления метки с существующим id */
-  // it('should return updated label if label exists', async () => {
-  //   const response = await request
-  //     .put(`/${CONFIG.prefix}/labels/${labelIds[0]}`).
-  //     send({
-  //       name: testLabel.name + 'updated',
-  //       color: testLabel.color
-  //     });
+  /** Тест обновления задачи с несуществующим id */
+  it('should return message if task does not exist', async () => {
+    const response = await request
+      .put(`/${CONFIG.prefix}/tasks/${nonExistentId}`)
+      .send({
+        name: testTask.name + 'updated',
+        description: testTask.description + 'updated',
+        labelIds: testTask.labelIds
+      });
 
-  //   expect(response.status).toBe(200);
-  //   expect(response.body.name).toBe(testLabel.name + 'updated');
-  //   expect(response.body.colorId).toBe(colorId);
-  //});
+    expect(response.status).toBe(404);
+    expect(response.body.message).toBe(`Task with id ${nonExistentId} was not found`);
+  });
+
+  /** Тест обновления задачи без меток */
+  it('should return updated task if task exists (without labels)', async () => {
+    const response = await request
+      .put(`/${CONFIG.prefix}/tasks/${taskIds[2]}`)
+      .send({
+        name: testTask.name + 'updated',
+        description: testTask.description + 'updated',
+        labelIds: testTask.labelIds
+      });
+
+    expect(response.status).toBe(200);
+    expect(response.body.name).toBe(testTask.name + 'updated');
+    expect(response.body.description).toBe(testTask.description + 'updated');
+    expect(response.body.labelIds).toHaveLength(0);
+  });
+
+  /** Тест обновления задачи c меткой */
+  it('should return updated task if task exists (with labels)', async () => {
+    const response = await request
+      .put(`/${CONFIG.prefix}/tasks/${taskIds[3]}`)
+      .send({
+        name: testTask.name + 'updated',
+        description: testTask.description + 'updated',
+        labelIds: labelIds
+      });
+
+    expect(response.status).toBe(200);
+    expect(response.body.name).toBe(testTask.name + 'updated');
+    expect(response.body.description).toBe(testTask.description + 'updated');
+    expect(response.body.labelIds).toHaveLength(1);
+  });
   
-  /** Тест обновления метки с несуществующим id */
-  // it('should return message if label does not exist', async () => {
-  //   const response = await request
-  //     .put(`/${CONFIG.prefix}/labels/${nonExistentId}`).
-  //     send({
-  //       name: testLabel.name + 'updated',
-  //       color: testLabel.color
-  //     });
+  /** Тест обновления задачи c несуществующей меткой */
+  it('should return updated task if task exists (with non-existend labels)', async () => {
+    const response = await request
+      .put(`/${CONFIG.prefix}/tasks/${taskIds[3]}`)
+      .send({
+        name: testTask.name + 'updated',
+        description: testTask.description + 'updated',
+        labelIds: [nonExistentId]
+      });
 
-  //   expect(response.status).toBe(404);
-  //   expect(response.body.message).toBe(`Label with id ${nonExistentId} was not found`);
-  // });
+    expect(response.status).toBe(404);
+    expect(response.body.message).toBe(`Label with id ${nonExistentId} was not found`);
+  });
+
+  
 });
 
 /** Тесты для удаления записей */
 describe('/deleteById controller', () => {
-  /** Тест удаления метки с существующим id */
-  // it('should return success message if label exists', async () => {
-  //   const allLabels = await Labels.find();
-  //   const currentLabelsLength = allLabels.length;
+  /** Тест удаления задачи с существующим id */
+  it('should return success message if task exists', async () => {
+    const allTasks = await Tasks.find();
+    const currentTasksLength = allTasks.length;
 
-  //   const response = await request
-  //     .delete(`/${CONFIG.prefix}/labels/${labelIds[0]}`);
+    const response = await request
+      .delete(`/${CONFIG.prefix}/tasks/${taskIds[2]}`);
 
-  //   expect(response.status).toBe(200);
-  //   expect(response.body.message).toBe(`Label with id ${labelIds[0]} was deleted`);
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe(`Task with id ${taskIds[2]} was deleted`);
     
-  //   const allLabelsAfterDelete = await Labels.find();
-  //   const labelsLengthAfterDelete = allLabelsAfterDelete.length;
+    const allTasksAfterDelete = await Tasks.find();
+    const tasksLengthAfterDelete = allTasksAfterDelete.length;
 
-  //   expect(labelsLengthAfterDelete).toBe(currentLabelsLength - 1);
-  // });
+    expect(tasksLengthAfterDelete).toBe(currentTasksLength - 1);
+  });
   
   /** Тест удаления метки с несуществующим id */
-  // it('should return failed message if label does not exist', async () => {
-  //   const response = await request
-  //     .delete(`/${CONFIG.prefix}/labels/${nonExistentId}`);
+  it('should return failed message if task does not exist', async () => {
+    const response = await request
+      .delete(`/${CONFIG.prefix}/tasks/${nonExistentId}`);
 
-  //   expect(response.status).toBe(404);
-  //   expect(response.body.message).toBe(`Label with id ${nonExistentId} was not found`);
-  // });
+    expect(response.status).toBe(404);
+    expect(response.body.message).toBe(`Task with id ${nonExistentId} was not found`);
+  });
 });
 
 /** После всех тестов удаление добавленных задач и меток */

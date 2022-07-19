@@ -23,7 +23,7 @@ const getById = async (req, res) => {
 };
 
 const add = async (req, res) => {
-  /** Если метки, приходящие от клиента, существуют, создаем задача, если нет - посылаем сообщение клиенту */
+  /** Если метки, приходящие от клиента, существуют, создаем задачу, если нет - посылаем сообщение клиенту */
   const existedLabelIds = [];
 
   for (const comeLabelId of req.body.labelIds) {
@@ -35,6 +35,7 @@ const add = async (req, res) => {
       res.status(404).json({
         message: `Label with id ${comeLabelId} was not found`
       });
+      return;
     }
   }
 
@@ -59,22 +60,22 @@ const add = async (req, res) => {
 };
 
 const updateById = async (req, res) => {
-  /** Если метки, приходящие от клиента, существуют, создаем задача, если нет - посылаем сообщение клиенту */
+  /** Если метки, приходящие от клиента, существуют, создаем задачу, если нет - посылаем сообщение клиенту */
   const existedLabelIds = [];
 
   for (const comeLabelId of req.body.labelIds) {
     const existedLabel = await Labels.findById(comeLabelId);
-
     if (existedLabel) {
       existedLabelIds.push(comeLabelId);
     } else {
       res.status(404).json({
         message: `Label with id ${comeLabelId} was not found`
       });
+      return;
     }
   }
 
-  const taskId = req.body.id;
+  const taskId = req.params.id;
   const existedTask = await Tasks.findById(taskId);
 
   /** Если задача существует - меняем значения, если нет - посылаем клиенту сообщение */
@@ -108,16 +109,16 @@ const deleteById = async (req, res) => {
   const taskId = req.params.id;
   const existedTask = await Tasks.findById(taskId);
 
-  /** Удаление связи с метками */
-  const relatedLabelIds = existedTask.labelIds;
-  for (const relatedLabelId of relatedLabelIds) {
-    const existedLabel = await Labels.findById(relatedLabelId);
-    existedLabel.taskIds = existedLabel.taskIds.filter(id => id.toString() !== taskId);
-    await existedLabel.save(); 
-  }
-
   /** Если задача существует - удаляем, если нет - посылаем клиенту сообщение */
   if (existedTask) {
+    /** Удаление связи с метками */
+    const relatedLabelIds = existedTask.labelIds;
+    for (const relatedLabelId of relatedLabelIds) {
+      const existedLabel = await Labels.findById(relatedLabelId);
+      existedLabel.taskIds = existedLabel.taskIds.filter(id => id.toString() !== taskId);
+      await existedLabel.save(); 
+    }
+    
     await Tasks.findByIdAndRemove(taskId);
 
     logger.info(`Task with name ${existedTask.name} was deleted`);
