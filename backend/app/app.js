@@ -1,6 +1,8 @@
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const cors = require('cors');
+const bodyParser = require('body-parser');
 
 const CONFIG = require('../config/index');
 const logger = require('../logger/logger');
@@ -22,6 +24,12 @@ mongoose.connect(CONFIG.mongoUrl)
   .catch(error => logger.error('Connection to MongoDb failed', error));
 
 app.use(morgan(CONFIG.morganFormat));
+app.use(cors());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(bodyParser.json());
+
 app.use(`/${CONFIG.prefix}/auth`, authRoutes);
 
 app.use(`/${CONFIG.prefix}/tasks`, tasksRoutes);
