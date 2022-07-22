@@ -3,9 +3,11 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const passport = require('passport');
 
 const CONFIG = require('../config/index');
 const logger = require('../logger/logger');
+const strategy = require('./../middwares/auth');
 
 const authRoutes = require('../routes/auth');
 const tasksRoutes = require('../routes/tasks');
@@ -29,6 +31,7 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 app.use(bodyParser.json());
+passport.use(strategy);
 
 app.use(`/${CONFIG.prefix}/auth`, authRoutes);
 

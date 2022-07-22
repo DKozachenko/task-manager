@@ -1,9 +1,22 @@
 /* eslint-disable no-console */
 /* eslint-disable object-curly-newline */
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const Users = require('../models/user');
 const logger = require('../logger/logger');
+const CONFIG = require('./../config');
+
+const generateToken = (userId, nickname) => {
+  const payload = {
+    userId,
+    nickname
+  };
+
+  return jwt.sign(payload, CONFIG.jwt, {
+    expiresIn: '1h'
+  });
+};
 
 /**
  * Функция входа
