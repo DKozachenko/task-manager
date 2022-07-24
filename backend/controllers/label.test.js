@@ -6,6 +6,7 @@ const app = require('../app/app');
 const CONFIG = require('../config/index');
 const Labels = require('../models/label');
 const Colors = require('../models/color');
+const Users = require('../models/user');
 const request = supertest(app);
 
 /** Тестовый объект метки для тестов */
@@ -25,8 +26,30 @@ let colorId = '';
 /** Несуществующий id в БД */
 const nonExistentId = '41224d776a326fb40f000001';
 
+/** Тестовый объект пользователя для тестов */
+const testUser = {
+  fullName: 'test fullname',
+  mail: 'test mail',
+  nickname: 'test nick',
+  password: 'test password'
+};
+
+/** Id добавленного пользователя */
+let testUserId = '';
+/** Токен */
+let testUserToken = '';
+
 /** Перед всеми тестами запоминание кол-ва меток, добавление в БД двух тестовых меток и цвета */
 beforeAll(async () => {
+  const response = await request.post(`/${CONFIG.prefix}/auth/register`)
+    .send(testUser);
+  testUserId = response.body._id;
+  
+  const response2 = await request.post(`/${CONFIG.prefix}/auth/login`)
+    .send(testUser);
+  
+  testUserToken = response2.body.token;
+
   const allLabels = await Labels.find();
   initialLabelsLength = allLabels.length;
 
@@ -38,13 +61,15 @@ beforeAll(async () => {
   
   const testDbLabel = new Labels({ 
     name: testLabel.name,
-    colorId: colorId 
+    colorId: colorId,
+    userId: testUserId
   });
   await testDbLabel.save();
   labelIds.push(testDbLabel._id);
 
   const testDbLabel2 = new Labels({ 
-    name: testLabel.name 
+    name: testLabel.name,
+    userId: testUserId 
   });
   await testDbLabel2.save();
   labelIds.push(testDbLabel2._id);
@@ -52,10 +77,20 @@ beforeAll(async () => {
 
 /** Тесты для получения всех записей */
 describe('/getAll controller', () => {
-  /** Тест получения всех меток */
+  /** Тест получения всех меток без токена */
   it('should return labels', async () => {
     const response = await request
       .get(`/${CONFIG.prefix}/labels`);
+    
+    expect(response.error.text).toBe('Unauthorized');
+    expect(response.status).toBe(401);
+  });
+
+  /** Тест получения всех меток */
+  it('should return labels', async () => {
+    const response = await request
+      .get(`/${CONFIG.prefix}/labels`)
+      .set('Authorization', testUserToken);
     
     expect(response.status).toBe(200);
     expect(response.body).toHaveLength(initialLabelsLength + 2);
@@ -67,7 +102,8 @@ describe('/getById controller', () => {
   /** Тест получения метки по существующему id */
   it('should return label by id if label exists', async () => {
     const response = await request
-      .get(`/${CONFIG.prefix}/labels/${labelIds[0]}`);
+      .get(`/${CONFIG.prefix}/labels/${labelIds[0]}`)
+      .set('Authorization', testUserToken);
     
     expect(response.status).toBe(200);
   });
@@ -75,7 +111,8 @@ describe('/getById controller', () => {
   /** Тест получения метки по несуществующему id */
   it('should return label by id if label does not exist', async () => {
     const response = await request
-      .get(`/${CONFIG.prefix}/labels/${nonExistentId}`);
+      .get(`/${CONFIG.prefix}/labels/${nonExistentId}`)
+      .set('Authorization', testUserToken);
     
     expect(response.status).toBe(404);
     expect(response.body.message).toBe(`Label with id ${nonExistentId} was not found`);
@@ -87,8 +124,9 @@ describe('/add controller', () => {
   /** Тест добавления метки */
   it('should return added label if is was added', async () => {
     const response = await request
-      .post(`/${CONFIG.prefix}/labels`).
-      send(testLabel);
+      .post(`/${CONFIG.prefix}/labels`)
+      .set('Authorization', testUserToken)
+      .send(testLabel);
 
     labelIds.push(response.body._id);
 
@@ -103,8 +141,9 @@ describe('/updateById controller', () => {
 /** Тест обновления метки с существующим id */
   it('should return updated label if label exists', async () => {
     const response = await request
-      .put(`/${CONFIG.prefix}/labels/${labelIds[0]}`).
-      send({
+      .put(`/${CONFIG.prefix}/labels/${labelIds[0]}`)
+      .set('Authorization', testUserToken)
+      .send({
         name: testLabel.name + 'updated',
         color: testLabel.color
       });
@@ -117,8 +156,9 @@ describe('/updateById controller', () => {
   /** Тест обновления метки с несуществующим id */
   it('should return message if label does not exist', async () => {
     const response = await request
-      .put(`/${CONFIG.prefix}/labels/${nonExistentId}`).
-      send({
+      .put(`/${CONFIG.prefix}/labels/${nonExistentId}`)
+      .set('Authorization', testUserToken)
+      .send({
         name: testLabel.name + 'updated',
         color: testLabel.color
       });
@@ -136,7 +176,8 @@ describe('/deleteById controller', () => {
     const currentLabelsLength = allLabels.length;
 
     const response = await request
-      .delete(`/${CONFIG.prefix}/labels/${labelIds[0]}`);
+      .delete(`/${CONFIG.prefix}/labels/${labelIds[0]}`)
+      .set('Authorization', testUserToken);
 
     expect(response.status).toBe(200);
     expect(response.body.message).toBe(`Label with id ${labelIds[0]} was deleted`);
@@ -150,18 +191,20 @@ describe('/deleteById controller', () => {
   /** Тест удаления метки с несуществующим id */
   it('should return failed message if label does not exist', async () => {
     const response = await request
-      .delete(`/${CONFIG.prefix}/labels/${nonExistentId}`);
+      .delete(`/${CONFIG.prefix}/labels/${nonExistentId}`)
+      .set('Authorization', testUserToken);
 
     expect(response.status).toBe(404);
     expect(response.body.message).toBe(`Label with id ${nonExistentId} was not found`);
   });
 });
 
-/** После всех тестов удаление добавленных меток и цвета */
+/** После всех тестов удаление добавленных меток, цвета и пользователя */
 afterAll(async () => {
   for (const labelId of labelIds) {
     await Labels.findByIdAndRemove(labelId);
   }
 
   await Colors.findByIdAndRemove(colorId);
+  await Users.findByIdAndRemove(testUserId);
 });
