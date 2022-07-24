@@ -1,19 +1,40 @@
-/* eslint-disable no-console */
 const Tasks = require('../models/task');
 const Labels = require('../models/label');
 const logger = require('../logger/logger');
 
+/**
+ * Функция получения всех задач
+ * @param {запрос} req - запрос 
+ * @param {ответ} res - ответ 
+ */
 const getAll = async (req, res) => {
-  const allTasks = await Tasks.find();
+  /** Выборка всех задач определенного пользователя */
+  const allTasks = await Tasks.find({ 
+    userId: req.user._id 
+  });
 
   res.status(200).json(allTasks);
 };
 
+/**
+ * Функция задачи по id
+ * @param {запрос} req - запрос 
+ * @param {ответ} res - ответ 
+ */
 const getById = async (req, res) => {
   const taskId = req.params.id;
   const requiredTask = await Tasks.findById(taskId);
 
+  /** Если задача существует - посылаем ее, если нет - посылаем сообщение */
   if (requiredTask) {
+    /** Проверка на принадлежность получаемой задачи текущему пользователю */
+    if (requiredTask.userId !== req.user._id) {
+      res.status(403).json({
+        message: `Task with id ${taskId} belongs to other user`
+      });
+      return;
+    }
+
     res.status(200).json(requiredTask);
   } else {
     res.status(404).json({
@@ -22,6 +43,11 @@ const getById = async (req, res) => {
   }
 };
 
+/**
+ * Функция добавления задачи
+ * @param {запрос} req - запрос 
+ * @param {ответ} res - ответ 
+ */
 const add = async (req, res) => {
   /** Если метки, приходящие от клиента, существуют, создаем задачу, если нет - посылаем сообщение клиенту */
   const existedLabelIds = [];
@@ -30,6 +56,14 @@ const add = async (req, res) => {
     const existedLabel = await Labels.findById(comeLabelId);
 
     if (existedLabel) {
+      /** Проверка на принадлежность присланных меток текущему пользователю */
+      if (existedLabel.userId !== req.user._id) {
+        res.status(403).json({
+          message: `Label for task with id ${existedLabel._id} belongs to other user`
+        });
+        return;
+      }
+
       existedLabelIds.push(comeLabelId);
     } else {
       res.status(404).json({
@@ -42,7 +76,8 @@ const add = async (req, res) => {
   const newTask = new Tasks({
     name: req.body.name,
     description: req.body.description,
-    labelIds: existedLabelIds
+    labelIds: existedLabelIds,
+    userId: req.user._id
   });
 
   await newTask.save();
@@ -59,13 +94,27 @@ const add = async (req, res) => {
   res.status(200).json(newTask);
 };
 
+/**
+ * Функция обновления задачи по id
+ * @param {запрос} req - запрос 
+ * @param {ответ} res - ответ 
+ */
 const updateById = async (req, res) => {
   /** Если метки, приходящие от клиента, существуют, создаем задачу, если нет - посылаем сообщение клиенту */
   const existedLabelIds = [];
 
   for (const comeLabelId of req.body.labelIds) {
     const existedLabel = await Labels.findById(comeLabelId);
+
     if (existedLabel) {
+      /** Проверка на принадлежность присланных меток текущему пользователю */
+      if (existedLabel.userId !== req.user._id) {
+        res.status(403).json({
+          message: `Label for task with id ${existedLabel._id} belongs to other user`
+        });
+        return;
+      }
+
       existedLabelIds.push(comeLabelId);
     } else {
       res.status(404).json({
@@ -80,6 +129,14 @@ const updateById = async (req, res) => {
 
   /** Если задача существует - меняем значения, если нет - посылаем клиенту сообщение */
   if (existedTask) {
+    /** Проверка на принадлежность получаемой задачи текущему пользователю */
+    if (existedTask.userId !== req.user._id) {
+      res.status(403).json({
+        message: `Task with id ${taskId} belongs to other user`
+      });
+      return;
+    }
+
     existedTask.name = req.body.name;
     existedTask.description = req.body.description;
     existedTask.labelIds = existedLabelIds;
@@ -105,12 +162,25 @@ const updateById = async (req, res) => {
   }
 };
 
+/**
+ * Функция удаления задачи по id
+ * @param {запрос} req - запрос 
+ * @param {ответ} res - ответ 
+ */
 const deleteById = async (req, res) => {
   const taskId = req.params.id;
   const existedTask = await Tasks.findById(taskId);
 
   /** Если задача существует - удаляем, если нет - посылаем клиенту сообщение */
   if (existedTask) {
+    /** Проверка на принадлежность получаемой задачи текущему пользователю */
+    if (existedTask.userId !== req.user._id) {
+      res.status(403).json({
+        message: `Task with id ${taskId} belongs to other user`
+      });
+      return;
+    }
+
     /** Удаление связи с метками */
     const relatedLabelIds = existedTask.labelIds;
     for (const relatedLabelId of relatedLabelIds) {

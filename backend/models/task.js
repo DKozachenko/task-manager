@@ -1,4 +1,3 @@
-/* eslint-disable array-bracket-newline */
 const mongoose = require('mongoose');
 
 /**
@@ -21,12 +20,10 @@ const taskSchema = new mongoose.Schema({
     default: Date.now
   },
   /** Id's меток */
-  labelIds: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Label'
-    }
-  ],
+  labelIds: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Label'
+  }],
   /** Id пользователя */
   userId: {
     type: mongoose.Schema.Types.ObjectId,
