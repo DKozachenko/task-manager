@@ -7,6 +7,7 @@ const CONFIG = require('../config/index');
 const Colors = require('../models/color');
 const Labels = require('../models/label');
 const Tasks = require('../models/task');
+const Users = require('../models/user');
 const request = supertest(app);
 
 /** Тестовый объект задачи для тестов */
@@ -35,8 +36,30 @@ let colorId = '';
 /** Несуществующий id в БД */
 const nonExistentId = '41224d776a326fb40f000001';
 
+/** Тестовый объект пользователя для тестов */
+const testUser = {
+  fullName: 'test fullname',
+  mail: 'test mail',
+  nickname: 'test nick',
+  password: 'test password'
+};
+
+/** Id добавленного пользователя */
+let testUserId = '';
+/** Токен */
+let testUserToken = '';
+
 /** Перед всеми тестами запоминание кол-ва меток, добавление в БД двух тестовых меток и цвета */
 beforeAll(async () => {
+  const response = await request.post(`/${CONFIG.prefix}/auth/register`)
+    .send(testUser);
+  testUserId = response.body._id;
+  
+  const response2 = await request.post(`/${CONFIG.prefix}/auth/login`)
+    .send(testUser);
+  
+  testUserToken = response2.body.token;
+  
   const allTasks = await Tasks.find();
   initialTasksLength = allTasks.length;
 
@@ -50,7 +73,8 @@ beforeAll(async () => {
   /** Сохранение тестовой метки, организация связи */
   const testDbLabel = new Labels({ 
     name: testLabel.name,
-    colorId: colorId 
+    colorId: colorId,
+    userId: testUserId 
   });
   await testDbLabel.save();
   labelIds.push(testDbLabel._id.toString());
@@ -62,7 +86,8 @@ beforeAll(async () => {
   const testDbTask = new Tasks({ 
     name: testTask.name,
     description: testTask.description,
-    labelIds: [testDbLabel._id]
+    labelIds: [testDbLabel._id],
+    userId: testUserId
   });
   await testDbTask.save();
   taskIds.push(testDbTask._id.toString());
@@ -72,7 +97,8 @@ beforeAll(async () => {
 
   const testDbTask2 = new Tasks({ 
     name: testTask.name,
-    description: testTask.description
+    description: testTask.description,
+    userId: testUserId
   });
   await testDbTask2.save();
   taskIds.push(testDbTask2._id.toString());
@@ -80,10 +106,20 @@ beforeAll(async () => {
 
 /** Тесты для получения всех записей */
 describe('/getAll controller', () => {
-  /** Тест получения всех задач */
+  /** Тест получения всех задач без токена */
   it('should return tasks', async () => {
     const response = await request
       .get(`/${CONFIG.prefix}/tasks`);
+    
+    expect(response.error.text).toBe('Unauthorized');
+    expect(response.status).toBe(401);
+  });
+
+  /** Тест получения всех задач */
+  it('should return tasks', async () => {
+    const response = await request
+      .get(`/${CONFIG.prefix}/tasks`)
+      .set('Authorization', testUserToken);
     
     expect(response.status).toBe(200);
     expect(response.body).toHaveLength(initialTasksLength + 2);
@@ -95,7 +131,8 @@ describe('/getById controller', () => {
   /** Тест получения задачи по существующему id */
   it('should return task by id if task exists', async () => {
     const response = await request
-      .get(`/${CONFIG.prefix}/tasks/${taskIds[0]}`);
+      .get(`/${CONFIG.prefix}/tasks/${taskIds[0]}`)
+      .set('Authorization', testUserToken);
     
     expect(response.status).toBe(200);
   });
@@ -103,7 +140,8 @@ describe('/getById controller', () => {
   /** Тест получения задачи по несуществующему id */
   it('should return task by id if task does not exist', async () => {
     const response = await request
-      .get(`/${CONFIG.prefix}/tasks/${nonExistentId}`);
+      .get(`/${CONFIG.prefix}/tasks/${nonExistentId}`)
+      .set('Authorization', testUserToken);
     
     expect(response.status).toBe(404);
     expect(response.body.message).toBe(`Task with id ${nonExistentId} was not found`);
@@ -116,6 +154,7 @@ describe('/add controller', () => {
   it('should return added task if is was added (without labels)', async () => {
     const response = await request
       .post(`/${CONFIG.prefix}/tasks`)
+      .set('Authorization', testUserToken)
       .send(testTask);
 
     taskIds.push(response.body._id);
@@ -128,6 +167,7 @@ describe('/add controller', () => {
   it('should return added task if is was added (with labels)', async () => {
     const response = await request
       .post(`/${CONFIG.prefix}/tasks`)
+      .set('Authorization', testUserToken)
       .send({
         ...testTask,
         labelIds: labelIds
@@ -145,6 +185,7 @@ describe('/add controller', () => {
   it('should return added task if is was added (with non-existend labels)', async () => {
     const response = await request
       .post(`/${CONFIG.prefix}/tasks`)
+      .set('Authorization', testUserToken)
       .send({
         ...testTask,
         labelIds: [nonExistentId]
@@ -161,6 +202,7 @@ describe('/updateById controller', () => {
   it('should return message if task does not exist', async () => {
     const response = await request
       .put(`/${CONFIG.prefix}/tasks/${nonExistentId}`)
+      .set('Authorization', testUserToken)
       .send({
         name: testTask.name + 'updated',
         description: testTask.description + 'updated',
@@ -175,6 +217,7 @@ describe('/updateById controller', () => {
   it('should return updated task if task exists (without labels)', async () => {
     const response = await request
       .put(`/${CONFIG.prefix}/tasks/${taskIds[2]}`)
+      .set('Authorization', testUserToken)
       .send({
         name: testTask.name + 'updated',
         description: testTask.description + 'updated',
@@ -191,6 +234,7 @@ describe('/updateById controller', () => {
   it('should return updated task if task exists (with labels)', async () => {
     const response = await request
       .put(`/${CONFIG.prefix}/tasks/${taskIds[3]}`)
+      .set('Authorization', testUserToken)
       .send({
         name: testTask.name + 'updated',
         description: testTask.description + 'updated',
@@ -207,6 +251,7 @@ describe('/updateById controller', () => {
   it('should return updated task if task exists (with non-existend labels)', async () => {
     const response = await request
       .put(`/${CONFIG.prefix}/tasks/${taskIds[3]}`)
+      .set('Authorization', testUserToken)
       .send({
         name: testTask.name + 'updated',
         description: testTask.description + 'updated',
@@ -228,7 +273,8 @@ describe('/deleteById controller', () => {
     const currentTasksLength = allTasks.length;
 
     const response = await request
-      .delete(`/${CONFIG.prefix}/tasks/${taskIds[2]}`);
+      .delete(`/${CONFIG.prefix}/tasks/${taskIds[2]}`)
+      .set('Authorization', testUserToken);
 
     expect(response.status).toBe(200);
     expect(response.body.message).toBe(`Task with id ${taskIds[2]} was deleted`);
@@ -242,14 +288,15 @@ describe('/deleteById controller', () => {
   /** Тест удаления метки с несуществующим id */
   it('should return failed message if task does not exist', async () => {
     const response = await request
-      .delete(`/${CONFIG.prefix}/tasks/${nonExistentId}`);
+      .delete(`/${CONFIG.prefix}/tasks/${nonExistentId}`)
+      .set('Authorization', testUserToken);
 
     expect(response.status).toBe(404);
     expect(response.body.message).toBe(`Task with id ${nonExistentId} was not found`);
   });
 });
 
-/** После всех тестов удаление добавленных задач, меток и цвета */
+/** После всех тестов удаление добавленных задач, меток, цвета и пользователя */
 afterAll(async () => {
   for (const taskId of taskIds) {
     await Tasks.findByIdAndRemove(taskId);
@@ -260,4 +307,5 @@ afterAll(async () => {
   }
 
   await Colors.findByIdAndRemove(colorId);
+  await Users.findByIdAndRemove(testUserId);
 });

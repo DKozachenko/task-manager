@@ -29,7 +29,7 @@ const getById = async (req, res) => {
   /** Если метка существует - посылаем ее, если нет - посылаем сообщение */
   if (requiredLabel) {
     /** Проверка на принадлежность получаемой метки текущему пользователю */
-    if (requiredLabel.userId !== req.user._id) {
+    if (requiredLabel.userId.toString() !== req.user._id.toString()) {
       res.status(403).json({
         message: `Label with id ${labelId} does not belong to user ${req.user.nickname}`
       });
@@ -97,7 +97,7 @@ const updateById = async (req, res) => {
   /** Если метка существует - меняем значения, если нет - посылаем клиенту сообщение */
   if (existedLabel) {
     /** Проверка на принадлежность получаемой метки текущему пользователю */
-    if (existedLabel.userId !== req.user._id) {
+    if (existedLabel.userId.toString() !== req.user._id.toString()) {
       res.status(403).json({
         message: `Label with id ${labelId} does not belong to user ${req.user.nickname}`
       });
@@ -153,7 +153,7 @@ const deleteById = async (req, res) => {
   /** Если метка существует - удаляем, если нет - посылаем клиенту сообщение */
   if (existedLabel) {
     /** Проверка на принадлежность получаемой метки текущему пользователю */
-    if (existedLabel.userId !== req.user._id) {
+    if (existedLabel.userId.toString() !== req.user._id.toString()) {
       res.status(403).json({
         message: `Label with id ${labelId} does not belong to user ${req.user.nickname}`
       });

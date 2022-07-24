@@ -28,7 +28,7 @@ const getById = async (req, res) => {
   /** Если задача существует - посылаем ее, если нет - посылаем сообщение */
   if (requiredTask) {
     /** Проверка на принадлежность получаемой задачи текущему пользователю */
-    if (requiredTask.userId !== req.user._id) {
+    if (requiredTask.userId.toString() !== req.user._id.toString()) {
       res.status(403).json({
         message: `Task with id ${taskId} does not belong to user ${req.user.nickname}`
       });
@@ -57,7 +57,7 @@ const add = async (req, res) => {
 
     if (existedLabel) {
       /** Проверка на принадлежность присланных меток текущему пользователю */
-      if (existedLabel.userId !== req.user._id) {
+      if (existedLabel.userId.toString() !== req.user._id.toString()) {
         res.status(403).json({
           message: `Label for task with id ${existedLabel._id} does not belong to user ${req.user.nickname}`
         });
@@ -108,7 +108,7 @@ const updateById = async (req, res) => {
 
     if (existedLabel) {
       /** Проверка на принадлежность присланных меток текущему пользователю */
-      if (existedLabel.userId !== req.user._id) {
+      if (existedLabel.userId.toString() !== req.user._id.toString()) {
         res.status(403).json({
           message: `Label for task with id ${existedLabel._id} does not belong to user ${req.user.nickname}`
         });
@@ -130,7 +130,7 @@ const updateById = async (req, res) => {
   /** Если задача существует - меняем значения, если нет - посылаем клиенту сообщение */
   if (existedTask) {
     /** Проверка на принадлежность получаемой задачи текущему пользователю */
-    if (existedTask.userId !== req.user._id) {
+    if (existedTask.userId.toString() !== req.user._id.toString()) {
       res.status(403).json({
         message: `Task with id ${taskId} does not belong to user ${req.user.nickname}`
       });
@@ -174,7 +174,7 @@ const deleteById = async (req, res) => {
   /** Если задача существует - удаляем, если нет - посылаем клиенту сообщение */
   if (existedTask) {
     /** Проверка на принадлежность получаемой задачи текущему пользователю */
-    if (existedTask.userId !== req.user._id) {
+    if (existedTask.userId.toString() !== req.user._id.toString()) {
       res.status(403).json({
         message: `Task with id ${taskId} does not belong to user ${req.user.nickname}`
       });
