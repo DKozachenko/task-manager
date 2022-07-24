@@ -3,9 +3,9 @@
 const supertest = require('supertest');
 const bcrypt = require('bcryptjs');
 
-const app = require('../app/app');
-const CONFIG = require('../config/index');
-const Users = require('../models/user');
+const app = require('../../app/app');
+const CONFIG = require('../../config/index');
+const Users = require('../../models/user');
 const request = supertest(app);
 
 const testUser = {

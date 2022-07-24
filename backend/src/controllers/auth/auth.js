@@ -1,9 +1,9 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const Users = require('../models/user');
-const logger = require('../logger/logger');
-const CONFIG = require('./../config');
+const Users = require('../../models/user');
+const logger = require('../../logger/logger');
+const CONFIG = require('../../config');
 
 /** Генерация токена на основе id и никнейма */
 const generateToken = (userId, nickname) => {

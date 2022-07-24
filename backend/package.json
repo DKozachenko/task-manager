@@ -4,8 +4,8 @@
   "description": "Backend API server",
   "main": "index.js",
   "scripts": {
-    "start": "node index",
-    "dev": "nodemon index",
+    "start": "node src/index",
+    "dev": "nodemon src/index",
     "lint": "npx eslint \"**/*.js\"",
     "test": "jest .*.test.js --forceExit --runInBand"
   },

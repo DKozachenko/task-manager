@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const passport = require('passport');
 
-const labelsControllers = require('../controllers/label');
+const labelsControllers = require('../controllers/label/label');
 
 /** Роут для получения всех меток */
 router.get('/', passport.authenticate('jwt', {

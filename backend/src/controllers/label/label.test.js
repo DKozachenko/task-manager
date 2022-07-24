@@ -2,11 +2,11 @@
 /* eslint-disable no-undef */
 const supertest = require('supertest');
 
-const app = require('../app/app');
-const CONFIG = require('../config/index');
-const Labels = require('../models/label');
-const Colors = require('../models/color');
-const Users = require('../models/user');
+const app = require('../../app/app');
+const CONFIG = require('../../config/index');
+const Labels = require('../../models/label');
+const Colors = require('../../models/color');
+const Users = require('../../models/user');
 const request = supertest(app);
 
 /** Тестовый объект метки для тестов */

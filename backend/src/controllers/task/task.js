@@ -1,6 +1,6 @@
-const Tasks = require('../models/task');
-const Labels = require('../models/label');
-const logger = require('../logger/logger');
+const Tasks = require('../../models/task');
+const Labels = require('../../models/label');
+const logger = require('../../logger/logger');
 
 /**
  * Функция получения всех задач
