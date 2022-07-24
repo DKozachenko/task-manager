@@ -17,7 +17,7 @@ const getAll = async (req, res) => {
 };
 
 /**
- * Функция задачи по id
+ * Функция получения задачи по id
  * @param {запрос} req - запрос 
  * @param {ответ} res - ответ 
  */
@@ -30,7 +30,7 @@ const getById = async (req, res) => {
     /** Проверка на принадлежность получаемой задачи текущему пользователю */
     if (requiredTask.userId !== req.user._id) {
       res.status(403).json({
-        message: `Task with id ${taskId} belongs to other user`
+        message: `Task with id ${taskId} does not belong to user ${req.user.nickname}`
       });
       return;
     }
@@ -59,7 +59,7 @@ const add = async (req, res) => {
       /** Проверка на принадлежность присланных меток текущему пользователю */
       if (existedLabel.userId !== req.user._id) {
         res.status(403).json({
-          message: `Label for task with id ${existedLabel._id} belongs to other user`
+          message: `Label for task with id ${existedLabel._id} does not belong to user ${req.user.nickname}`
         });
         return;
       }
@@ -110,7 +110,7 @@ const updateById = async (req, res) => {
       /** Проверка на принадлежность присланных меток текущему пользователю */
       if (existedLabel.userId !== req.user._id) {
         res.status(403).json({
-          message: `Label for task with id ${existedLabel._id} belongs to other user`
+          message: `Label for task with id ${existedLabel._id} does not belong to user ${req.user.nickname}`
         });
         return;
       }
@@ -132,7 +132,7 @@ const updateById = async (req, res) => {
     /** Проверка на принадлежность получаемой задачи текущему пользователю */
     if (existedTask.userId !== req.user._id) {
       res.status(403).json({
-        message: `Task with id ${taskId} belongs to other user`
+        message: `Task with id ${taskId} does not belong to user ${req.user.nickname}`
       });
       return;
     }
@@ -176,7 +176,7 @@ const deleteById = async (req, res) => {
     /** Проверка на принадлежность получаемой задачи текущему пользователю */
     if (existedTask.userId !== req.user._id) {
       res.status(403).json({
-        message: `Task with id ${taskId} belongs to other user`
+        message: `Task with id ${taskId} does not belong to user ${req.user.nickname}`
       });
       return;
     }
