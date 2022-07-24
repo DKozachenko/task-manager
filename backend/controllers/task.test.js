@@ -249,7 +249,7 @@ describe('/deleteById controller', () => {
   });
 });
 
-/** После всех тестов удаление добавленных задач и меток */
+/** После всех тестов удаление добавленных задач, меток и цвета */
 afterAll(async () => {
   for (const taskId of taskIds) {
     await Tasks.findByIdAndRemove(taskId);

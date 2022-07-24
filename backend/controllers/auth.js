@@ -1,9 +1,21 @@
-/* eslint-disable no-console */
-/* eslint-disable object-curly-newline */
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const Users = require('../models/user');
 const logger = require('../logger/logger');
+const CONFIG = require('./../config');
+
+/** Генерация токена на основе id и никнейма */
+const generateToken = (userId, nickname) => {
+  const payload = {
+    userId,
+    nickname
+  };
+
+  return jwt.sign(payload, CONFIG.jwt, {
+    expiresIn: '1h'
+  });
+};
 
 /**
  * Функция входа
@@ -24,9 +36,11 @@ const login = async (req, res) => {
 
     /** Если пароли совпали отправляем токен, если нет - отправляем клиенту сообщение */
     if(matchPasswords) {
-      logger.info(`User: ${requiredUser.nickname} logged in with token ${''}`);
+      const token = generateToken(requiredUser._id, requiredUser.nickname);
+
+      logger.info(`User: ${requiredUser.nickname} logged in with token ${token}`);
       res.status(200).json({
-        token: ''
+        token: `Bearer ${token}`
       });
     } else {
       res.status(401).json({
