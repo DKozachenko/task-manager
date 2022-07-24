@@ -7,18 +7,12 @@ const passport = require('passport');
 
 const CONFIG = require('../config/index');
 const logger = require('../logger/logger');
-const strategy = require('./../middwares/auth');
 
 const authRoutes = require('../routes/auth');
 const tasksRoutes = require('../routes/tasks');
 const labelsRoutes = require('../routes/labels');
 
 const app = express();
-
-/** Remove test method */
-app.get('/test', (req, res) =>  {
-  res.status(200).send('Passed');
-});
 
 /** Connection to MongoDb */
 mongoose.connect(CONFIG.mongoUrl)
@@ -31,10 +25,11 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 app.use(bodyParser.json());
-passport.use(strategy);
+
+require('../middwares/auth')(passport);
+app.use(passport.initialize());
 
 app.use(`/${CONFIG.prefix}/auth`, authRoutes);
-
 app.use(`/${CONFIG.prefix}/tasks`, tasksRoutes);
 app.use(`/${CONFIG.prefix}/labels`, labelsRoutes);
 
