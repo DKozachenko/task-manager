@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const passport = require('passport');
 
-const tasksControllers = require('../controllers/task');
+const tasksControllers = require('../controllers/task/task');
 
 /** Роут для получения всех задач */
 router.get('/', passport.authenticate('jwt', {
