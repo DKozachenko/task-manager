@@ -1,20 +1,41 @@
-/* eslint-disable no-console */
 const Labels = require('../models/label');
 const Colors = require('../models/color');
 const Tasks = require('../models/task');
 const logger = require('../logger/logger');
 
+/**
+ * Функция получения всех меток
+ * @param {запрос} req - запрос 
+ * @param {ответ} res - ответ 
+ */
 const getAll = async (req, res) => {
-  const allLabels = await Labels.find();
+  /** Выборка всех меток определенного пользователя */
+  const allLabels = await Labels.find({ 
+    userId: req.user._id 
+  });
 
   res.status(200).json(allLabels);
 };
 
+/**
+ * Функция получения метки по id
+ * @param {запрос} req - запрос 
+ * @param {ответ} res - ответ 
+ */
 const getById = async (req, res) => {
   const labelId = req.params.id;
   const requiredLabel = await Labels.findById(labelId);
 
+  /** Если метка существует - посылаем ее, если нет - посылаем сообщение */
   if (requiredLabel) {
+    /** Проверка на принадлежность получаемой метки текущему пользователю */
+    if (requiredLabel.userId !== req.user._id) {
+      res.status(403).json({
+        message: `Label with id ${labelId} does not belong to user ${req.user.nickname}`
+      });
+      return;
+    }
+
     res.status(200).json(requiredLabel);
   } else {
     res.status(404).json({
@@ -23,6 +44,11 @@ const getById = async (req, res) => {
   }
 };
 
+/**
+ * Функция добавления метки
+ * @param {запрос} req - запрос 
+ * @param {ответ} res - ответ 
+ */
 const add = async (req, res) => {
   /** Определение, существует ли цвет метки */
   let comeColor = req.body.color;
@@ -45,7 +71,8 @@ const add = async (req, res) => {
   const newLabel = new Labels({
     name: req.body.name,
     colorId: comeColor._id,
-    taskIds: req.body.taskIds
+    taskIds: req.body.taskIds,
+    userId: req.user._id
   });
 
   await newLabel.save();
@@ -58,12 +85,24 @@ const add = async (req, res) => {
   res.status(200).json(newLabel);
 };
 
+/**
+ * Функция обновления метки по id
+ * @param {запрос} req - запрос 
+ * @param {ответ} res - ответ 
+ */
 const updateById = async (req, res) => {
   const labelId = req.params.id;
   const existedLabel = await Labels.findById(labelId);
 
   /** Если метка существует - меняем значения, если нет - посылаем клиенту сообщение */
   if (existedLabel) {
+    /** Проверка на принадлежность получаемой метки текущему пользователю */
+    if (existedLabel.userId !== req.user._id) {
+      res.status(403).json({
+        message: `Label with id ${labelId} does not belong to user ${req.user.nickname}`
+      });
+      return;
+    }
     /** Определение, существует ли цвет метки */
     let comeColor = req.body.color;
     const existedColor = await Colors.findOne({
@@ -102,12 +141,25 @@ const updateById = async (req, res) => {
   }
 };
 
+/**
+ * Функция удаления метки по id
+ * @param {запрос} req - запрос 
+ * @param {ответ} res - ответ 
+ */
 const deleteById = async (req, res) => {
   const labelId = req.params.id;
   const existedLabel = await Labels.findById(labelId);
 
   /** Если метка существует - удаляем, если нет - посылаем клиенту сообщение */
   if (existedLabel) {
+    /** Проверка на принадлежность получаемой метки текущему пользователю */
+    if (existedLabel.userId !== req.user._id) {
+      res.status(403).json({
+        message: `Label with id ${labelId} does not belong to user ${req.user.nickname}`
+      });
+      return;
+    }
+
     /** Удаление связи с задачами и цветом */
     const relatedTaskIds = existedLabel.taskIds;
     for (const relatedTaskId of relatedTaskIds) {

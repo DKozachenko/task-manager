@@ -1,4 +1,3 @@
-/* eslint-disable array-bracket-newline */
 const mongoose = require('mongoose');
 
 /**
@@ -21,12 +20,10 @@ const labelSchema = new mongoose.Schema({
     ref: 'User'
   },
   /** Id's задач */
-  taskIds: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Task'
-    }
-  ],
+  taskIds: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Task'
+  }],
 });
 
 module.exports = mongoose.model('Label', labelSchema);
