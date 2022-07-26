@@ -1,8 +1,15 @@
-.dummy
-  height: 12.5rem
-  background-color: rgba(208, 2, 27, 0.3)
+.container
+  height: 100vh
 
-  :host-context(tui-root._mobile) &
-    &:not(&_fixed)
-      height: 1.25rem
+.tui-row
+  height: 100%
+  justify-content: center
 
+.button
+  flex-basis: 50%
+
+  span
+    display: block
+
+  &.button__register
+    margin-left: 0

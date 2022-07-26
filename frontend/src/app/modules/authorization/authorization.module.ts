@@ -2,7 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LayoutComponent } from './components/layout/layout.component';
 import { AuthorizationRoutingModule } from './authorization-routing.module';
-import { TuiTabsModule } from '@taiga-ui/kit';
+import { TuiInputModule, TuiInputPasswordModule, TuiTabsModule } from '@taiga-ui/kit';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TuiButtonModule } from '@taiga-ui/core';
 
 @NgModule({
   declarations: [
@@ -11,7 +13,12 @@ import { TuiTabsModule } from '@taiga-ui/kit';
   imports: [
     CommonModule,
     AuthorizationRoutingModule,
-    TuiTabsModule
+    FormsModule,
+    ReactiveFormsModule,
+    TuiInputPasswordModule,
+    TuiTabsModule,
+    TuiInputModule,
+    TuiButtonModule
   ]
 })
 export class AuthorizationModule { }
