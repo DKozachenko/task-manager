@@ -28,6 +28,7 @@
               "src/assets",
               {
                 "glob": "**/*",
+<<<<<<< HEAD
                 "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/",
                 "output": "/assets/"
               }
@@ -35,6 +36,16 @@
             "styles": [
               "src/styles.sass",
               "node_modules/ng-zorro-antd/ng-zorro-antd.min.css"
+=======
+                "input": "node_modules/@taiga-ui/icons/src",
+                "output": "assets/taiga-ui/icons"
+              }
+            ],
+            "styles": [
+              "node_modules/@taiga-ui/core/styles/taiga-ui-global.less",
+              "node_modules/@taiga-ui/core/styles/taiga-ui-theme.less",
+              "src/styles.sass"
+>>>>>>> 1211c096e7236a78de3755065cb0a0226474569d
             ],
             "scripts": []
           },
