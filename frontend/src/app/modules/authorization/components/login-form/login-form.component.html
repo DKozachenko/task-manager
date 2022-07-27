@@ -1,0 +1,76 @@
+<form nz-form
+    nzLayout="vertical"
+    [formGroup]="form"
+    (ngSubmit)="submit()"
+  >
+  <div nz-row [nzGutter]="24">
+    <div nz-col [nzSpan]="24">
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="nickname">Никнейм</nz-form-label>
+        <nz-form-control>
+          <nz-input-group [nzSuffix]="nickanameTemplate" [nzSize]="'large'">
+            <input nz-input
+              formControlName="nickname"
+              placeholder="Никнейм"
+            />
+          </nz-input-group>
+
+          <ng-template #nickanameTemplate>
+            <i nz-icon
+                nz-tooltip
+                nzTooltipTitle="Extra information"
+                nzType="info-circle"
+              ></i>
+          </ng-template>
+
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+
+  <div nz-row [nzGutter]="24">
+    <div nz-col [nzSpan]="24">
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="password">Пароль</nz-form-label>
+        <nz-form-control>
+          <nz-input-group [nzSuffix]="passwordTemplate" [nzSize]="'large'">
+            <input
+              nz-input
+              placeholder="Пароль"
+              [type]="passwordVisible ? 'text' : 'password'"
+            />
+          </nz-input-group>
+
+          <ng-template #passwordTemplate>
+            <i nz-icon
+                [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+                (click)="passwordVisible = !passwordVisible"
+              ></i>
+
+            <i nz-icon
+                nz-tooltip
+                nzTooltipTitle="Extra information"
+                nzType="info-circle"
+              ></i>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+
+  <div nz-row
+      [nzGutter]="24"
+      [nzJustify]="'center'"
+    >
+    <div nz-col [nzSpan]="5">
+      <button nz-button
+          nzType="primary"
+          nzShape="round"
+          type="submit"
+          [nzSize]="'large'"
+        >
+          Войти
+      </button>
+    </div>
+  </div>
+</form>
