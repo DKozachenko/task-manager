@@ -59,14 +59,14 @@
       <nz-form-item>
         <nz-form-label nzRequired nzFor="nickname">Никнейм</nz-form-label>
         <nz-form-control>
-          <nz-input-group [nzSuffix]="nickanameTemplate" [nzSize]="'large'">
+          <nz-input-group [nzSuffix]="nicknameTemplate" [nzSize]="'large'">
             <input nz-input
               formControlName="nickname"
               placeholder="Никнейм"
             />
           </nz-input-group>
 
-          <ng-template #nickanameTemplate>
+          <ng-template #nicknameTemplate>
             <i nz-icon
                 nz-tooltip
                 nzTooltipTitle="Extra information"
