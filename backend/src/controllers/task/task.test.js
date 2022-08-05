@@ -53,12 +53,12 @@ let testUserToken = '';
 beforeAll(async () => {
   const response = await request.post(`/${CONFIG.prefix}/auth/register`)
     .send(testUser);
-  testUserId = response.body._id;
+  testUserId = response.body.data._id;
   
   const response2 = await request.post(`/${CONFIG.prefix}/auth/login`)
     .send(testUser);
   
-  testUserToken = response2.body.token;
+  testUserToken = response2.body.data.token;
   
   const allTasks = await Tasks.find();
   initialTasksLength = allTasks.length;
@@ -122,7 +122,7 @@ describe('/getAll controller', () => {
       .set('Authorization', testUserToken);
     
     expect(response.status).toBe(200);
-    expect(response.body).toHaveLength(initialTasksLength + 2);
+    expect(response.body.data).toHaveLength(initialTasksLength + 2);
   });
 });
 
@@ -157,10 +157,10 @@ describe('/add controller', () => {
       .set('Authorization', testUserToken)
       .send(testTask);
 
-    taskIds.push(response.body._id);
+    taskIds.push(response.body.data._id);
 
     expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty('_id');
+    expect(response.body.data).toHaveProperty('_id');
   });
 
   /** Тест добавления задачи c меткой */
@@ -173,12 +173,12 @@ describe('/add controller', () => {
         labelIds: labelIds
       });
 
-    taskIds.push(response.body._id);
+    taskIds.push(response.body.data._id);
 
     expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty('_id');
-    expect(response.body.labelIds).toHaveLength(1);
-    expect(response.body.labelIds.map(item => item.toString())).toStrictEqual(labelIds);
+    expect(response.body.data).toHaveProperty('_id');
+    expect(response.body.data.labelIds).toHaveLength(1);
+    expect(response.body.data.labelIds.map(item => item.toString())).toStrictEqual(labelIds);
   });
 
   /** Тест добавления задачи c несуществующей меткой */
@@ -225,9 +225,9 @@ describe('/updateById controller', () => {
       });
 
     expect(response.status).toBe(200);
-    expect(response.body.name).toBe(testTask.name + 'updated');
-    expect(response.body.description).toBe(testTask.description + 'updated');
-    expect(response.body.labelIds).toHaveLength(0);
+    expect(response.body.data.name).toBe(testTask.name + 'updated');
+    expect(response.body.data.description).toBe(testTask.description + 'updated');
+    expect(response.body.data.labelIds).toHaveLength(0);
   });
 
   /** Тест обновления задачи c меткой */
@@ -242,9 +242,9 @@ describe('/updateById controller', () => {
       });
 
     expect(response.status).toBe(200);
-    expect(response.body.name).toBe(testTask.name + 'updated');
-    expect(response.body.description).toBe(testTask.description + 'updated');
-    expect(response.body.labelIds).toHaveLength(1);
+    expect(response.body.data.name).toBe(testTask.name + 'updated');
+    expect(response.body.data.description).toBe(testTask.description + 'updated');
+    expect(response.body.data.labelIds).toHaveLength(1);
   });
   
   /** Тест обновления задачи c несуществующей меткой */
@@ -277,7 +277,7 @@ describe('/deleteById controller', () => {
       .set('Authorization', testUserToken);
 
     expect(response.status).toBe(200);
-    expect(response.body.message).toBe(`Task with id ${taskIds[2]} was deleted`);
+    expect(response.body.data.message).toBe(`Task with id ${taskIds[2]} was deleted`);
     
     const allTasksAfterDelete = await Tasks.find();
     const tasksLengthAfterDelete = allTasksAfterDelete.length;

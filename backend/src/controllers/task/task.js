@@ -194,9 +194,9 @@ const deleteById = async (req, res) => {
     await Tasks.findByIdAndRemove(taskId);
 
     logger.info(`Task with name ${existedTask.name} was deleted`);
-    res.status(200).json(generateResponseWithData(
-      `Task with id ${taskId} was deleted`
-    ));
+    res.status(200).json(generateResponseWithData({
+      message: `Task with id ${taskId} was deleted`
+    }));
   } else {
     res.status(404).json(generateResponseWithError(
       `Task with id ${taskId} was not found`
