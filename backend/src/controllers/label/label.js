@@ -1,7 +1,7 @@
 const Labels = require('../../models/label');
 const Colors = require('../../models/color');
 const Tasks = require('../../models/task');
-const logger = require('../../logger/logger');
+const logger = require('../../utils/logger');
 
 /**
  * Функция получения всех меток
