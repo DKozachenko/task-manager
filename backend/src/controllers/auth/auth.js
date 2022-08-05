@@ -44,7 +44,7 @@ const login = async (req, res) => {
       });
     } else {
       res.status(401).json({
-        message: `Passord for user with nickname ${req.body.nickname} is not correct`
+        message: `Password for user with nickname ${req.body.nickname} is not correct`
       });
     }
 

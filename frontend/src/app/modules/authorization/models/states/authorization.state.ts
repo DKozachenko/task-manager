@@ -1,6 +1,6 @@
-import { EntityState } from '@datorama/akita';
-import { IUser } from '../interfaces';
-
-export interface AuthorizationState extends EntityState<IUser, string> {
+/**
+ * Модель состояния авторизации
+ */
+export interface AuthorizationState {
   token: string | undefined;
 }
