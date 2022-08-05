@@ -109,7 +109,7 @@ describe('/login controller', () => {
         password: testUser.password + 'fdsfd'
       });
     expect(response.status).toBe(401);
-    expect(response.body.message).toBe(`Passord for user with nickname ${testUser.nickname} is not correct`);
+    expect(response.body.message).toBe(`Password for user with nickname ${testUser.nickname} is not correct`);
   });
 
   /** После всех тестов удаление тестового пользователя */
