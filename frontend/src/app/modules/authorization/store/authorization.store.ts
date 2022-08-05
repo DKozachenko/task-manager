@@ -4,6 +4,8 @@ import { EntityStore, StoreConfig } from '@datorama/akita';
 @StoreConfig({ name: 'authorization', idKey: '_id' })
 export class AuthorizationStore extends EntityStore<AuthorizationState> {
   constructor() {
-    super();
+    super({
+      token: undefined
+    });
   }
 }
