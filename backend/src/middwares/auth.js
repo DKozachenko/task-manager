@@ -2,7 +2,7 @@ const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 
 const CONFIG = require('../config');
-const logger = require('../logger/logger');
+const logger = require('../utils/logger');
 const Users = require('../models/user');
 
 /** Опции для стратегии */

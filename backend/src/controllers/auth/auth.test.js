@@ -25,10 +25,10 @@ describe('/register controller', () => {
       .post(`/${CONFIG.prefix}/auth/register`)
       .send(testUser);
     
-    testUserId = response.body._id;
+    testUserId = response.body.data._id;
     expect(response.status).toBe(201);
-    expect(response.body).toHaveProperty('_id');
-    expect(await bcrypt.compare(testUser.password, response.body.password)).toBeTruthy();
+    expect(response.body.data).toHaveProperty('_id');
+    expect(await bcrypt.compare(testUser.password, response.body.data.password)).toBeTruthy();
   });
 
   /** Тест ошибки при существовании пользователя с такой же почтой */
@@ -85,7 +85,7 @@ describe('/login controller', () => {
         password: testUser.password
       });
     expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty('token');
+    expect(response.body.data).toHaveProperty('token');
   });
 
   /** Тест ошибки, если пользователь с указанными ником не существует */

@@ -43,12 +43,12 @@ let testUserToken = '';
 beforeAll(async () => {
   const response = await request.post(`/${CONFIG.prefix}/auth/register`)
     .send(testUser);
-  testUserId = response.body._id;
+  testUserId = response.body.data._id;
   
   const response2 = await request.post(`/${CONFIG.prefix}/auth/login`)
     .send(testUser);
   
-  testUserToken = response2.body.token;
+  testUserToken = response2.body.data.token;
 
   const allLabels = await Labels.find();
   initialLabelsLength = allLabels.length;
@@ -93,7 +93,7 @@ describe('/getAll controller', () => {
       .set('Authorization', testUserToken);
     
     expect(response.status).toBe(200);
-    expect(response.body).toHaveLength(initialLabelsLength + 2);
+    expect(response.body.data).toHaveLength(initialLabelsLength + 2);
   });
 });
 
@@ -128,11 +128,11 @@ describe('/add controller', () => {
       .set('Authorization', testUserToken)
       .send(testLabel);
 
-    labelIds.push(response.body._id);
+    labelIds.push(response.body.data._id);
 
     expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty('_id');
-    expect(response.body.colorId).toBe(colorId);
+    expect(response.body.data).toHaveProperty('_id');
+    expect(response.body.data.colorId).toBe(colorId);
   });
 });
 
@@ -149,8 +149,8 @@ describe('/updateById controller', () => {
       });
 
     expect(response.status).toBe(200);
-    expect(response.body.name).toBe(testLabel.name + 'updated');
-    expect(response.body.colorId).toBe(colorId);
+    expect(response.body.data.name).toBe(testLabel.name + 'updated');
+    expect(response.body.data.colorId).toBe(colorId);
   });
   
   /** Тест обновления метки с несуществующим id */
@@ -180,7 +180,7 @@ describe('/deleteById controller', () => {
       .set('Authorization', testUserToken);
 
     expect(response.status).toBe(200);
-    expect(response.body.message).toBe(`Label with id ${labelIds[0]} was deleted`);
+    expect(response.body.data.message).toBe(`Label with id ${labelIds[0]} was deleted`);
     
     const allLabelsAfterDelete = await Labels.find();
     const labelsLengthAfterDelete = allLabelsAfterDelete.length;
