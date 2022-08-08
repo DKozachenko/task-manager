@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IMessage } from '../../models/interfaces';
+import { environment } from 'src/environments/environment';
+import { IResponse } from '../../models/interfaces';
 
 @Injectable()
 export class RestService {
@@ -13,8 +14,8 @@ export class RestService {
    * @param route - адрес запроса
    * @returns все элементы
    */
-  public getAll<T>(route: string): Observable<T> {
-    return this.httpClient.get<T>(`/api/${route}`);
+  public getAll<T>(route: string): Observable<IResponse<T>> {
+    return this.httpClient.get<IResponse<T>>(`/${environment.apiUrl}/${route}`);
   }
 
   /**
@@ -24,8 +25,8 @@ export class RestService {
    * @param id - id записи
    * @returns элемент или сообщение об ошибке
    */
-  public getById<T>(route: string, id: string): Observable<T | IMessage> {
-    return this.httpClient.get<T | IMessage>(`/api/${route}/${id}`);
+  public getById<T>(route: string, id: string): Observable<IResponse<T>> {
+    return this.httpClient.get<IResponse<T>>(`/${environment.apiUrl}/${route}/${id}`);
   }
 
   /**
@@ -36,8 +37,8 @@ export class RestService {
    * @param newItem - добавляемый элемент
    * @returns добавленный в БД элемент
    */
-  public add<T, K = T>(route: string, newItem: T): Observable<K> {
-    return this.httpClient.post<K>(`/api/${route}`, newItem);
+  public add<T, K = T>(route: string, newItem: T): Observable<IResponse<K>> {
+    return this.httpClient.post<IResponse<K>>(`/${environment.apiUrl}/${route}`, newItem);
   }
 
   /**
@@ -48,12 +49,8 @@ export class RestService {
    * @param updatedItem - обновленный элемент
    * @returns обновленный в БД элемент или сообщение об ошибке
    */
-  public updateById<T>(
-    route: string,
-    id: string,
-    updatedItem: T
-  ): Observable<T | IMessage> {
-    return this.httpClient.put<T | IMessage>(`/api/${route}/${id}`, updatedItem);
+  public updateById<T>(route: string, id: string, updatedItem: T): Observable<IResponse<T>> {
+    return this.httpClient.put<IResponse<T>>(`/${environment.apiUrl}/${route}/${id}`, updatedItem);
   }
 
   /**
@@ -62,7 +59,7 @@ export class RestService {
    * @param id - id записи
    * @returns сообщение
    */
-  public deleteById(route: string, id: string): Observable<IMessage> {
-    return this.httpClient.delete<IMessage>(`/api/${route}/${id}`);
+  public deleteById(route: string, id: string): Observable<IResponse> {
+    return this.httpClient.delete<IResponse>(`/${environment.apiUrl}/${route}/${id}`);
   }
 }
