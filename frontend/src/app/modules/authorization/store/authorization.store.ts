@@ -1,8 +1,8 @@
 import { AuthorizationState } from './../models/states/authorization.state';
-import { EntityStore, StoreConfig } from '@datorama/akita';
+import { Store, StoreConfig } from '@datorama/akita';
 
-@StoreConfig({ name: 'authorization', idKey: '_id' })
-export class AuthorizationStore extends EntityStore<AuthorizationState> {
+@StoreConfig({ name: 'authorization' })
+export class AuthorizationStore extends Store<AuthorizationState> {
   constructor() {
     super({
       token: undefined
