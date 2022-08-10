@@ -4,9 +4,12 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { IResponse } from '../../models/interfaces';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class RestService {
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) {
+  }
 
   /**
    * Получение всех элементов
