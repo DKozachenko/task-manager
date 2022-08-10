@@ -1,3 +1,4 @@
+import { AuthorizationQuery } from './../../store/authorization.query';
 import { IToken } from './../../../shared/models/interfaces/token.interface';
 import { IResponse } from './../../../shared/models/interfaces/response.interface';
 import { ILoginInfo } from './../../models/interfaces/login-info.interface';
@@ -22,7 +23,7 @@ export class LoginFormComponent {
     nickname: new FormControl('', [
       Validators.required,
       Validators.maxLength(60),
-      Validators.pattern('^[A-Za-z]+$'),
+      Validators.pattern('^[A-Za-z0-9]+$'),
     ]),
     password: new FormControl('', [
       Validators.required,
@@ -46,8 +47,7 @@ export class LoginFormComponent {
   public login() {
     const loginInfo: ILoginInfo = this.form.value;
 
-    this.authorizationService
-      .login(loginInfo)
+    this.authorizationService.login(loginInfo)
       .pipe(
         catchError((response: HttpErrorResponse) => {
           return of({
@@ -60,6 +60,9 @@ export class LoginFormComponent {
       .subscribe((response: IResponse<IToken | undefined>) => {
         if (response.error) {
           this.notificationService.error('Ошибка', response.message ?? '');
+        } else {
+          this.notificationService.success('Успешно', 'Вы вошли');
+          this.form.reset();
         }
       });
   }
