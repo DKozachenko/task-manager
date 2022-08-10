@@ -1,21 +1,77 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Validators } from '@angular/forms';
+import { ControlsOf, FormControl, FormGroup } from '@ngneat/reactive-forms';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { catchError, of } from 'rxjs';
+import { IResponse } from './../../../shared/models/interfaces/response.interface';
+import { IUser } from '../../models/interfaces';
+import { AuthorizationService } from '../../store';
 
 @Component({
   selector: 'authorization-register-form',
   templateUrl: './register-form.component.html',
-  styleUrls: ['./register-form.component.sass']
+  styleUrls: ['./register-form.component.sass'],
 })
 export class RegisterFormComponent {
-  public form: FormGroup = new FormGroup({
-    fullName: new FormControl(null, [Validators.required]),
-    mail: new FormControl(null, [Validators.required]),
-    nickname: new FormControl(null, [Validators.required]),
-    password: new FormControl(null, [Validators.required])
+  /** Форма регистрации */
+  public form: FormGroup<ControlsOf<IUser>> = new FormGroup<ControlsOf<IUser>>({
+    fullName: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(60),
+      Validators.pattern('^[А-Яа-яA-Za-z]+$'),
+    ]),
+    mail: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(60),
+      Validators.email,
+    ]),
+    nickname: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(60),
+      Validators.pattern('^[A-Za-z0-9]+$'),
+    ]),
+    password: new FormControl('', [
+      Validators.required,
+      Validators.minLength(6),
+      Validators.maxLength(60),
+      Validators.pattern('(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}'),
+    ]),
   });
 
-  public submit() {
-    console.log(this.form);
-  }
+  constructor(
+    private authorizationService: AuthorizationService,
+    private notificationService: NzNotificationService
+  ) {}
 
+  /**
+   * Регистрация
+   */
+  public register() {
+    const newUser: IUser = {
+      ...this.form.value,
+      dateRegistration: undefined,
+      taskIds: [],
+      labelIds: []
+    };
+
+    this.authorizationService.register(newUser)
+      .pipe(
+        catchError((response: HttpErrorResponse) => {
+          return of({
+            data: undefined,
+            error: true,
+            message: response.error.message,
+          });
+        })
+      )
+      .subscribe((response: IResponse<IUser | undefined>) => {
+        if (response.error) {
+          this.notificationService.error('Ошибка', response.message ?? '');
+        } else {
+          this.notificationService.success('Успешно', 'Вы зарегистрировались');
+          this.form.reset();
+        }
+      });
+  }
 }
