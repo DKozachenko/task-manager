@@ -1,7 +1,8 @@
 <form nz-form
     nzLayout="vertical"
+    errorTailor
     [formGroup]="form"
-    (ngSubmit)="submit()"
+    (ngSubmit)="login()"
   >
   <div nz-row [nzGutter]="24">
     <div nz-col [nzSpan]="24">
@@ -18,7 +19,7 @@
           <ng-template #nicknameTemplate>
             <i nz-icon
                 nz-tooltip
-                nzTooltipTitle="Extra information"
+                nzTooltipTitle="Только английские буквы, максимальная длина - 60"
                 nzType="info-circle"
               ></i>
           </ng-template>
@@ -36,6 +37,7 @@
           <nz-input-group [nzSuffix]="passwordTemplate" [nzSize]="'large'">
             <input
               nz-input
+              formControlName="password"
               placeholder="Пароль"
               [type]="passwordVisible ? 'text' : 'password'"
             />
@@ -49,7 +51,7 @@
 
             <i nz-icon
                 nz-tooltip
-                nzTooltipTitle="Extra information"
+                nzTooltipTitle="Только английские буквы, минимум 1 заглавная, минимум 1 цифра, без спецсимволов, минимальная длина - 6, максимальная длина - 60"
                 nzType="info-circle"
               ></i>
           </ng-template>
@@ -68,6 +70,7 @@
           nzShape="round"
           type="submit"
           [nzSize]="'large'"
+          [disabled]="form.invalid"
         >
           Войти
       </button>

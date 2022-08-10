@@ -7,6 +7,7 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { IconDefinition } from '@ant-design/icons-angular';
+import { NzNotificationModule } from 'ng-zorro-antd/notification';
 import { EyeInvisibleOutline, EyeFill, InfoCircleFill } from '@ant-design/icons-angular/icons';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { LoginFormComponent } from './components/login-form/login-form.component';
@@ -33,7 +34,8 @@ const icons: IconDefinition[] = [
     NzInputModule,
     NzIconModule.forChild(icons),
     NzButtonModule,
-    NzToolTipModule
-  ]
+    NzToolTipModule,
+    NzNotificationModule
+  ],
 })
-export class AuthorizationModule { }
+export class AuthorizationModule {}

@@ -4,7 +4,6 @@ import { map, Observable } from 'rxjs';
 import { RestService } from '../../shared/services';
 import { IResponse, IToken } from '../../shared/models/interfaces';
 import { ILoginInfo, IUser } from '../models/interfaces';
-import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +18,7 @@ export class AuthorizationService {
    * @returns созданного в БД пользователя
    */
   public register(newUser: IUser): Observable<IResponse<IUser>> {
-    return this.restService.add<IUser>(`${environment}/register`, newUser);
+    return this.restService.add<IUser>('auth/register', newUser);
   }
 
   /**
@@ -28,7 +27,7 @@ export class AuthorizationService {
    * @returns токен
    */
   public login(loginInfo: ILoginInfo): Observable<IResponse<IToken>> {
-    return this.restService.add<IUser, IToken>(`${environment}/login`, loginInfo)
+    return this.restService.add<IUser, IToken>('auth/login', loginInfo)
       .pipe(
         map((response: IResponse<IToken>) => {
           this.authorizationStore.update(response.data);
