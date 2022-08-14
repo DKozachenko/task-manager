@@ -31,6 +31,7 @@ export class AuthorizationService {
       .pipe(
         map((response: IResponse<IToken>) => {
           this.authorizationStore.update(response.data);
+          localStorage.setItem('token-jwt', response.data.token);
           return response;
         })
       );
@@ -43,5 +44,6 @@ export class AuthorizationService {
     this.authorizationStore.update({
       token: undefined
     });
+    localStorage.removeItem('token-jwt');
   }
 }
