@@ -8,8 +8,10 @@ import { Injectable } from '@angular/core';
 @StoreConfig({ name: 'authorization' })
 export class AuthorizationStore extends Store<AuthorizationState> {
   constructor() {
+    const tokenValue: string | null = localStorage.getItem('token-jwt');
+
     super({
-      token: undefined
+      token: tokenValue ?? undefined
     });
   }
 }
