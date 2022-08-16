@@ -26,6 +26,8 @@ const testUser = {
   password: 'test password'
 };
 
+/** Изначальное кол-во цветов до тестов */
+let initialColorsLength = 0;
 /** Id добавленного пользователя */
 let testUserId = '';
 /** Токен */
@@ -42,12 +44,37 @@ beforeAll(async () => {
   
   testUserToken = response2.body.data.token;
 
+  const allColors = await Colors.find();
+  initialColorsLength = allColors.length;
+
   const testDbColor = new Colors({ 
     hexCode: testColor.hexCode 
   });
 
   await testDbColor.save();
   colorId = testDbColor._id.toString();
+});
+
+/** Тесты для получения всех записей */
+describe('/getAll controller', () => {
+  /** Тест получения всех меток без токена */
+  it('should return colors', async () => {
+    const response = await request
+      .get(`/${CONFIG.prefix}/colors`);
+    
+    expect(response.error.text).toBe('Unauthorized');
+    expect(response.status).toBe(401);
+  });
+
+  /** Тест получения всех меток */
+  it('should return colors', async () => {
+    const response = await request
+      .get(`/${CONFIG.prefix}/colors`)
+      .set('Authorization', testUserToken);
+    
+    expect(response.status).toBe(200);
+    expect(response.body.data).toHaveLength(initialColorsLength + 1);
+  });
 });
 
 /** Тесты для получения записи */
