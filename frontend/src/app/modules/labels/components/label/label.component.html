@@ -1,0 +1,17 @@
+<div nz-row [nzGutter]="24" [nzJustify]="'space-between'">
+  <div nz-col [nzSpan]="6" class="card__content">
+    <div [style.backgroundColor]="label.colorHexCode" class="card__content-color"></div>
+
+    <span class="card__name">{{ label.name }}</span>
+  </div>
+
+  <div nz-col [nzSpan]="4">
+    <a nz-button nzType="link" [routerLink]="['/dashboard/labels']">
+      <i nz-icon nzType="edit" nzTheme="outline"></i>
+    </a>
+
+    <a nz-button nzType="link">
+      <i nz-icon nzType="delete" nzTheme="outline"></i>
+    </a>
+  </div>
+</div>

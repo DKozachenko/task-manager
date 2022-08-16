@@ -8,7 +8,6 @@ import { ErrorTailorModule } from '@ngneat/error-tailor';
 import { HttpClientModule } from '@angular/common/http';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 
-
 @NgModule({
   declarations: [AppComponent],
   imports: [
