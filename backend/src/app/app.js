@@ -11,6 +11,7 @@ const logger = require('../utils/logger');
 const authRoutes = require('../routes/auth');
 const tasksRoutes = require('../routes/tasks');
 const labelsRoutes = require('../routes/labels');
+const colorsRoutes = require('../routes/colors');
 
 const app = express();
 
@@ -32,5 +33,6 @@ app.use(passport.initialize());
 app.use(`/${CONFIG.prefix}/auth`, authRoutes);
 app.use(`/${CONFIG.prefix}/tasks`, tasksRoutes);
 app.use(`/${CONFIG.prefix}/labels`, labelsRoutes);
+app.use(`/${CONFIG.prefix}/colors`, colorsRoutes);
 
 module.exports = app;
