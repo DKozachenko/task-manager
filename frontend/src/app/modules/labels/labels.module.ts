@@ -12,7 +12,7 @@ import { IconDefinition } from '@ant-design/icons-angular';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { DeleteOutline, EditOutline } from '@ant-design/icons-angular/icons';
 import { EditFormComponent, LabelComponent, LabelsComponent } from './components';
-import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { ColorPickerModule } from 'ngx-color-picker';
 
@@ -43,6 +43,5 @@ const icons: IconDefinition[] = [
     NzSelectModule,
     ColorPickerModule,
   ],
-  // providers: [NzModalService],
 })
 export class LabelsModule {}

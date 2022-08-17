@@ -8,8 +8,7 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { PlusOutline } from '@ant-design/icons-angular/icons';
 import { IconDefinition } from '@ant-design/icons-angular';
-import { NzModalService } from 'ng-zorro-antd/modal';
-import { OverlayModule } from '@angular/cdk/overlay';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 const icons: IconDefinition[] = [PlusOutline];
 
@@ -21,8 +20,8 @@ const icons: IconDefinition[] = [PlusOutline];
     NzGridModule,
     NzLayoutModule,
     NzButtonModule,
+    ColorPickerModule,
     NzIconModule.forChild(icons),
   ],
-  providers: [NzModalService],
 })
 export class DashboardModule {}

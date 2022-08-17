@@ -26,15 +26,15 @@ export class LayoutComponent implements OnInit {
 
   public add(): void {
     if (this.state === 'labels') {
-      // this.modalService
-      //   .create({
-      //     nzContent: EditFormComponent,
-      //     nzViewContainerRef: this.viewContainerRef,
-      //     nzComponentParams: {
-      //       id: undefined,
-      //     },
-      //   })
-      //   .afterClose.subscribe((result) => console.log(result));
+      this.modalService
+        .create({
+          nzContent: EditFormComponent,
+          nzViewContainerRef: this.viewContainerRef,
+          nzComponentParams: {
+            id: undefined,
+          },
+        })
+        .afterClose.subscribe((result) => console.log(result));
     }
   }
 }

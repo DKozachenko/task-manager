@@ -15,20 +15,20 @@ export class LabelComponent {
   };
 
   constructor(
-    // private readonly modalService: NzModalService,
+    private readonly modalService: NzModalService,
     private viewContainerRef: ViewContainerRef
   ) {}
 
   public edit(id: string): void {
-    // this.modalService
-    //   .create({
-    //     nzContent: EditFormComponent,
-    //     nzViewContainerRef: this.viewContainerRef,
-    //     nzComponentParams: {
-    //       id,
-    //     },
-    //   })
-    //   .afterClose.subscribe((result) => console.log(result));
+    this.modalService
+      .create({
+        nzContent: EditFormComponent,
+        nzViewContainerRef: this.viewContainerRef,
+        nzComponentParams: {
+          id,
+        },
+      })
+      .afterClose.subscribe((result) => console.log(result));
   }
 
   public delete(id: string): void {
