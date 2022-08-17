@@ -1,0 +1,122 @@
+<form nz-form
+    nzLayout="vertical"
+    [formGroup]="form"
+    (ngSubmit)="register()"
+  >
+  <div nz-row [nzGutter]="24">
+    <div nz-col [nzSpan]="24">
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="fullName">Полное имя</nz-form-label>
+        <nz-form-control>
+          <nz-input-group [nzSuffix]="fullNameTemplate" [nzSize]="'large'">
+            <input nz-input
+                nzSize="large"
+                formControlName="fullName"
+                placeholder="Полное имя"
+              />
+          </nz-input-group>
+
+          <ng-template #fullNameTemplate>
+            <i nz-icon
+                nz-tooltip
+                nzTooltipTitle="Русские или английские буквы, максимальная длина - 60"
+                nzType="info-circle"
+              ></i>
+          </ng-template>
+
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+
+  <div nz-row [nzGutter]="24">
+    <div nz-col [nzSpan]="24">
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="mail">Почта</nz-form-label>
+        <nz-form-control>
+          <nz-input-group [nzSuffix]="mailTemplate" [nzSize]="'large'">
+            <input
+              nz-input
+              placeholder="Почта"
+              formControlName="mail"
+            />
+          </nz-input-group>
+
+          <ng-template #mailTemplate>
+            <i nz-icon
+                nz-tooltip
+                nzTooltipTitle="Формат почты, например xxx@mail.ru"
+                nzType="info-circle"
+              ></i>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+
+  <div nz-row [nzGutter]="24">
+    <div nz-col [nzSpan]="24">
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="nickname">Никнейм</nz-form-label>
+        <nz-form-control>
+          <nz-input-group [nzSuffix]="nicknameTemplate" [nzSize]="'large'">
+            <input nz-input
+              formControlName="nickname"
+              placeholder="Никнейм"
+            />
+          </nz-input-group>
+
+          <ng-template #nicknameTemplate>
+            <i nz-icon
+                nz-tooltip
+                nzTooltipTitle="Только английские буквы, максимальная длина - 60"
+                nzType="info-circle"
+              ></i>
+          </ng-template>
+
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+
+  <div nz-row [nzGutter]="24">
+    <div nz-col [nzSpan]="24">
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="password">Пароль</nz-form-label>
+        <nz-form-control>
+          <nz-input-group [nzSuffix]="passwordTemplate" [nzSize]="'large'">
+            <input nz-input
+              formControlName="password"
+              placeholder="Пароль"
+            />
+          </nz-input-group>
+
+          <ng-template #passwordTemplate>
+            <i nz-icon
+                nz-tooltip
+                nzTooltipTitle="Только английские буквы, минимум 1 заглавная, минимум 1 цифра, без спецсимволов, минимальная длина - 6, максимальная длина - 60"
+                nzType="info-circle"
+              ></i>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+
+  <div nz-row
+      [nzGutter]="24"
+      [nzJustify]="'center'"
+    >
+    <div nz-col [nzSpan]="10">
+      <button nz-button
+          nzType="primary"
+          nzShape="round"
+          type="submit"
+          [nzSize]="'large'"
+          [disabled]="form.invalid"
+        >
+          Зарегистрироваться
+      </button>
+    </div>
+  </div>
+</form>

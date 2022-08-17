@@ -1,0 +1,29 @@
+<nz-layout>
+  <nz-sider class="sider">
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzSpan]="24">
+        <a nz-button nzType="link" [routerLink]="['/dashboard/tasks']">Tasks</a>
+      </div>
+
+      <div nz-col [nzSpan]="24">
+        <a nz-button nzType="link" [routerLink]="['/dashboard/labels']">Labels</a>
+      </div>
+    </div>
+
+  </nz-sider>
+
+  <nz-layout>
+    <nz-header class="header">
+      <p>{{ state === 'tasks' ? 'Задачи' : 'Метки' }}</p>
+
+      <button nz-button nzType="default" (click)="add()">
+        <i nz-icon nzType="plus" nzTheme="outline"></i>
+      </button>
+    </nz-header>
+
+    <nz-content class="content">
+      <router-outlet></router-outlet>
+    </nz-content>
+  </nz-layout>
+
+</nz-layout>

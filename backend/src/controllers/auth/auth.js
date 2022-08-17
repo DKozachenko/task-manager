@@ -2,8 +2,10 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const Users = require('../../models/user');
-const logger = require('../../logger/logger');
+const logger = require('../../utils/logger');
 const CONFIG = require('../../config');
+const generateResponseWithError = require('../../utils/generate-response-with-error');
+const generateResponseWithData = require('../../utils/generate-response-with-data');
 
 /** Генерация токена на основе id и никнейма */
 const generateToken = (userId, nickname) => {
@@ -39,19 +41,19 @@ const login = async (req, res) => {
       const token = generateToken(requiredUser._id, requiredUser.nickname);
 
       logger.info(`User: ${requiredUser.nickname} logged in with token ${token}`);
-      res.status(200).json({
+      res.status(200).json(generateResponseWithData({
         token: `Bearer ${token}`
-      });
+      }));
     } else {
-      res.status(401).json({
-        message: `Passord for user with nickname ${req.body.nickname} is not correct`
-      });
+      res.status(401).json(generateResponseWithError(
+        `Password for user with nickname ${req.body.nickname} is not correct`
+      ));
     }
 
   } else {
-    res.status(404).json({
-      message: `User with nickname ${req.body.nickname} was not found`
-    });
+    res.status(404).json(generateResponseWithError(
+      `User with nickname ${req.body.nickname} was not found`
+    ));
   }
 };
 
@@ -71,9 +73,9 @@ const register = async (req, res) => {
   });
 
   if (existedMailUser) {
-    res.status(403).json({
-      message: `User with mail ${req.body.mail} is already exists`
-    });
+    res.status(403).json(generateResponseWithError(
+      `User with mail ${req.body.mail} is already exists`
+    ));
     return;
   }
 
@@ -82,9 +84,9 @@ const register = async (req, res) => {
   });
 
   if (existedNicknameUser) {
-    res.status(403).json({
-      message: `User with nickname ${req.body.nickname} is already exists`
-    });
+    res.status(403).json(generateResponseWithError(
+      `User with nickname ${req.body.nickname} is already exists`
+    ));
     return;
   }
   const hashPassword = await bcrypt.hash(req.body.password, 10);
@@ -100,12 +102,12 @@ const register = async (req, res) => {
   try {
     await newUser.save();
     logger.info(`User with nickname ${req.body.nickname} was registered`);
-    res.status(201).json(newUser);
+    res.status(201).json(generateResponseWithData(newUser));
   } catch (error) {
     logger.error(`While registering user with nickname ${req.body.nickname} error ${error} occurred`);
-    res.status(500).json({
-      message: `Ошибка при регистрации нового пользователя: ${error.message ? error.message: error}`
-    });
+    res.status(500).json(generateResponseWithError(
+      `Ошибка при регистрации нового пользователя: ${error.message ? error.message: error}`
+    ));
   }
 };
 
