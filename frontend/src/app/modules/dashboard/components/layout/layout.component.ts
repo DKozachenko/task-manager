@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, UrlSegment } from '@angular/router';
 import { NzModalService } from 'ng-zorro-antd/modal';
-import { EditFormComponent } from 'src/app/modules/labels/components';
+import { EditFormComponent as EditLabelForm} from 'src/app/modules/labels/components';
+import { EditFormComponent as EditTaskForm } from 'src/app/modules/tasks/components';
 import { DashboardState } from '../../types';
 
 @Component({
@@ -28,7 +29,17 @@ export class LayoutComponent implements OnInit {
     if (this.state === 'labels') {
       this.modalService
         .create({
-          nzContent: EditFormComponent,
+          nzContent: EditLabelForm,
+          nzViewContainerRef: this.viewContainerRef,
+          nzComponentParams: {
+            id: undefined,
+          },
+        })
+        .afterClose.subscribe((result) => console.log(result));
+    } else {
+      this.modalService
+        .create({
+          nzContent: EditTaskForm,
           nzViewContainerRef: this.viewContainerRef,
           nzComponentParams: {
             id: undefined,

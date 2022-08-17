@@ -5,3 +5,5 @@ export { ILabel } from './label.interface';
 export { ITask } from './task.interface';
 export { ILabelForDashboard } from './label-for-dashboard.interface';
 export { ISendColor } from './send-color.interface';
+export { ILabelForTask } from './label-for-task.interface';
+export { ITaskForDashboard } from './task-for-dashboard.interface';

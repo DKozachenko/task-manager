@@ -9,7 +9,8 @@ describe('EditFormComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ EditFormComponent ]
-    }).compileComponents();
+    })
+    .compileComponents();
 
     fixture = TestBed.createComponent(EditFormComponent);
     component = fixture.componentInstance;
