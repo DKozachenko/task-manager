@@ -14,7 +14,7 @@ export class LabelsComponent implements OnInit {
     },
     {
       name: 'name 2',
-      colorHexCode: '#fff',
+      colorHexCode: 'blue',
     },
     {
       name: 'name 3',

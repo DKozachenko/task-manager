@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -7,6 +8,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ErrorTailorModule } from '@ngneat/error-tailor';
 import { HttpClientModule } from '@angular/common/http';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NZ_I18N, en_US } from 'ng-zorro-antd/i18n';
+import { OverlayModule } from '@angular/cdk/overlay';
+
+import { registerLocaleData } from '@angular/common';
+import en from '@angular/common/locales/en';
+import { NzModalService } from 'ng-zorro-antd/modal';
+
+registerLocaleData(en);
 
 @NgModule({
   declarations: [AppComponent],
@@ -27,8 +36,13 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
         },
       },
     }),
+    OverlayModule,
   ],
   bootstrap: [AppComponent],
-  providers: [NzNotificationService],
+  providers: [
+    NzNotificationService,
+    { provide: NZ_I18N, useValue: en_US },
+    // NzModalService
+  ],
 })
 export class AppModule {}

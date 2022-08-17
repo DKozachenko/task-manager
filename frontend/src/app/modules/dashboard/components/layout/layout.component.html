@@ -13,7 +13,13 @@
   </nz-sider>
 
   <nz-layout>
-    <nz-header class="header">{{ title }}</nz-header>
+    <nz-header class="header">
+      <p>{{ state === 'tasks' ? 'Задачи' : 'Метки' }}</p>
+
+      <button nz-button nzType="default" (click)="add()">
+        <i nz-icon nzType="plus" nzTheme="outline"></i>
+      </button>
+    </nz-header>
 
     <nz-content class="content">
       <router-outlet></router-outlet>

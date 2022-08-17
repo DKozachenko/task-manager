@@ -5,13 +5,13 @@
     <span class="card__name">{{ label.name }}</span>
   </div>
 
-  <div nz-col [nzSpan]="4">
-    <a nz-button nzType="link" [routerLink]="['/dashboard/labels']">
+  <div nz-col [nzSpan]="4" class="card__actions">
+    <button nz-button nzType="default" (click)="edit(label._id ?? '')">
       <i nz-icon nzType="edit" nzTheme="outline"></i>
-    </a>
+    </button>
 
-    <a nz-button nzType="link">
+    <button nz-button nzType="default" (click)="delete(label._id ?? '')">
       <i nz-icon nzType="delete" nzTheme="outline"></i>
-    </a>
+    </button>
   </div>
 </div>
