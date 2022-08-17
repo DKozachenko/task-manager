@@ -4,10 +4,6 @@ import { LayoutComponent } from './components';
 
 const routes: Routes = [
   {
-    path: '',
-    component: LayoutComponent
-  },
-  {
     path: 'tasks',
     component: LayoutComponent,
     loadChildren: () =>
