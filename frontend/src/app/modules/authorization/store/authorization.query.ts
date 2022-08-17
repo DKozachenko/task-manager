@@ -8,10 +8,12 @@ import { AuthorizationState } from '../models/states';
   providedIn: 'root',
 })
 export class AuthorizationQuery extends Query<AuthorizationState> {
-  /** Есть ли токен */
-  public hasToken$: Observable<boolean> = this.select((state: AuthorizationState) => !!state.token);
-
   constructor(protected override store: AuthorizationStore) {
     super(store);
+  }
+
+  /** Есть ли токен */
+  public get hasToken() {
+    return !!this.getValue().token;
   }
 }

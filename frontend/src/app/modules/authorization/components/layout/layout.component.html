@@ -1,9 +1,13 @@
-<nz-tabset [nzCentered]="true">
-  <nz-tab nzTitle="Войти">
-    <authorization-login-form></authorization-login-form>
-  </nz-tab>
+<div nz-row [nzGutter]="24" [nzJustify]="'center'" [nzAlign]="'middle'" class="main__layout">
+  <div nz-col [nzSpan]="8">
+    <nz-tabset [nzCentered]="true">
+      <nz-tab nzTitle="Войти">
+        <authorization-login-form></authorization-login-form>
+      </nz-tab>
 
-  <nz-tab nzTitle="Зарегистрироваться">
-    <authorization-register-form></authorization-register-form>
-  </nz-tab>
-</nz-tabset>
+      <nz-tab nzTitle="Зарегистрироваться">
+        <authorization-register-form></authorization-register-form>
+      </nz-tab>
+    </nz-tabset>
+  </div>
+</div>

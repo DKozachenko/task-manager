@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
-import { ActivatedRoute, UrlSegment } from '@angular/router';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { NzModalService } from 'ng-zorro-antd/modal';
+import { AuthorizationService } from 'src/app/modules/authorization/store';
 import { EditFormComponent as EditLabelForm} from 'src/app/modules/labels/components';
 import { EditFormComponent as EditTaskForm } from 'src/app/modules/tasks/components';
 import { DashboardState } from '../../types';
@@ -16,7 +17,9 @@ export class LayoutComponent implements OnInit {
   constructor(
     private readonly activatedRoute: ActivatedRoute,
     private readonly modalService: NzModalService,
-    private viewContainerRef: ViewContainerRef
+    private readonly authorizationService: AuthorizationService,
+    private readonly viewContainerRef: ViewContainerRef,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
@@ -47,5 +50,10 @@ export class LayoutComponent implements OnInit {
         })
         .afterClose.subscribe((result) => console.log(result));
     }
+  }
+
+  public logout(): void {
+    this.authorizationService.logout();
+    this.router.navigate(['/']);
   }
 }
