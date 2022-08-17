@@ -9,6 +9,7 @@ import { AuthorizationService } from './../../store/authorization.service';
 import { catchError, of } from 'rxjs';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'authorization-login-form',
@@ -38,7 +39,8 @@ export class LoginFormComponent {
 
   constructor(
     private authorizationService: AuthorizationService,
-    private notificationService: NzNotificationService
+    private notificationService: NzNotificationService,
+    private readonly router: Router
   ) {}
 
   /**
@@ -63,6 +65,7 @@ export class LoginFormComponent {
         } else {
           this.notificationService.success('Успешно', 'Вы вошли');
           this.form.reset();
+          this.router.navigate(['/dashboard/tasks']);
         }
       });
   }
