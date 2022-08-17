@@ -1,0 +1,17 @@
+<div nz-row [nzGutter]="24" [nzJustify]="'space-between'">
+  <div nz-col [nzSpan]="6" class="card__content">
+    <div [style.backgroundColor]="label.colorHexCode" class="card__content-color"></div>
+
+    <span class="card__name">{{ label.name }}</span>
+  </div>
+
+  <div nz-col [nzSpan]="4" class="card__actions">
+    <button nz-button nzType="default" (click)="edit(label._id ?? '')">
+      <i nz-icon nzType="edit" nzTheme="outline"></i>
+    </button>
+
+    <button nz-button nzType="default" (click)="delete(label._id ?? '')">
+      <i nz-icon nzType="delete" nzTheme="outline"></i>
+    </button>
+  </div>
+</div>

@@ -1,7 +1,9 @@
 const Labels = require('../../models/label');
 const Colors = require('../../models/color');
 const Tasks = require('../../models/task');
-const logger = require('../../logger/logger');
+const logger = require('../../utils/logger');
+const generateResponseWithError = require('../../utils/generate-response-with-error');
+const generateResponseWithData = require('../../utils/generate-response-with-data');
 
 /**
  * Функция получения всех меток
@@ -14,7 +16,7 @@ const getAll = async (req, res) => {
     userId: req.user._id 
   });
 
-  res.status(200).json(allLabels);
+  res.status(200).json(generateResponseWithData(allLabels));
 };
 
 /**
@@ -30,17 +32,17 @@ const getById = async (req, res) => {
   if (requiredLabel) {
     /** Проверка на принадлежность получаемой метки текущему пользователю */
     if (requiredLabel.userId.toString() !== req.user._id.toString()) {
-      res.status(403).json({
-        message: `Label with id ${labelId} does not belong to user ${req.user.nickname}`
-      });
+      res.status(403).json(generateResponseWithError(
+        `Label with id ${labelId} does not belong to user ${req.user.nickname}`
+      ));
       return;
     }
 
-    res.status(200).json(requiredLabel);
+    res.status(200).json(generateResponseWithData(requiredLabel));
   } else {
-    res.status(404).json({
-      message: `Label with id ${labelId} was not found`
-    });
+    res.status(404).json(generateResponseWithError(
+      `Label with id ${labelId} was not found`
+    ));
   }
 };
 
@@ -82,7 +84,7 @@ const add = async (req, res) => {
   await comeColor.save();
 
   logger.info(`Label with name ${newLabel.name} was created`);
-  res.status(200).json(newLabel);
+  res.status(200).json(generateResponseWithData(newLabel));
 };
 
 /**
@@ -98,9 +100,9 @@ const updateById = async (req, res) => {
   if (existedLabel) {
     /** Проверка на принадлежность получаемой метки текущему пользователю */
     if (existedLabel.userId.toString() !== req.user._id.toString()) {
-      res.status(403).json({
-        message: `Label with id ${labelId} does not belong to user ${req.user.nickname}`
-      });
+      res.status(403).json(generateResponseWithError(
+        `Label with id ${labelId} does not belong to user ${req.user.nickname}`
+      ));
       return;
     }
     /** Определение, существует ли цвет метки */
@@ -133,11 +135,11 @@ const updateById = async (req, res) => {
     }
 
     logger.info(`Label with name ${existedLabel.name} was updated`);
-    res.status(200).json(existedLabel);
+    res.status(200).json(generateResponseWithData(existedLabel));
   } else {
-    res.status(404).json({
-      message: `Label with id ${labelId} was not found`
-    });
+    res.status(404).json(generateResponseWithError(
+      `Label with id ${labelId} was not found`
+    ));
   }
 };
 
@@ -154,9 +156,9 @@ const deleteById = async (req, res) => {
   if (existedLabel) {
     /** Проверка на принадлежность получаемой метки текущему пользователю */
     if (existedLabel.userId.toString() !== req.user._id.toString()) {
-      res.status(403).json({
-        message: `Label with id ${labelId} does not belong to user ${req.user.nickname}`
-      });
+      res.status(403).json(generateResponseWithError(
+        `Label with id ${labelId} does not belong to user ${req.user.nickname}`
+      ));
       return;
     }
 
@@ -176,13 +178,13 @@ const deleteById = async (req, res) => {
     await Labels.findByIdAndRemove(labelId);
 
     logger.info(`Label with name ${existedLabel.name} was deleted`);
-    res.status(200).json({
+    res.status(200).json(generateResponseWithData({
       message: `Label with id ${labelId} was deleted`
-    });
+    }));
   } else {
-    res.status(404).json({
-      message: `Label with id ${labelId} was not found`
-    });
+    res.status(404).json(generateResponseWithError(
+      `Label with id ${labelId} was not found`
+    ));
   }
 };
 
