@@ -2,7 +2,7 @@
   {{ label.name || 'Новая метка' }}
 </div>
 
-<form nz-form [formGroup]="form" errorTailor>
+<form *ngIf="form" nz-form [formGroup]="form" errorTailor>
   <nz-form-item>
     <nz-form-label [nzSpan]="7" nzRequired>Название</nz-form-label>
     <nz-form-control [nzSpan]="12">

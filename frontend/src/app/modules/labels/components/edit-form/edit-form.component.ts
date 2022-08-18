@@ -39,25 +39,30 @@ export class EditFormComponent implements OnInit {
     private readonly labelService: LabelService) {}
 
   ngOnInit(): void {
-    if (this.id) {
-      this.labelService.getById(this.id)
-        .pipe(
-          catchError((err: HttpErrorResponse) => of({
-            data: this.label,
-            error: false,
-            message: ''
-          })),
-          untilDestroyed(this)
-        )
-        .subscribe((response: IResponse<ILabel>) => {
-          this.label = response.data;
-        });
-    }
+    console.log(this.id)
+    this.labelService.getById(this.id)
+      .pipe(
+        catchError((err: HttpErrorResponse) => of({
+          data: this.label,
+          error: false,
+          message: ''
+        })),
+        untilDestroyed(this)
+      )
+      .subscribe((response: IResponse<ILabel>) => {
+        this.label = response.data;
 
-    this.form = new FormGroup<ControlsOf<ILabel>>({
-      name: new FormControl(this.label.name, [Validators.required]),
-      tasksIds: new FormArray<string>(this.label?.tasksIds?.map((id: string) => new FormControl<string>(id)) ?? []),
-    });
+        this.form = new FormGroup<ControlsOf<ILabel>>({
+          name: new FormControl(this.label.name, [Validators.required]),
+          tasksIds: new FormArray<string>(
+            this.label?.tasksIds?.map((id: string) => new FormControl<string>(id)) ?? []
+          ),
+        });
+
+      });
+
+
+
 
   }
 

@@ -41,9 +41,6 @@ export class LayoutComponent implements OnInit {
         .create({
           nzContent: EditLabelForm,
           nzViewContainerRef: this.viewContainerRef,
-          nzComponentParams: {
-            id: undefined,
-          },
         })
         .afterClose.subscribe((sendLabel: ISendLabel) => {
           console.log(sendLabel)
