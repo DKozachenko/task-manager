@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ErrorTailorModule } from '@ngneat/error-tailor';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NZ_I18N, en_US } from 'ng-zorro-antd/i18n';
 import { OverlayModule } from '@angular/cdk/overlay';
@@ -15,6 +15,7 @@ import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { ColorPickerService } from 'ngx-color-picker';
+import { TokenInterceptor } from './interceptors';
 
 registerLocaleData(en);
 
@@ -44,7 +45,12 @@ registerLocaleData(en);
     NzNotificationService,
     { provide: NZ_I18N, useValue: en_US },
     NzModalService,
-    ColorPickerService
+    ColorPickerService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      multi: true,
+      useClass: TokenInterceptor
+    }
   ],
 })
 export class AppModule {}

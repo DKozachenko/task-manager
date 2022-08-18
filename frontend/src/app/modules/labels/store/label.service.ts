@@ -5,7 +5,8 @@ import { RestService } from '../../shared/services';
 import {IColor,
   ILabel,
   ILabelForDashboard,
-  IResponse} from '../../shared/models/interfaces';
+  IResponse,
+  ISendLabel} from '../../shared/models/interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -29,8 +30,8 @@ export class LabelService {
     return this.restService.getById<ILabel>('labels', id);
   }
 
-  public add(newLabel: ILabel): Observable<IResponse<ILabel>> {
-    return this.restService.add<ILabel>('labels', newLabel).pipe(
+  public add(newLabel: ISendLabel): Observable<IResponse<ILabel>> {
+    return this.restService.add<ISendLabel, ILabel>('labels', newLabel).pipe(
       map((response: IResponse<ILabel>) => {
         this.labelStore.add(response.data);
         return response;
