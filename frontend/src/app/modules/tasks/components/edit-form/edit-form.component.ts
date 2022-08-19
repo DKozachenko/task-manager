@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormControl, ControlsOf, FormArray } from '@ngneat/reactive-forms';
 import { NzModalRef } from 'ng-zorro-antd/modal';
-import { ILabel, ISendColor, ITask } from '../../../shared/models/interfaces';
+import { ILabel, ITask } from '../../../shared/models/interfaces';
 
 @Component({
   selector: 'app-edit-form',
@@ -17,10 +17,6 @@ export class EditFormComponent implements OnInit {
     dateCreation: new Date(),
     labelsIds: [],
     userId: '',
-  };
-
-  public color: ISendColor = {
-    hexCode: '',
   };
 
   public allLabels: ILabel[] = [{

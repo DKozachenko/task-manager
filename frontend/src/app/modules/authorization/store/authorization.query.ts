@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { Observable } from 'rxjs';
 import { AuthorizationStore } from '.';
 import { AuthorizationState } from '../models/states';
 
@@ -13,7 +12,11 @@ export class AuthorizationQuery extends Query<AuthorizationState> {
   }
 
   /** Есть ли токен */
-  public get hasToken() {
+  public get hasToken(): boolean {
     return !!this.getValue().token;
+  }
+
+  public get getToken(): string {
+    return this.getValue().token ?? '';
   }
 }

@@ -124,7 +124,7 @@ const updateById = async (req, res) => {
 
     /** Редактирование метки */
     existedLabel.name = req.body.name;
-    existedColor.colorId = comeColor._id;
+    existedLabel.colorId = comeColor._id;
     existedLabel.taskIds = req.body.taskIds;
     await existedLabel.save();
 

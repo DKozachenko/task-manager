@@ -14,6 +14,7 @@ import { DeleteOutline, EditOutline } from '@ant-design/icons-angular/icons';
 import { EditFormComponent, LabelComponent, LabelsComponent } from './components';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { ColorPickerModule } from 'ngx-color-picker';
 
 const icons: IconDefinition[] = [
@@ -42,6 +43,7 @@ const icons: IconDefinition[] = [
     NzInputModule,
     NzSelectModule,
     ColorPickerModule,
+    NzSpinModule
   ],
 })
 export class LabelsModule {}

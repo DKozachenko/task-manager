@@ -1,3 +1,4 @@
+import { LabelService } from './../../../labels/store/label.service';
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { NzModalService } from 'ng-zorro-antd/modal';
@@ -5,7 +6,13 @@ import { AuthorizationService } from 'src/app/modules/authorization/store';
 import { EditFormComponent as EditLabelForm} from 'src/app/modules/labels/components';
 import { EditFormComponent as EditTaskForm } from 'src/app/modules/tasks/components';
 import { DashboardState } from '../../types';
+import { ILabel, IResponse, ISendLabel } from 'src/app/modules/shared/models/interfaces';
+import { catchError, of } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { HttpErrorResponse } from '@angular/common/http';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
+@UntilDestroy()
 @Component({
   selector: 'app-layout',
   templateUrl: './layout.component.html',
@@ -17,7 +24,9 @@ export class LayoutComponent implements OnInit {
   constructor(
     private readonly activatedRoute: ActivatedRoute,
     private readonly modalService: NzModalService,
+    private readonly notificationService: NzNotificationService,
     private readonly authorizationService: AuthorizationService,
+    private readonly labelService: LabelService,
     private readonly viewContainerRef: ViewContainerRef,
     private readonly router: Router
   ) {}
@@ -34,11 +43,34 @@ export class LayoutComponent implements OnInit {
         .create({
           nzContent: EditLabelForm,
           nzViewContainerRef: this.viewContainerRef,
-          nzComponentParams: {
-            id: undefined,
-          },
         })
-        .afterClose.subscribe((result) => console.log(result));
+        .afterClose.subscribe((sendLabel: ISendLabel) => {
+          if (sendLabel) {
+            this.labelService.add(sendLabel)
+              .pipe(
+                catchError((err: HttpErrorResponse) => {
+                  this.notificationService.error('Ошибка', 'Ошибка при добавлении записи');
+                  return of({
+                    data: {
+                      name: '',
+                      colorId: '',
+                      tasksIds: [],
+                      userId: ''
+                    },
+                    error: true,
+                    message: ''
+                  });
+                }),
+                untilDestroyed(this)
+              )
+              .subscribe((response: IResponse<ILabel>) => {
+                if (!response.error) {
+                  this.notificationService.success('Успешно', 'Запись была успешно добавлена');
+                }
+              });
+          }
+
+        });
     } else {
       this.modalService
         .create({
