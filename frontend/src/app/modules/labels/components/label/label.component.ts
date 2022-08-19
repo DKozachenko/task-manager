@@ -37,28 +37,30 @@ export class LabelComponent {
         },
       })
       .afterClose.subscribe((sendLabel: ISendLabel) => {
-        this.labelService.updateById(sendLabel)
-          .pipe(
-            catchError((err: HttpErrorResponse) => {
-              this.notificationService.error('Ошибка', 'Ошибка при редактировании записи');
-              return of({
-                data: {
-                  name: '',
-                  colorId: '',
-                  tasksIds: [],
-                  userId: ''
-                },
-                error: true,
-                message: ''
-              });
-            }),
-            untilDestroyed(this)
-          )
-          .subscribe((response: IResponse<ILabel>) => {
-            if (!response.error) {
-              this.notificationService.success('Успешно', 'Запись была успешно обновлена');
-            }
-          });
+        if (sendLabel) {
+          this.labelService.updateById(sendLabel)
+            .pipe(
+              catchError((err: HttpErrorResponse) => {
+                this.notificationService.error('Ошибка', 'Ошибка при редактировании записи');
+                return of({
+                  data: {
+                    name: '',
+                    colorId: '',
+                    tasksIds: [],
+                    userId: ''
+                  },
+                  error: true,
+                  message: ''
+                });
+              }),
+              untilDestroyed(this)
+            )
+            .subscribe((response: IResponse<ILabel>) => {
+              if (!response.error) {
+                this.notificationService.success('Успешно', 'Запись была успешно обновлена');
+              }
+            });
+        }
       });
   }
 

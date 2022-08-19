@@ -21,14 +21,13 @@
     <nz-form-label [nzSpan]="7" nzRequired>Задачи</nz-form-label>
     <nz-form-control [nzSpan]="12">
       <nz-select nzMode="multiple" nzPlaceHolder="Задачи" formArrayName="tasksIds" nzAllowClear>
-        <nz-option *ngFor="let task of allTasks;trackBy:trackByFunc"
+        <nz-option *ngFor="let task of (allTasks | async)?.data;trackBy:trackByFunc"
           [nzValue]="task._id" [nzLabel]="task.name"
         ></nz-option>
       </nz-select>
     </nz-form-control>
   </nz-form-item>
 </form>
-
 
 <div *nzModalFooter>
   <button nz-button nzType="default" (click)="close()">Закрыть</button>

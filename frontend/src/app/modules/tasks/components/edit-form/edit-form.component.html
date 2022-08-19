@@ -1,8 +1,8 @@
 <div *nzModalTitle>
-  Редактирование (name)
+  {{ task.name || 'Новая задача' }}
 </div>
 
-<form nz-form [formGroup]="form" errorTailor>
+<form *ngIf="form" nz-form [formGroup]="form" errorTailor>
   <nz-form-item>
     <nz-form-label [nzSpan]="6" nzRequired nzFor="name">Название</nz-form-label>
     <nz-form-control [nzSpan]="16">
@@ -18,10 +18,10 @@
   </nz-form-item>
 
   <nz-form-item>
-    <nz-form-label [nzSpan]="6" nzRequired nzFor="labelsIds">Метки</nz-form-label>
+    <nz-form-label [nzSpan]="6" nzFor="labelIds">Метки</nz-form-label>
     <nz-form-control [nzSpan]="16">
-      <nz-select nzMode="multiple" nzPlaceHolder="Задачи" formArrayName="labelsIds" nzAllowClear>
-        <nz-option *ngFor="let label of allLabels;trackBy:trackByFunc"
+      <nz-select nzMode="multiple" nzPlaceHolder="Задачи" formArrayName="labelIds" nzAllowClear>
+        <nz-option *ngFor="let label of (allLabels | async)?.data; trackBy:trackByFunc"
           [nzValue]="label._id" [nzLabel]="label.name"
         ></nz-option>
       </nz-select>
@@ -29,8 +29,7 @@
   </nz-form-item>
 </form>
 
-
 <div *nzModalFooter>
-  <button nz-button nzType="default" (click)="handleCancel()">Закрыть</button>
-  <button nz-button nzType="primary" (click)="handleOk()">Сохранить</button>
+  <button nz-button nzType="default" (click)="close()">Закрыть</button>
+  <button nz-button nzType="primary" (click)="save()" [disabled]="form ? form.invalid : true">Сохранить</button>
 </div>

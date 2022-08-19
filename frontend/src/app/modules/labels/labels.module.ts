@@ -11,11 +11,11 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { IconDefinition } from '@ant-design/icons-angular';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { DeleteOutline, EditOutline } from '@ant-design/icons-angular/icons';
-import { EditFormComponent, LabelComponent, LabelsComponent } from './components';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { ColorPickerModule } from 'ngx-color-picker';
+import { EditFormComponent, LabelComponent, LabelsComponent } from './components';
 
 const icons: IconDefinition[] = [
   EditOutline,
