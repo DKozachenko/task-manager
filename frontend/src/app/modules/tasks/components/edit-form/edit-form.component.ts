@@ -1,13 +1,12 @@
 import { TaskService } from './../../store/task.service';
 import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup, FormControl, ControlsOf, FormArray } from '@ngneat/reactive-forms';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { ILabel, IResponse, ITask } from '../../../shared/models/interfaces';
 import { LabelService } from 'src/app/modules/labels/store';
 import { catchError, Observable, of } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @UntilDestroy()
@@ -27,10 +26,9 @@ export class EditFormComponent implements OnInit {
     userId: '',
   };
 
-  public allLabels: Observable<IResponse<ILabel[]>> =
-    this.labelService.getAll();
+  public allLabels: Observable<IResponse<ILabel[]>> = this.labelService.getAll();
 
-  public form!: FormGroup<ControlsOf<ITask>>;
+  public form!: FormGroup;
 
   constructor(
     private readonly taskService: TaskService,
@@ -69,13 +67,10 @@ export class EditFormComponent implements OnInit {
   }
 
   private fillForm(): void {
-    this.form = new FormGroup<ControlsOf<ITask>>({
+    this.form = new FormGroup({
       name: new FormControl(this.task.name, [Validators.required]),
       description: new FormControl(this.task.description, [Validators.required]),
-      labelIds: new FormArray<string>(
-        this.task.labelIds?.map((id: string) => new FormControl<string>(id)) ??
-          []
-      ),
+      labelIds: new FormControl(this.task?.labelIds),
     });
   }
 

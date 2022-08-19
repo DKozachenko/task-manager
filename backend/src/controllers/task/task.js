@@ -52,8 +52,7 @@ const getById = async (req, res) => {
  */
 const add = async (req, res) => {
   /** Если метки, приходящие от клиента, существуют, создаем задачу, если нет - посылаем сообщение клиенту */
-  const existedLabelIds = [];
-
+  const existedLabelIds = [];  
   for (const comeLabelId of req.body.labelIds) {
     const existedLabel = await Labels.findById(comeLabelId);
 
@@ -103,7 +102,7 @@ const add = async (req, res) => {
  */
 const updateById = async (req, res) => {
   /** Если метки, приходящие от клиента, существуют, создаем задачу, если нет - посылаем сообщение клиенту */
-  const existedLabelIds = [];
+  const existedComeLabelIds = [];
 
   for (const comeLabelId of req.body.labelIds) {
     const existedLabel = await Labels.findById(comeLabelId);
@@ -117,7 +116,7 @@ const updateById = async (req, res) => {
         return;
       }
 
-      existedLabelIds.push(comeLabelId);
+      existedComeLabelIds.push(comeLabelId);
     } else {
       res.status(404).json(generateResponseWithError(
         `Label with id ${comeLabelId} was not found`
@@ -128,6 +127,7 @@ const updateById = async (req, res) => {
 
   const taskId = req.params.id;
   const existedTask = await Tasks.findById(taskId);
+  const existedLabelIds = existedTask.labelIds;
 
   /** Если задача существует - меняем значения, если нет - посылаем клиенту сообщение */
   if (existedTask) {
@@ -141,18 +141,27 @@ const updateById = async (req, res) => {
 
     existedTask.name = req.body.name;
     existedTask.description = req.body.description;
-    existedTask.labelIds = existedLabelIds;
+    existedTask.labelIds = existedComeLabelIds;
 
     await existedTask.save();
     
     /** Связь меток с задачей */
-    for (const existedLabelId of existedLabelIds) {
-      const existedLabel = await Labels.findById(existedLabelId);
+    for (const existedComeLabelId of existedComeLabelIds) {
+      if (!existedLabelIds.includes(existedComeLabelId)) {
+        const existedLabel = await Labels.findById(existedComeLabelId);
 
-      if (!existedLabel.taskIds.includes(taskId)) {
         existedLabel.taskIds.push(taskId);
         await existedLabel.save();
-      }
+      }      
+    }
+
+    for (const existedLabelId of existedLabelIds) {
+      if (!existedComeLabelIds.includes(existedLabelId)) {
+        const existedLabel = await Labels.findById(existedLabelId);
+
+        existedLabel.taskIds = existedLabel.taskIds.filter(id => id.toString() !== taskId);
+        await existedLabel.save();
+      }      
     }
 
     logger.info(`Task with name ${existedTask.name} was updated`);

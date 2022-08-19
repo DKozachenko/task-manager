@@ -1,8 +1,7 @@
 import { ISendLabel } from './../../../shared/models/interfaces/send-label.interface';
-import { Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LabelService } from './../../store/label.service';
 import {  Component, Input, OnInit } from '@angular/core';
-import { FormGroup, FormControl, ControlsOf, FormArray } from '@ngneat/reactive-forms';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { ILabel, IResponse, ITask } from '../../../shared/models/interfaces';
 import { catchError, Observable, of } from 'rxjs';
@@ -27,13 +26,13 @@ export class EditFormComponent implements OnInit {
     color: {
       hexCode: this.hexCode,
     },
-    tasksIds: [],
+    taskIds: [],
     userId: '',
   };
 
   public allTasks: Observable<IResponse<ITask[]>> = this.taskService.getAll();
 
-  public form!: FormGroup<ControlsOf<ILabel>>;
+  public form!: FormGroup;
 
   constructor(
     private readonly modalRef: NzModalRef,
@@ -66,13 +65,9 @@ export class EditFormComponent implements OnInit {
   }
 
   private fillForm(): void {
-    this.form = new FormGroup<ControlsOf<ILabel>>({
+    this.form = new FormGroup({
       name: new FormControl(this.label.name, [Validators.required]),
-      tasksIds: new FormArray<string>(
-        this.label?.tasksIds?.map(
-          (id: string) => new FormControl<string>(id)
-        ) ?? []
-      ),
+      taskIds: new FormControl(this.label?.taskIds)
     });
 
     this.hexCode = this.label.color.hexCode;

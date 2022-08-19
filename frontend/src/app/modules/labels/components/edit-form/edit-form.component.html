@@ -18,10 +18,10 @@
   </nz-form-item>
 
   <nz-form-item>
-    <nz-form-label [nzSpan]="7" nzRequired>Задачи</nz-form-label>
+    <nz-form-label [nzSpan]="7" nzFor="taskIds">Задачи</nz-form-label>
     <nz-form-control [nzSpan]="12">
-      <nz-select nzMode="multiple" nzPlaceHolder="Задачи" formArrayName="tasksIds" nzAllowClear>
-        <nz-option *ngFor="let task of (allTasks | async)?.data;trackBy:trackByFunc"
+      <nz-select nzMode="multiple" nzPlaceHolder="Задачи" formControlName="taskIds" nzAllowClear>
+        <nz-option *ngFor="let task of (allTasks | async)?.data; trackBy:trackByFunc"
           [nzValue]="task._id" [nzLabel]="task.name"
         ></nz-option>
       </nz-select>

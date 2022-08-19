@@ -37,6 +37,7 @@ export class LabelComponent {
         },
       })
       .afterClose.subscribe((sendLabel: ISendLabel) => {
+
         if (sendLabel) {
           this.labelService.updateById(sendLabel)
             .pipe(
