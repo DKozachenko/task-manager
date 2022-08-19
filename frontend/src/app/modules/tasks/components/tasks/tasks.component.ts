@@ -1,64 +1,63 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { EntityAction, EntityActions } from '@datorama/akita';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { catchError, of } from 'rxjs';
 import { ITaskForDashboard } from '../../../shared/models/interfaces';
+import { TaskQuery, TaskService } from '../../store';
 
+@UntilDestroy()
 @Component({
   selector: 'tasks-tasks',
   templateUrl: './tasks.component.html',
   styleUrls: ['./tasks.component.sass'],
 })
 export class TasksComponent implements OnInit {
-  public arr: ITaskForDashboard[] = [
-    {
-      name: 'name 1',
-      description: 'desc 1',
-      labelsForTask: [
-        {
-          name: 'good',
-          colorHexCode: 'green',
-        },
-        {
-          name: 'good 2',
-          colorHexCode: 'red',
-        },
-      ],
-    },
-    {
-      name: 'name 2',
-      description: 'desc 2',
-      labelsForTask: [
-        {
-          name: 'dsfdfdffsdf',
-          colorHexCode: '#ccc',
-        },
-        {
-          name: 'fgfgf 2',
-          colorHexCode: 'blue',
-        },
-      ],
-    },
-    {
-      name: 'name 3',
-      description: 'desc 3',
-      labelsForTask: [
-        {
-          name: 'nop',
-          colorHexCode: '#fefe55',
-        },
-        {
-          name: 'dsfdsfdfsd 22',
-          colorHexCode: '#a4faaa',
-        },
-        {
-          name: 'dsfdsfdfsd 223434',
-          colorHexCode: '#a4fa23',
-        },
-      ],
-    },
-  ];
+  public tasksForDashboard: ITaskForDashboard[] = [];
 
-  constructor() {}
+  public isLoading: boolean = false;
 
-  ngOnInit(): void {}
+  constructor(
+    private readonly taskService: TaskService,
+    private readonly taskQuery: TaskQuery,
+    private readonly notificationService: NzNotificationService
+  ) {}
+
+  ngOnInit(): void {
+    this.reload();
+
+    this.taskQuery
+      .selectEntityAction([
+        EntityActions.Add,
+        EntityActions.Update,
+        EntityActions.Remove,
+      ])
+      .subscribe((action: EntityAction<string>) => {
+        this.reload();
+      });
+  }
+
+  private reload(): void {
+    this.isLoading = true;
+
+    this.taskService
+      .getAllForDashboard()
+      .pipe(
+        catchError((err: HttpErrorResponse) => {
+          this.notificationService.error(
+            'Ошибка',
+            'Ошибка при получении всех записей'
+          );
+          return of([]);
+        }),
+        untilDestroyed(this)
+      )
+      .subscribe((data: ITaskForDashboard[]) => {
+        this.tasksForDashboard = data;
+        this.isLoading = false;
+      });
+  }
 
   public trackByFunc(index: number, task: ITaskForDashboard): string {
     return task.name;

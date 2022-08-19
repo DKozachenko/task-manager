@@ -1,13 +1,14 @@
 import { ISendLabel } from './../../../shared/models/interfaces/send-label.interface';
-import { Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LabelService } from './../../store/label.service';
 import {  Component, Input, OnInit } from '@angular/core';
-import { FormGroup, FormControl, ControlsOf, FormArray } from '@ngneat/reactive-forms';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { ILabel, IResponse, ITask } from '../../../shared/models/interfaces';
-import { catchError, of } from 'rxjs';
+import { catchError, Observable, of } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { HttpErrorResponse } from '@angular/common/http';
+import { TaskService } from 'src/app/modules/tasks/store';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @UntilDestroy()
 @Component({
@@ -23,36 +24,40 @@ export class EditFormComponent implements OnInit {
   public label: ISendLabel = {
     name: '',
     color: {
-      hexCode: this.hexCode
+      hexCode: this.hexCode,
     },
-    tasksIds: [],
+    taskIds: [],
     userId: '',
   };
 
-  public allTasks: ITask[] = [{
-    name: '',
-    description: '',
-    dateCreation: new Date(),
-    labelsIds: [],
-    userId: '',
-  }];
+  public allTasks: Observable<IResponse<ITask[]>> = this.taskService.getAll();
 
-  public form!: FormGroup<ControlsOf<ILabel>>;
+  public form!: FormGroup;
 
-  constructor(private readonly modalRef: NzModalRef,
-    private readonly labelService: LabelService) {}
+  constructor(
+    private readonly modalRef: NzModalRef,
+    private readonly labelService: LabelService,
+    private readonly taskService: TaskService,
+    private readonly notificationService: NzNotificationService
+  ) {}
 
   ngOnInit(): void {
     if (this.id) {
-      this.labelService.getById(this.id)
+      this.labelService
+        .getById(this.id)
         .pipe(
-          catchError((err: HttpErrorResponse) => of(this.label)),
+          catchError((err: HttpErrorResponse) => {
+            this.notificationService.error(
+              'Ошибка',
+              'Ошибка при получении записи'
+            );
+            return of(this.label);
+          }),
           untilDestroyed(this)
         )
         .subscribe((label: ISendLabel) => {
           this.label = label;
           this.fillForm();
-
         });
     } else {
       this.fillForm();
@@ -60,11 +65,9 @@ export class EditFormComponent implements OnInit {
   }
 
   private fillForm(): void {
-    this.form = new FormGroup<ControlsOf<ILabel>>({
+    this.form = new FormGroup({
       name: new FormControl(this.label.name, [Validators.required]),
-      tasksIds: new FormArray<string>(
-        this.label?.tasksIds?.map((id: string) => new FormControl<string>(id)) ?? []
-      ),
+      taskIds: new FormControl(this.label?.taskIds)
     });
 
     this.hexCode = this.label.color.hexCode;
@@ -79,8 +82,8 @@ export class EditFormComponent implements OnInit {
       _id: this.id ?? undefined,
       ...this.form.value,
       color: {
-        hexCode: this.hexCode
-      }
+        hexCode: this.hexCode,
+      },
     });
   }
 

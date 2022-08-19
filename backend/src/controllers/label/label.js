@@ -52,6 +52,30 @@ const getById = async (req, res) => {
  * @param {ответ} res - ответ 
  */
 const add = async (req, res) => {
+  /** Если задачи, приходящие от клиента, существуют, создаем метку, если нет - посылаем сообщение клиенту */
+  const existedTaskIds = [];
+
+  for (const comeTaskId of req.body.taskIds) {
+    const existedTask = await Tasks.findById(comeTaskId);
+
+    if (existedTask) {
+      /** Проверка на принадлежность присланных меток текущему пользователю */
+      if (existedTask.userId.toString() !== req.user._id.toString()) {
+        res.status(403).json(generateResponseWithError(
+          `Task for task with id ${existedTask._id} does not belong to user ${req.user.nickname}`
+        ));
+        return;
+      }
+
+      existedTaskIds.push(comeTaskId);
+    } else {
+      res.status(404).json(generateResponseWithError(
+        `Task with id ${comeTaskId} was not found`
+      ));
+      return;
+    }
+  }
+
   /** Определение, существует ли цвет метки */
   let comeColor = req.body.color;
   const existedColor = await Colors.findOne({
@@ -79,6 +103,14 @@ const add = async (req, res) => {
 
   await newLabel.save();
 
+  /** Связь задач с меткой */
+  for (const existedTaskId of existedTaskIds) {
+    const existedTask = await Tasks.findById(existedTaskId);
+
+    existedTask.labelIds.push(newLabel._id);
+    await existedTask.save();
+  }
+
   /** Связь цвета с меткой */
   comeColor.labelIds.push(newLabel._id);
   await comeColor.save();
@@ -93,8 +125,33 @@ const add = async (req, res) => {
  * @param {ответ} res - ответ 
  */
 const updateById = async (req, res) => {
+  /** Если задачи, приходящие от клиента, существуют, создаем метку, если нет - посылаем сообщение клиенту */
+  const existedComeTaskIds = [];
+
+  for (const comeTaskId of req.body.taskIds) {
+    const existedTask = await Tasks.findById(comeTaskId);
+
+    if (existedTask) {
+      /** Проверка на принадлежность присланных меток текущему пользователю */
+      if (existedTask.userId.toString() !== req.user._id.toString()) {
+        res.status(403).json(generateResponseWithError(
+          `Task for task with id ${existedTask._id} does not belong to user ${req.user.nickname}`
+        ));
+        return;
+      }
+
+      existedComeTaskIds.push(comeTaskId);
+    } else {
+      res.status(404).json(generateResponseWithError(
+        `Task with id ${comeTaskId} was not found`
+      ));
+      return;
+    }
+  }
+
   const labelId = req.params.id;
   const existedLabel = await Labels.findById(labelId);
+  const existedTaskIds = existedLabel.taskIds;
 
   /** Если метка существует - меняем значения, если нет - посылаем клиенту сообщение */
   if (existedLabel) {
@@ -127,6 +184,25 @@ const updateById = async (req, res) => {
     existedLabel.colorId = comeColor._id;
     existedLabel.taskIds = req.body.taskIds;
     await existedLabel.save();
+
+    /** Связь задач с меткой */
+    for (const existedComeTaskId of existedComeTaskIds) {
+      if (!existedTaskIds.includes(existedComeTaskId)) {
+        const existedTask = await Tasks.findById(existedComeTaskId);
+
+        existedTask.labelIds.push(labelId);
+        await existedTask.save();
+      }      
+    }
+
+    for (const existedTaskId of existedTaskIds) {
+      if (!existedComeTaskIds.includes(existedTaskId)) {
+        const existedTask = await Tasks.findById(existedTaskId);
+
+        existedTask.labelIds = existedTask.labelIds.filter(id => id.toString() !== labelId);
+        await existedTask.save();
+      }      
+    }
 
     /** Связь цвета с меткой, если цвет еще не привязан */
     if (!comeColor.labelIds.includes(labelId)) {

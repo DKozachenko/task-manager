@@ -6,6 +6,6 @@ export interface ITask {
   name: string,
   description: string,
   dateCreation?: Date,
-  labelsIds?: string[],
+  labelIds?: string[],
   userId?: string
 }

@@ -5,5 +5,4 @@ export { ILabel } from './label.interface';
 export { ITask } from './task.interface';
 export { ILabelForDashboard } from './label-for-dashboard.interface';
 export { ISendLabel } from './send-label.interface';
-export { ILabelForTask } from './label-for-task.interface';
 export { ITaskForDashboard } from './task-for-dashboard.interface';

@@ -14,8 +14,8 @@ import { DeleteOutline, EditOutline } from '@ant-design/icons-angular/icons';
 import { EditFormComponent, TaskComponent, TasksComponent } from './components';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzSelectModule } from 'ng-zorro-antd/select';
-import { ColorPickerModule } from 'ngx-color-picker';
 import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 const icons: IconDefinition[] = [
   EditOutline,
@@ -43,7 +43,7 @@ const icons: IconDefinition[] = [
     NzInputModule,
     NzSelectModule,
     NzTagModule,
-    ColorPickerModule,
+    NzSpinModule,
   ],
 })
 export class TasksModule {}
