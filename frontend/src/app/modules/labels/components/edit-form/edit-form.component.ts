@@ -1,3 +1,4 @@
+import { ISendLabel } from './../../../shared/models/interfaces/send-label.interface';
 import { Validators } from '@angular/forms';
 import { LabelService } from './../../store/label.service';
 import {  Component, Input, OnInit } from '@angular/core';
@@ -17,14 +18,16 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class EditFormComponent implements OnInit {
   @Input() public id: string = '';
 
-  public label: ILabel = {
+  public hexCode: string = '#ffffff';
+
+  public label: ISendLabel = {
     name: '',
-    colorId: '',
+    color: {
+      hexCode: this.hexCode
+    },
     tasksIds: [],
     userId: '',
   };
-
-  public hexCode: string = '#ffffff';
 
   public allTasks: ITask[] = [{
     name: '',
@@ -35,35 +38,36 @@ export class EditFormComponent implements OnInit {
   }];
 
   public form!: FormGroup<ControlsOf<ILabel>>;
+
   constructor(private readonly modalRef: NzModalRef,
     private readonly labelService: LabelService) {}
 
   ngOnInit(): void {
-    console.log(this.id)
-    this.labelService.getById(this.id)
-      .pipe(
-        catchError((err: HttpErrorResponse) => of({
-          data: this.label,
-          error: false,
-          message: ''
-        })),
-        untilDestroyed(this)
-      )
-      .subscribe((response: IResponse<ILabel>) => {
-        this.label = response.data;
+    if (this.id) {
+      this.labelService.getById(this.id)
+        .pipe(
+          catchError((err: HttpErrorResponse) => of(this.label)),
+          untilDestroyed(this)
+        )
+        .subscribe((label: ISendLabel) => {
+          this.label = label;
+          this.fillForm();
 
-        this.form = new FormGroup<ControlsOf<ILabel>>({
-          name: new FormControl(this.label.name, [Validators.required]),
-          tasksIds: new FormArray<string>(
-            this.label?.tasksIds?.map((id: string) => new FormControl<string>(id)) ?? []
-          ),
         });
+    } else {
+      this.fillForm();
+    }
+  }
 
-      });
+  private fillForm(): void {
+    this.form = new FormGroup<ControlsOf<ILabel>>({
+      name: new FormControl(this.label.name, [Validators.required]),
+      tasksIds: new FormArray<string>(
+        this.label?.tasksIds?.map((id: string) => new FormControl<string>(id)) ?? []
+      ),
+    });
 
-
-
-
+    this.hexCode = this.label.color.hexCode;
   }
 
   public close(): void {
@@ -72,6 +76,7 @@ export class EditFormComponent implements OnInit {
 
   public save(): void {
     this.modalRef.close({
+      _id: this.id ?? undefined,
       ...this.form.value,
       color: {
         hexCode: this.hexCode

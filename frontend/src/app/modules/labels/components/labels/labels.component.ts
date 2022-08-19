@@ -1,6 +1,7 @@
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { LabelQuery } from './../../store/label.query';
-import { catchError, of } from 'rxjs';
-import { Component, OnInit } from '@angular/core';
+import { catchError, finalize, of } from 'rxjs';
+import { AfterViewChecked, AfterViewInit, Component, OnInit } from '@angular/core';
 import { LabelService } from '../../store';
 import { ILabelForDashboard } from './../../../shared/models/interfaces';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -16,8 +17,11 @@ import { EntityAction, EntityActions } from '@datorama/akita';
 export class LabelsComponent implements OnInit {
   public labelsForDashboard: ILabelForDashboard[] = [];
 
+  public isLoading: boolean = false;
+
   constructor(private readonly labelService: LabelService,
-              private readonly labelQuery: LabelQuery) {}
+              private readonly labelQuery: LabelQuery,
+              private readonly notificationService: NzNotificationService) {}
 
   public ngOnInit(): void {
     this.reload();
@@ -32,14 +36,19 @@ export class LabelsComponent implements OnInit {
   }
 
   private reload(): void {
+    this.isLoading = true;
+
     this.labelService.getAllForDashboard()
       .pipe(
-        catchError((err: HttpErrorResponse) => of([])),
+        catchError((err: HttpErrorResponse) => {
+          this.notificationService.error('Ошибка', 'Ошибка при получении всех записей');
+          return of([]);
+        }),
         untilDestroyed(this)
       )
       .subscribe((data: ILabelForDashboard[]) => {
-        console.log(data);
         this.labelsForDashboard = data;
+        this.isLoading = false;
       });
   }
 

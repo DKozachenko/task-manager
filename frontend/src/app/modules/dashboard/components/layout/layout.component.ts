@@ -10,6 +10,7 @@ import { ILabel, IResponse, ISendLabel } from 'src/app/modules/shared/models/int
 import { catchError, of } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { HttpErrorResponse } from '@angular/common/http';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @UntilDestroy()
 @Component({
@@ -23,6 +24,7 @@ export class LayoutComponent implements OnInit {
   constructor(
     private readonly activatedRoute: ActivatedRoute,
     private readonly modalService: NzModalService,
+    private readonly notificationService: NzNotificationService,
     private readonly authorizationService: AuthorizationService,
     private readonly labelService: LabelService,
     private readonly viewContainerRef: ViewContainerRef,
@@ -43,22 +45,31 @@ export class LayoutComponent implements OnInit {
           nzViewContainerRef: this.viewContainerRef,
         })
         .afterClose.subscribe((sendLabel: ISendLabel) => {
-          console.log(sendLabel)
-          this.labelService.add(sendLabel)
-            .pipe(
-              catchError((err: HttpErrorResponse) => of({
-                data: {
-                  name: '',
-                  colorId: '',
-                  tasksIds: [],
-                  userId: ''
-                },
-                error: false,
-                message: ''
-              })),
-              untilDestroyed(this)
-            )
-            .subscribe((response: IResponse<ILabel>) => {});
+          if (sendLabel) {
+            this.labelService.add(sendLabel)
+              .pipe(
+                catchError((err: HttpErrorResponse) => {
+                  this.notificationService.error('Ошибка', 'Ошибка при добавлении записи');
+                  return of({
+                    data: {
+                      name: '',
+                      colorId: '',
+                      tasksIds: [],
+                      userId: ''
+                    },
+                    error: true,
+                    message: ''
+                  });
+                }),
+                untilDestroyed(this)
+              )
+              .subscribe((response: IResponse<ILabel>) => {
+                if (!response.error) {
+                  this.notificationService.success('Успешно', 'Запись была успешно добавлена');
+                }
+              });
+          }
+
         });
     } else {
       this.modalService

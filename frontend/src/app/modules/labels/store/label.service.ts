@@ -17,6 +17,10 @@ export class LabelService {
     private labelStore: LabelStore
   ) {}
 
+  public setLoadingState(state: boolean): void {
+    this.labelStore.setLoading(state);
+  }
+
   public getAll(): Observable<IResponse<ILabel[]>> {
     return this.restService.getAll<ILabel[]>('labels').pipe(
       map((response: IResponse<ILabel[]>) => {
@@ -26,8 +30,32 @@ export class LabelService {
     );
   }
 
-  public getById(id: string): Observable<IResponse<ILabel>> {
-    return this.restService.getById<ILabel>('labels', id);
+  public getById(id: string): Observable<ISendLabel> {
+    return this.restService.getById<ILabel>('labels', id)
+      .pipe(
+        switchMap((response: IResponse<ILabel>) => {
+          return forkJoin([
+            of(response),
+            this.restService.getById<IColor>('colors', response.data.colorId ?? ''),
+          ]);
+        }),
+        map(
+          ([
+            labelResponse, colorResponse]: [
+            IResponse<ILabel>,
+            IResponse<IColor>
+          ]) => {
+            const color: IColor = colorResponse.data;
+
+            return {
+              ...labelResponse.data,
+              color: {
+                hexCode: color.hexCode
+              }
+            };
+          }
+        )
+      );
   }
 
   public add(newLabel: ISendLabel): Observable<IResponse<ILabel>> {
@@ -39,9 +67,9 @@ export class LabelService {
     );
   }
 
-  public updateById(updatedLabel: ILabel): Observable<IResponse<ILabel>> {
+  public updateById(updatedLabel: ISendLabel): Observable<IResponse<ILabel>> {
     return this.restService
-      .updateById<ILabel>('labels', updatedLabel._id ?? '', updatedLabel)
+      .updateById<ISendLabel, ILabel>('labels', updatedLabel._id ?? '', updatedLabel)
       .pipe(
         map((response: IResponse<ILabel>) => {
           this.labelStore.update(response.data._id ?? '', response.data);
@@ -60,32 +88,33 @@ export class LabelService {
   }
 
   public getAllForDashboard(): Observable<ILabelForDashboard[]> {
-    return this.getAll().pipe(
-      switchMap((response: IResponse<ILabel[]>) => {
-        return forkJoin([
-          of(response),
-          this.restService.getAll<IColor[]>('colors'),
-        ]);
-      }),
-      map(
-        ([
-          labelResponse, colorResponse]: [
-          IResponse<ILabel[]>,
-          IResponse<IColor[]>
-        ]) => {
-          const allColors: IColor[] = colorResponse.data;
+    return this.getAll()
+      .pipe(
+        switchMap((response: IResponse<ILabel[]>) => {
+          return forkJoin([
+            of(response),
+            this.restService.getAll<IColor[]>('colors'),
+          ]);
+        }),
+        map(
+          ([
+            labelResponse, colorResponse]: [
+            IResponse<ILabel[]>,
+            IResponse<IColor[]>
+          ]) => {
+            const allColors: IColor[] = colorResponse.data;
 
-          return labelResponse.data.map((label: ILabel) => {
-            return {
-              _id: label._id,
-              name: label.name,
-              colorHexCode:
-                allColors.find((color: IColor) => color._id === label.colorId)
-                  ?.hexCode ?? 'Нет цвета',
-            };
-          });
-        }
-      )
-    );
+            return labelResponse.data.map((label: ILabel) => {
+              return {
+                _id: label._id,
+                name: label.name,
+                colorHexCode:
+                  allColors.find((color: IColor) => color._id === label.colorId)
+                    ?.hexCode ?? 'Нет цвета',
+              };
+            });
+          }
+        )
+      );
   }
 }
