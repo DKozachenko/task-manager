@@ -11,6 +11,7 @@ export class TokenInterceptor implements HttpInterceptor{
   }
 
   public intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    /** Если есть токен, то устанавливаем его в заголовках */
     if (this.authorizationQuery.hasToken) {
       req = req.clone({
         setHeaders: {

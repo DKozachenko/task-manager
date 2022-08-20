@@ -1,5 +1,5 @@
 /**
- * Модель задачи
+ * Модель задачи в БД
  */
 export interface ITaskDto {
   _id?: string,

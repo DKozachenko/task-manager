@@ -16,6 +16,7 @@ export class AuthorizationQuery extends Query<AuthorizationState> {
     return !!this.getValue().token;
   }
 
+  /** Получение токена */
   public get getToken(): string {
     return this.getValue().token ?? '';
   }

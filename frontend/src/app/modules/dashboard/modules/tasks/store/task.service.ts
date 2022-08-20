@@ -17,6 +17,10 @@ export class TaskService {
     private taskStore: TaskStore
   ) {}
 
+  /**
+   * Получение всех задач из БД
+   * @returns ответ с массивом задач
+   */
   public getAll(): Observable<IResponse<ITaskDto[]>> {
     return this.restService.getAll<ITaskDto[]>('tasks').pipe(
       map((response: IResponse<ITaskDto[]>) => {
@@ -26,10 +30,20 @@ export class TaskService {
     );
   }
 
+  /**
+   * Получение задачи по id
+   * @param id - id записи
+   * @returns задачу из БД
+   */
   public getById(id: string): Observable<IResponse<ITaskDto>> {
     return this.restService.getById<ITaskDto>('tasks', id);
   }
 
+  /**
+   * Добавление задачи
+   * @param newTask - новая задача
+   * @returns созданную задачу из БД
+   */
   public add(newTask: ITaskDto): Observable<IResponse<ITaskDto>> {
     return this.restService.add<ITaskDto>('tasks', newTask).pipe(
       map((response: IResponse<ITaskDto>) => {
@@ -39,6 +53,11 @@ export class TaskService {
     );
   }
 
+  /**
+   * Обновление задачи по id
+   * @param updatedTask - новая задача
+   * @returns обновленную задачу из БД
+   */
   public updateById(updatedTask: ITaskDto): Observable<IResponse<ITaskDto>> {
     return this.restService
       .updateById<ITaskDto>('tasks', updatedTask._id ?? '', updatedTask)
@@ -50,6 +69,11 @@ export class TaskService {
       );
   }
 
+  /**
+   * Удаление задачи по id
+   * @param id - id записи
+   * @returns ответ без данных
+   */
   public deleteById(id: string): Observable<IResponse> {
     return this.restService.deleteById('tasks', id).pipe(
       map((response: IResponse) => {
@@ -59,37 +83,40 @@ export class TaskService {
     );
   }
 
+  /**
+   * Получение задач для дашборда
+   * @returns массив с задачами для дашборда
+   */
   public getAllForDashboard(): Observable<ITaskForDashboard[]> {
-    return this.getAll()
-      .pipe(
-        switchMap((response: IResponse<ITaskDto[]>) => {
-          return forkJoin([
-            of(response),
-            this.labelService.getAllForDashboard(),
-          ]);
-        }),
-        map(
-          ([
-            tasksResponse,
-            labelsForDashboard
-          ]: [
-            IResponse<ITaskDto[]>,
-            ILabelForDashboard[],
-          ]) => {
-            return tasksResponse.data.map((task: ITaskDto) => {
-              return {
-                _id: task._id,
-                name: task.name,
-                description: task.description,
-                labelsForTask: labelsForDashboard.filter(
-                  (labelForDashboard: ILabelForDashboard) => {
-                    return task.labelIds?.includes(labelForDashboard._id ?? '');
-                  }
-                ),
-              };
-            });
-          }
-        )
-      );
+    return this.getAll().pipe(
+      switchMap((response: IResponse<ITaskDto[]>) => {
+        return forkJoin([
+          of(response),
+          this.labelService.getAllForDashboard()
+        ]);
+      }),
+      map(
+        ([
+          tasksResponse,
+          labelsForDashboard
+        ]: [
+          IResponse<ITaskDto[]>,
+          ILabelForDashboard[]
+        ]) => {
+          return tasksResponse.data.map((task: ITaskDto) => {
+            return {
+              _id: task._id,
+              name: task.name,
+              description: task.description,
+              labelsForTask: labelsForDashboard.filter(
+                (labelForDashboard: ILabelForDashboard) => {
+                  return task.labelIds?.includes(labelForDashboard._id ?? '');
+                }
+              ),
+            };
+          });
+        }
+      )
+    );
   }
 }

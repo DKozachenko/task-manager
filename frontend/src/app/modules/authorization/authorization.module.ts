@@ -4,8 +4,7 @@ import { AuthorizationRoutingModule } from './authorization-routing.module';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { IconDefinition } from '@ant-design/icons-angular';
 import { EyeInvisibleOutline, EyeFill, InfoCircleFill } from '@ant-design/icons-angular/icons';
-import { LoginFormComponent } from './components/login-form/login-form.component';
-import { RegisterFormComponent } from './components/register-form/register-form.component';
+import { LoginFormComponent, RegisterFormComponent } from './components';
 import { SharedModule } from '../shared/shared.module';
 
 const icons: IconDefinition[] = [

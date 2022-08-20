@@ -1,5 +1,5 @@
 /**
- * Модель метки
+ * Модель метки в БД
  */
 export interface ILabelDto {
   _id?: string,

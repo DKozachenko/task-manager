@@ -21,6 +21,7 @@ import { ISendLabel } from '../../modules/labels/models/interfaces';
   styleUrls: ['./layout.component.sass'],
 })
 export class LayoutComponent implements OnInit {
+  /** Отркрытая вкладка */
   public state: DashboardState = 'tasks';
 
   constructor(
@@ -34,13 +35,15 @@ export class LayoutComponent implements OnInit {
     private readonly router: Router
   ) {}
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.activatedRoute.url.subscribe((segments: UrlSegment[]) => {
       this.state = <DashboardState>segments[0].path;
     });
   }
 
+  /** Добавление элемента через кнопку в шапке */
   public add(): void {
+    /** Окно редактирования меток */
     if (this.state === 'labels') {
       this.modalService
         .create({
@@ -53,12 +56,8 @@ export class LayoutComponent implements OnInit {
             this.labelService
               .add(sendLabel)
               .pipe(
-                catchError((err: HttpErrorResponse) => {
-                  this.notificationService.error(
-                    'Ошибка',
-                    'Ошибка при добавлении записи'
-                  );
-                  return of({
+                catchError((err: HttpErrorResponse) =>
+                  of({
                     data: {
                       name: '',
                       colorId: '',
@@ -67,12 +66,17 @@ export class LayoutComponent implements OnInit {
                     },
                     error: true,
                     message: '',
-                  });
-                }),
+                  })
+                ),
                 untilDestroyed(this)
               )
               .subscribe((response: IResponse<ILabelDto>) => {
-                if (!response.error) {
+                if (response.error) {
+                  this.notificationService.error(
+                    'Ошибка',
+                    'Ошибка при добавлении записи'
+                  );
+                } else {
                   this.notificationService.success(
                     'Успешно',
                     'Запись была успешно добавлена'
@@ -82,6 +86,7 @@ export class LayoutComponent implements OnInit {
           }
         });
     } else {
+      /** Окно редактирования задач */
       this.modalService
         .create({
           nzContent: EditTaskForm,
@@ -92,12 +97,8 @@ export class LayoutComponent implements OnInit {
             this.taskService
               .add(task)
               .pipe(
-                catchError((err: HttpErrorResponse) => {
-                  this.notificationService.error(
-                    'Ошибка',
-                    'Ошибка при добавлении записи'
-                  );
-                  return of({
+                catchError((err: HttpErrorResponse) =>
+                  of({
                     data: {
                       name: '',
                       colorId: '',
@@ -107,12 +108,17 @@ export class LayoutComponent implements OnInit {
                     },
                     error: true,
                     message: '',
-                  });
-                }),
+                  })
+                ),
                 untilDestroyed(this)
               )
               .subscribe((response: IResponse<ITaskDto>) => {
-                if (!response.error) {
+                if (response.error) {
+                  this.notificationService.error(
+                    'Ошибка',
+                    'Ошибка при добавлении записи'
+                  );
+                } else {
                   this.notificationService.success(
                     'Успешно',
                     'Запись была успешно добавлена'
@@ -121,10 +127,10 @@ export class LayoutComponent implements OnInit {
               });
           }
         });
-
     }
   }
 
+  /** Выход */
   public logout(): void {
     this.authorizationService.logout();
     this.router.navigate(['/']);

@@ -10,8 +10,7 @@ import { AuthorizationService } from '../../store';
 
 @Component({
   selector: 'authorization-register-form',
-  templateUrl: './register-form.component.html',
-  styleUrls: ['./register-form.component.sass'],
+  templateUrl: './register-form.component.html'
 })
 export class RegisterFormComponent {
   /** Форма регистрации */

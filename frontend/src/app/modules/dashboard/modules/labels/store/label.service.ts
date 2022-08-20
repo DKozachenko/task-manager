@@ -15,10 +15,10 @@ export class LabelService {
     private labelStore: LabelStore
   ) {}
 
-  public setLoadingState(state: boolean): void {
-    this.labelStore.setLoading(state);
-  }
-
+  /**
+   * Получение всех меток из БД
+   * @returns ответ с массивом меток
+   */
   public getAll(): Observable<IResponse<ILabelDto[]>> {
     return this.restService.getAll<ILabelDto[]>('labels').pipe(
       map((response: IResponse<ILabelDto[]>) => {
@@ -28,6 +28,11 @@ export class LabelService {
     );
   }
 
+  /**
+   * Получение метки по id
+   * @param id - id записи
+   * @returns метку, которую можно редактировать в форме
+   */
   public getById(id: string): Observable<ISendLabel> {
     return this.restService.getById<ILabelDto>('labels', id)
       .pipe(
@@ -56,6 +61,11 @@ export class LabelService {
       );
   }
 
+  /**
+   * Добавление метки
+   * @param newLabel - метка из формы редактирования
+   * @returns созданную метку из БД
+   */
   public add(newLabel: ISendLabel): Observable<IResponse<ILabelDto>> {
     return this.restService.add<ISendLabel, ILabelDto>('labels', newLabel).pipe(
       map((response: IResponse<ILabelDto>) => {
@@ -65,6 +75,11 @@ export class LabelService {
     );
   }
 
+  /**
+   * Обновление метки по id
+   * @param updatedLabel - метка из формы редактирования
+   * @returns обновленную метку из БД
+   */
   public updateById(updatedLabel: ISendLabel): Observable<IResponse<ILabelDto>> {
     return this.restService
       .updateById<ISendLabel, ILabelDto>('labels', updatedLabel._id ?? '', updatedLabel)
@@ -76,6 +91,11 @@ export class LabelService {
       );
   }
 
+  /**
+   * Удаление метки по id
+   * @param id - id записи
+   * @returns ответ без данных
+   */
   public deleteById(id: string): Observable<IResponse> {
     return this.restService.deleteById('labels', id).pipe(
       map((response: IResponse) => {
@@ -85,6 +105,10 @@ export class LabelService {
     );
   }
 
+  /**
+   * Получение меток для дашборда
+   * @returns массив с метками для дашборда
+   */
   public getAllForDashboard(): Observable<ILabelForDashboard[]> {
     return this.getAll()
       .pipe(

@@ -12,8 +12,7 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'authorization-login-form',
-  templateUrl: './login-form.component.html',
-  styleUrls: ['./login-form.component.sass'],
+  templateUrl: './login-form.component.html'
 })
 export class LoginFormComponent {
   /** Форма входа */

@@ -11,8 +11,7 @@ import { ILabelForDashboard } from '../../models/interfaces';
 @UntilDestroy()
 @Component({
   selector: 'labels-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.sass'],
+  templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent implements OnInit {
   public labelsForDashboard: ILabelForDashboard[] = [];
