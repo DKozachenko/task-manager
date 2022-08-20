@@ -1,8 +1,7 @@
-import { AuthorizationQuery } from './../../store/authorization.query';
 import { IToken } from './../../../shared/models/interfaces/token.interface';
 import { IResponse } from './../../../shared/models/interfaces/response.interface';
 import { ILoginInfo } from './../../models/interfaces/login-info.interface';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { ControlsOf, FormControl, FormGroup } from '@ngneat/reactive-forms';
 import { AuthorizationService } from './../../store/authorization.service';
@@ -47,6 +46,7 @@ export class LoginFormComponent {
    * Вход
    */
   public login() {
+    this.form.disable();
     const loginInfo: ILoginInfo = this.form.value;
 
     this.authorizationService.login(loginInfo)
@@ -60,6 +60,7 @@ export class LoginFormComponent {
         })
       )
       .subscribe((response: IResponse<IToken | undefined>) => {
+        this.form.enable();
         if (response.error) {
           this.notificationService.error('Ошибка', response.message ?? '');
         } else {

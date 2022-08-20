@@ -113,7 +113,7 @@
           nzShape="round"
           type="submit"
           [nzSize]="'large'"
-          [disabled]="form.invalid"
+          [disabled]="form.invalid || form.disabled"
         >
           Зарегистрироваться
       </button>

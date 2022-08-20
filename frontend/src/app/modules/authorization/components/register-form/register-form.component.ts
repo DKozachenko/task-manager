@@ -48,6 +48,7 @@ export class RegisterFormComponent {
    * Регистрация
    */
   public register() {
+    this.form.disable();
     const newUser: IUser = {
       ...this.form.value,
       dateRegistration: undefined,
@@ -66,6 +67,7 @@ export class RegisterFormComponent {
         })
       )
       .subscribe((response: IResponse<IUser | undefined>) => {
+        this.form.enable();
         if (response.error) {
           this.notificationService.error('Ошибка', response.message ?? '');
         } else {
