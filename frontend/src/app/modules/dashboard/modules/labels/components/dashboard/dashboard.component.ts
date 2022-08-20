@@ -7,38 +7,23 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { HttpErrorResponse } from '@angular/common/http';
 import { EntityAction, EntityActions } from '@datorama/akita';
 import { ILabelForDashboard } from '../../models/interfaces';
+import { BaseDashboardComponent } from 'src/app/modules/shared/classes';
 
-@UntilDestroy()
 @Component({
   selector: 'labels-dashboard',
-  templateUrl: './dashboard.component.html'
+  templateUrl: './dashboard.component.html',
 })
-export class DashboardComponent implements OnInit {
-  public labelsForDashboard: ILabelForDashboard[] = [];
-
-  public isLoading: boolean = false;
-
+export class DashboardComponent extends BaseDashboardComponent<ILabelForDashboard, LabelQuery> {
   constructor(
     private readonly labelService: LabelService,
     private readonly labelQuery: LabelQuery,
     private readonly notificationService: NzNotificationService
-  ) {}
-
-  public ngOnInit(): void {
-    this.reload();
-
-    this.labelQuery
-      .selectEntityAction([
-        EntityActions.Add,
-        EntityActions.Update,
-        EntityActions.Remove,
-      ])
-      .subscribe((action: EntityAction<string>) => {
-        this.reload();
-      });
+  ) {
+    super(labelQuery);
   }
 
-  private reload(): void {
+  /** Функция получения данных */
+  public reload(): void {
     this.isLoading = true;
 
     this.labelService
@@ -54,12 +39,8 @@ export class DashboardComponent implements OnInit {
         untilDestroyed(this)
       )
       .subscribe((data: ILabelForDashboard[]) => {
-        this.labelsForDashboard = data;
+        this.dataForDashboard = data;
         this.isLoading = false;
       });
-  }
-
-  public trackByFunc(index: number, label: ILabelForDashboard): string {
-    return label.name;
   }
 }

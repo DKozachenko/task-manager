@@ -4,6 +4,7 @@ import { EntityAction, EntityActions } from '@datorama/akita';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { catchError, of } from 'rxjs';
+import { BaseDashboardComponent } from 'src/app/modules/shared/classes';
 import { ITaskForDashboard } from '../../models/interfaces';
 import { TaskQuery, TaskService } from '../../store';
 
@@ -13,32 +14,17 @@ import { TaskQuery, TaskService } from '../../store';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.sass'],
 })
-export class DashboardComponent implements OnInit {
-  public tasksForDashboard: ITaskForDashboard[] = [];
-
-  public isLoading: boolean = false;
-
+export class DashboardComponent extends BaseDashboardComponent<ITaskForDashboard, TaskQuery> {
   constructor(
     private readonly taskService: TaskService,
     private readonly taskQuery: TaskQuery,
     private readonly notificationService: NzNotificationService
-  ) {}
-
-  ngOnInit(): void {
-    this.reload();
-
-    this.taskQuery
-      .selectEntityAction([
-        EntityActions.Add,
-        EntityActions.Update,
-        EntityActions.Remove,
-      ])
-      .subscribe((action: EntityAction<string>) => {
-        this.reload();
-      });
+  ) {
+    super(taskQuery);
   }
 
-  private reload(): void {
+  /** Получение данных */
+  public reload(): void {
     this.isLoading = true;
 
     this.taskService
@@ -54,12 +40,8 @@ export class DashboardComponent implements OnInit {
         untilDestroyed(this)
       )
       .subscribe((data: ITaskForDashboard[]) => {
-        this.tasksForDashboard = data;
+        this.dataForDashboard = data;
         this.isLoading = false;
       });
-  }
-
-  public trackByFunc(index: number, task: ITaskForDashboard): string {
-    return task.name;
   }
 }
