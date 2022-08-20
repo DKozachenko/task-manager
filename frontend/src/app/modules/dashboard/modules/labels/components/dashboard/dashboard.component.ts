@@ -13,34 +13,13 @@ import { BaseDashboardComponent } from 'src/app/modules/shared/classes';
   selector: 'labels-dashboard',
   templateUrl: './dashboard.component.html',
 })
-export class DashboardComponent extends BaseDashboardComponent<ILabelForDashboard, LabelQuery> {
+export class DashboardComponent extends BaseDashboardComponent
+  <ILabelForDashboard, LabelService, LabelQuery> {
   constructor(
     private readonly labelService: LabelService,
     private readonly labelQuery: LabelQuery,
-    private readonly notificationService: NzNotificationService
+    public override readonly notificationService: NzNotificationService
   ) {
-    super(labelQuery);
-  }
-
-  /** Функция получения данных */
-  public reload(): void {
-    this.isLoading = true;
-
-    this.labelService
-      .getAllForDashboard()
-      .pipe(
-        catchError((err: HttpErrorResponse) => {
-          this.notificationService.error(
-            'Ошибка',
-            'Ошибка при получении всех записей'
-          );
-          return of([]);
-        }),
-        untilDestroyed(this)
-      )
-      .subscribe((data: ILabelForDashboard[]) => {
-        this.dataForDashboard = data;
-        this.isLoading = false;
-      });
+    super(labelService, labelQuery, notificationService);
   }
 }

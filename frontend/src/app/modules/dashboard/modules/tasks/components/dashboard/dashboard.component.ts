@@ -14,34 +14,13 @@ import { TaskQuery, TaskService } from '../../store';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.sass'],
 })
-export class DashboardComponent extends BaseDashboardComponent<ITaskForDashboard, TaskQuery> {
+export class DashboardComponent extends BaseDashboardComponent
+  <ITaskForDashboard, TaskService, TaskQuery> {
   constructor(
     private readonly taskService: TaskService,
     private readonly taskQuery: TaskQuery,
-    private readonly notificationService: NzNotificationService
+    public override readonly notificationService: NzNotificationService
   ) {
-    super(taskQuery);
-  }
-
-  /** Получение данных */
-  public reload(): void {
-    this.isLoading = true;
-
-    this.taskService
-      .getAllForDashboard()
-      .pipe(
-        catchError((err: HttpErrorResponse) => {
-          this.notificationService.error(
-            'Ошибка',
-            'Ошибка при получении всех записей'
-          );
-          return of([]);
-        }),
-        untilDestroyed(this)
-      )
-      .subscribe((data: ITaskForDashboard[]) => {
-        this.dataForDashboard = data;
-        this.isLoading = false;
-      });
+    super(taskService, taskQuery, notificationService);
   }
 }
