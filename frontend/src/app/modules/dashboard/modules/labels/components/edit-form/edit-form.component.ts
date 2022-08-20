@@ -6,8 +6,9 @@ import { catchError, Observable, of } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { IResponse, ISendLabel, ITask } from 'src/app/modules/shared/models/interfaces';
+import { IResponse, ITaskDto } from 'src/app/modules/shared/models/interfaces';
 import { TaskService } from '../../../tasks/store';
+import { ILabelForDashboard, ISendLabel } from '../../models/interfaces';
 
 @UntilDestroy()
 @Component({
@@ -29,7 +30,7 @@ export class EditFormComponent implements OnInit {
     userId: '',
   };
 
-  public allTasks: Observable<IResponse<ITask[]>> = this.taskService.getAll();
+  public allTasks: Observable<IResponse<ITaskDto[]>> = this.taskService.getAll();
 
   public form!: FormGroup;
 
@@ -86,7 +87,7 @@ export class EditFormComponent implements OnInit {
     });
   }
 
-  public trackByFunc(index: number, task: ITask) {
-    return task.name;
+  public trackByFunc(index: number, label: ILabelForDashboard) {
+    return label.name;
   }
 }

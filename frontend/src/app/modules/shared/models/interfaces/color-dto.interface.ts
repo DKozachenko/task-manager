@@ -1,7 +1,7 @@
 /**
  * Модель цвета
  */
-export interface IColor {
+export interface IColorDto {
   _id?: string,
   hexCode: string,
   labelsIds?: string[]

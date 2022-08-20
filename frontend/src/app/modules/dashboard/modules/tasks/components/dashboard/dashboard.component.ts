@@ -4,16 +4,16 @@ import { EntityAction, EntityActions } from '@datorama/akita';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { catchError, of } from 'rxjs';
-import { ITaskForDashboard } from 'src/app/modules/shared/models/interfaces';
+import { ITaskForDashboard } from '../../models/interfaces';
 import { TaskQuery, TaskService } from '../../store';
 
 @UntilDestroy()
 @Component({
-  selector: 'tasks-tasks',
-  templateUrl: './tasks.component.html',
-  styleUrls: ['./tasks.component.sass'],
+  selector: 'tasks-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.sass'],
 })
-export class TasksComponent implements OnInit {
+export class DashboardComponent implements OnInit {
   public tasksForDashboard: ITaskForDashboard[] = [];
 
   public isLoading: boolean = false;

@@ -15,7 +15,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { ColorPickerModule } from 'ngx-color-picker';
-import { EditFormComponent, LabelComponent, LabelsComponent } from './components';
+import { EditFormComponent, LabelComponent, DashboardComponent } from './components';
 
 const icons: IconDefinition[] = [
   EditOutline,
@@ -24,7 +24,7 @@ const icons: IconDefinition[] = [
 
 @NgModule({
   declarations: [
-    LabelsComponent,
+    DashboardComponent,
     LabelComponent,
     EditFormComponent
   ],

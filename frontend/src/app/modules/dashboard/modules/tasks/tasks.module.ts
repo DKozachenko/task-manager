@@ -11,7 +11,7 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { IconDefinition } from '@ant-design/icons-angular';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { DeleteOutline, EditOutline } from '@ant-design/icons-angular/icons';
-import { EditFormComponent, TaskComponent, TasksComponent } from './components';
+import { EditFormComponent, TaskComponent, DashboardComponent } from './components';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTagModule } from 'ng-zorro-antd/tag';
@@ -24,7 +24,7 @@ const icons: IconDefinition[] = [
 
 @NgModule({
   declarations: [
-    TasksComponent,
+    DashboardComponent,
     TaskComponent,
     EditFormComponent
   ],

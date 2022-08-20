@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { AuthorizationStore } from '.';
 import { map, Observable } from 'rxjs';
 import { RestService } from '../../shared/services';
-import { IResponse, IToken } from '../../shared/models/interfaces';
-import { ILoginInfo, IUser } from '../models/interfaces';
+import { IResponse } from '../../shared/models/interfaces';
+import { ILoginInfo, IUser, IToken } from '../models/interfaces';
 
 @Injectable({
   providedIn: 'root',

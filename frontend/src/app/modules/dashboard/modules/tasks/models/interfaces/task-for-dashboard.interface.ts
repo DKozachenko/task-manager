@@ -1,4 +1,4 @@
-import { ILabelForDashboard } from '.';
+import { ILabelForDashboard } from 'src/app/modules/dashboard/modules/labels/models/interfaces';
 
 /**
  * Модель задачи для дашборда

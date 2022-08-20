@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
 import { TaskStore } from '.';
-import { TaskState } from '../models/states';
+import { TaskState } from '../states';
 
 @Injectable({
   providedIn: 'root',

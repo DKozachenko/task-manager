@@ -1,7 +1,7 @@
 /**
  * Модель задачи
  */
-export interface ITask {
+export interface ITaskDto {
   _id?: string,
   name: string,
   description: string,

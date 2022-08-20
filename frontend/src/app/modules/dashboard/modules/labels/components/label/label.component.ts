@@ -6,7 +6,8 @@ import { LabelService } from '../../store';
 import { catchError, of } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { ILabel, ILabelForDashboard, IResponse, ISendLabel } from 'src/app/modules/shared/models/interfaces';
+import { ILabelDto, IResponse } from 'src/app/modules/shared/models/interfaces';
+import { ILabelForDashboard, ISendLabel } from '../../models/interfaces';
 
 @UntilDestroy()
 @Component({
@@ -56,7 +57,7 @@ export class LabelComponent {
               }),
               untilDestroyed(this)
             )
-            .subscribe((response: IResponse<ILabel>) => {
+            .subscribe((response: IResponse<ILabelDto>) => {
               if (!response.error) {
                 this.notificationService.success('Успешно', 'Запись была успешно обновлена');
               }

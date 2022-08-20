@@ -6,7 +6,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { ILabel, IResponse, ITask } from 'src/app/modules/shared/models/interfaces';
+import { ILabelDto, IResponse, ITaskDto } from 'src/app/modules/shared/models/interfaces';
 import { LabelService } from '../../../labels/store';
 
 @UntilDestroy()
@@ -18,7 +18,7 @@ import { LabelService } from '../../../labels/store';
 export class EditFormComponent implements OnInit {
   @Input() public id: string = '';
 
-  public task: ITask = {
+  public task: ITaskDto = {
     name: '',
     description: '',
     dateCreation: new Date(),
@@ -26,7 +26,7 @@ export class EditFormComponent implements OnInit {
     userId: '',
   };
 
-  public allLabels: Observable<IResponse<ILabel[]>> = this.labelService.getAll();
+  public allLabels: Observable<IResponse<ILabelDto[]>> = this.labelService.getAll();
 
   public form!: FormGroup;
 
@@ -55,7 +55,7 @@ export class EditFormComponent implements OnInit {
           }),
           untilDestroyed(this)
         )
-        .subscribe((response: IResponse<ITask>) => {
+        .subscribe((response: IResponse<ITaskDto>) => {
           if (!response.error) {
             this.task = response.data;
             this.fillForm();
@@ -85,7 +85,7 @@ export class EditFormComponent implements OnInit {
     });
   }
 
-  public trackByFunc(index: number, label: ILabel) {
+  public trackByFunc(index: number, label: ILabelDto) {
     return label.name;
   }
 }

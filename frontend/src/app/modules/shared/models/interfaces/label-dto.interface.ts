@@ -1,7 +1,7 @@
 /**
  * Модель метки
  */
-export interface ILabel {
+export interface ILabelDto {
   _id?: string,
   name: string,
   colorId?: string,

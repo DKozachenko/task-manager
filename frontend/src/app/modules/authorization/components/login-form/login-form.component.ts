@@ -1,7 +1,7 @@
-import { IToken } from './../../../shared/models/interfaces/token.interface';
+import { IToken } from '../../models/interfaces';
 import { IResponse } from './../../../shared/models/interfaces/response.interface';
 import { ILoginInfo } from './../../models/interfaces/login-info.interface';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { ControlsOf, FormControl, FormGroup } from '@ngneat/reactive-forms';
 import { AuthorizationService } from './../../store/authorization.service';

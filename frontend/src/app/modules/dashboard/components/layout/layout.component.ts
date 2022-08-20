@@ -2,8 +2,8 @@ import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { AuthorizationService } from 'src/app/modules/authorization/store';
-import { DashboardState } from '../../types';
-import { ILabel, IResponse, ISendLabel, ITask } from 'src/app/modules/shared/models/interfaces';
+import { DashboardState } from '../../models/types';
+import { ILabelDto, IResponse, ITaskDto } from 'src/app/modules/shared/models/interfaces';
 import { catchError, of } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -12,6 +12,7 @@ import { LabelService } from '../../modules/labels/store';
 import { TaskService } from '../../modules/tasks/store';
 import { EditFormComponent as EditLabelForm} from 'src/app/modules/dashboard/modules/labels/components';
 import { EditFormComponent as EditTaskForm } from 'src/app/modules/dashboard/modules/tasks/components';
+import { ISendLabel } from '../../modules/labels/models/interfaces';
 
 @UntilDestroy()
 @Component({
@@ -70,7 +71,7 @@ export class LayoutComponent implements OnInit {
                 }),
                 untilDestroyed(this)
               )
-              .subscribe((response: IResponse<ILabel>) => {
+              .subscribe((response: IResponse<ILabelDto>) => {
                 if (!response.error) {
                   this.notificationService.success(
                     'Успешно',
@@ -86,7 +87,7 @@ export class LayoutComponent implements OnInit {
           nzContent: EditTaskForm,
           nzViewContainerRef: this.viewContainerRef,
         })
-        .afterClose.subscribe((task: ITask) => {
+        .afterClose.subscribe((task: ITaskDto) => {
           if (task) {
             this.taskService
               .add(task)
@@ -110,7 +111,7 @@ export class LayoutComponent implements OnInit {
                 }),
                 untilDestroyed(this)
               )
-              .subscribe((response: IResponse<ITask>) => {
+              .subscribe((response: IResponse<ITaskDto>) => {
                 if (!response.error) {
                   this.notificationService.success(
                     'Успешно',

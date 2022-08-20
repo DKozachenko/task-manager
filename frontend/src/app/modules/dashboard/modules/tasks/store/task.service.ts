@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { forkJoin, map, Observable, of, switchMap } from 'rxjs';
-import { ILabelForDashboard, IResponse, ITask, ITaskForDashboard } from 'src/app/modules/shared/models/interfaces';
+import { IResponse, ITaskDto } from 'src/app/modules/shared/models/interfaces';
 import { RestService } from 'src/app/modules/shared/services';
 import { TaskStore } from '.';
+import { ILabelForDashboard } from '../../labels/models/interfaces';
 import { LabelService } from '../../labels/store';
+import { ITaskForDashboard } from '../models/interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -15,33 +17,33 @@ export class TaskService {
     private taskStore: TaskStore
   ) {}
 
-  public getAll(): Observable<IResponse<ITask[]>> {
-    return this.restService.getAll<ITask[]>('tasks').pipe(
-      map((response: IResponse<ITask[]>) => {
+  public getAll(): Observable<IResponse<ITaskDto[]>> {
+    return this.restService.getAll<ITaskDto[]>('tasks').pipe(
+      map((response: IResponse<ITaskDto[]>) => {
         this.taskStore.set(response.data);
         return response;
       })
     );
   }
 
-  public getById(id: string): Observable<IResponse<ITask>> {
-    return this.restService.getById<ITask>('tasks', id);
+  public getById(id: string): Observable<IResponse<ITaskDto>> {
+    return this.restService.getById<ITaskDto>('tasks', id);
   }
 
-  public add(newTask: ITask): Observable<IResponse<ITask>> {
-    return this.restService.add<ITask>('tasks', newTask).pipe(
-      map((response: IResponse<ITask>) => {
+  public add(newTask: ITaskDto): Observable<IResponse<ITaskDto>> {
+    return this.restService.add<ITaskDto>('tasks', newTask).pipe(
+      map((response: IResponse<ITaskDto>) => {
         this.taskStore.add(response.data);
         return response;
       })
     );
   }
 
-  public updateById(updatedTask: ITask): Observable<IResponse<ITask>> {
+  public updateById(updatedTask: ITaskDto): Observable<IResponse<ITaskDto>> {
     return this.restService
-      .updateById<ITask>('tasks', updatedTask._id ?? '', updatedTask)
+      .updateById<ITaskDto>('tasks', updatedTask._id ?? '', updatedTask)
       .pipe(
-        map((response: IResponse<ITask>) => {
+        map((response: IResponse<ITaskDto>) => {
           this.taskStore.update(response.data._id ?? '', response.data);
           return response;
         })
@@ -60,7 +62,7 @@ export class TaskService {
   public getAllForDashboard(): Observable<ITaskForDashboard[]> {
     return this.getAll()
       .pipe(
-        switchMap((response: IResponse<ITask[]>) => {
+        switchMap((response: IResponse<ITaskDto[]>) => {
           return forkJoin([
             of(response),
             this.labelService.getAllForDashboard(),
@@ -71,10 +73,10 @@ export class TaskService {
             tasksResponse,
             labelsForDashboard
           ]: [
-            IResponse<ITask[]>,
+            IResponse<ITaskDto[]>,
             ILabelForDashboard[],
           ]) => {
-            return tasksResponse.data.map((task: ITask) => {
+            return tasksResponse.data.map((task: ITaskDto) => {
               return {
                 _id: task._id,
                 name: task.name,

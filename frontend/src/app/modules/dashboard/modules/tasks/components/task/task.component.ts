@@ -6,7 +6,8 @@ import { TaskService } from '../../store';
 import { catchError, of } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { IResponse, ITask, ITaskForDashboard } from 'src/app/modules/shared/models/interfaces';
+import { IResponse, ITaskDto } from 'src/app/modules/shared/models/interfaces';
+import { ITaskForDashboard } from '../../models/interfaces';
 
 @UntilDestroy()
 @Component({
@@ -37,7 +38,7 @@ export class TaskComponent {
           id,
         },
       })
-      .afterClose.subscribe((updateTask: ITask) => {
+      .afterClose.subscribe((updateTask: ITaskDto) => {
         if (updateTask) {
           this.taskService
             .updateById(updateTask)
@@ -60,7 +61,7 @@ export class TaskComponent {
               }),
               untilDestroyed(this)
             )
-            .subscribe((response: IResponse<ITask>) => {
+            .subscribe((response: IResponse<ITaskDto>) => {
               if (!response.error) {
                 this.notificationService.success(
                   'Успешно',
