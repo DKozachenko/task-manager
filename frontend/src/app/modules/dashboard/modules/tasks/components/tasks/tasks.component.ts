@@ -4,7 +4,7 @@ import { EntityAction, EntityActions } from '@datorama/akita';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { catchError, of } from 'rxjs';
-import { ITaskForDashboard } from '../../../shared/models/interfaces';
+import { ITaskForDashboard } from 'src/app/modules/shared/models/interfaces';
 import { TaskQuery, TaskService } from '../../store';
 
 @UntilDestroy()

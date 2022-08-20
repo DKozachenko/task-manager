@@ -3,10 +3,10 @@ import { LabelQuery } from './../../store/label.query';
 import { catchError, finalize, of } from 'rxjs';
 import { AfterViewChecked, AfterViewInit, Component, OnInit } from '@angular/core';
 import { LabelService } from '../../store';
-import { ILabelForDashboard } from './../../../shared/models/interfaces';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { HttpErrorResponse } from '@angular/common/http';
 import { EntityAction, EntityActions } from '@datorama/akita';
+import { ILabelForDashboard } from 'src/app/modules/shared/models/interfaces';
 
 @UntilDestroy()
 @Component({

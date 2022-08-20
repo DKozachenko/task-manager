@@ -1,12 +1,8 @@
 import { LabelStore } from './label.store';
 import { Injectable } from '@angular/core';
 import { forkJoin, map, Observable, of, switchMap } from 'rxjs';
-import { RestService } from '../../shared/services';
-import {IColor,
-  ILabel,
-  ILabelForDashboard,
-  IResponse,
-  ISendLabel} from '../../shared/models/interfaces';
+import { RestService } from 'src/app/modules/shared/services';
+import { IColor, ILabel, ILabelForDashboard, IResponse, ISendLabel } from 'src/app/modules/shared/models/interfaces';
 
 @Injectable({
   providedIn: 'root',

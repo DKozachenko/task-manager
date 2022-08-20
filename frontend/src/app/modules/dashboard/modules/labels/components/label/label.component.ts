@@ -1,32 +1,30 @@
-import { ITask } from './../../../shared/models/interfaces/task.interface';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { Component, Input, ViewContainerRef } from '@angular/core';
-import { IResponse, ITaskForDashboard } from '../../../shared/models/interfaces';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { EditFormComponent } from '..';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { TaskService } from '../../store';
+import { LabelService } from '../../store';
 import { catchError, of } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { ILabel, ILabelForDashboard, IResponse, ISendLabel } from 'src/app/modules/shared/models/interfaces';
 
 @UntilDestroy()
 @Component({
-  selector: 'tasks-task',
-  templateUrl: './task.component.html',
-  styleUrls: ['./task.component.sass'],
+  selector: 'labels-label',
+  templateUrl: './label.component.html',
+  styleUrls: ['./label.component.sass'],
 })
-export class TaskComponent {
-  @Input() public task: ITaskForDashboard = {
+export class LabelComponent {
+  @Input() public label: ILabelForDashboard = {
     name: '',
-    description: '',
-    labelsForTask: [],
+    colorHexCode: '',
   };
 
   constructor(
     private readonly modalService: NzModalService,
-    private readonly taskService: TaskService,
     private readonly notificationService: NzNotificationService,
-    private viewContainerRef: ViewContainerRef
+    private readonly viewContainerRef: ViewContainerRef,
+    private readonly labelService: LabelService
   ) {}
 
   public edit(id: string): void {
@@ -38,44 +36,37 @@ export class TaskComponent {
           id,
         },
       })
-      .afterClose.subscribe((updateTask: ITask) => {
-        if (updateTask) {
-          this.taskService
-            .updateById(updateTask)
+      .afterClose.subscribe((sendLabel: ISendLabel) => {
+
+        if (sendLabel) {
+          this.labelService.updateById(sendLabel)
             .pipe(
               catchError((err: HttpErrorResponse) => {
-                this.notificationService.error(
-                  'Ошибка',
-                  'Ошибка при редактировании записи'
-                );
+                this.notificationService.error('Ошибка', 'Ошибка при редактировании записи');
                 return of({
                   data: {
                     name: '',
-                    description: '',
-                    labelIds: [],
-                    userId: '',
+                    colorId: '',
+                    tasksIds: [],
+                    userId: ''
                   },
                   error: true,
-                  message: '',
+                  message: ''
                 });
               }),
               untilDestroyed(this)
             )
-            .subscribe((response: IResponse<ITask>) => {
+            .subscribe((response: IResponse<ILabel>) => {
               if (!response.error) {
-                this.notificationService.success(
-                  'Успешно',
-                  'Запись была успешно обновлена'
-                );
+                this.notificationService.success('Успешно', 'Запись была успешно обновлена');
               }
             });
         }
-
       });
   }
 
   public delete(id: string): void {
-    this.taskService.deleteById(id)
+    this.labelService.deleteById(id)
       .pipe(
         catchError((err: HttpErrorResponse) => {
           this.notificationService.error('Ошибка', 'Ошибка при удалении записи');

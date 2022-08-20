@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { forkJoin, map, Observable, of, switchMap } from 'rxjs';
-import { RestService } from '../../shared/services';
-import { ILabelForDashboard, IResponse, ITask, ITaskForDashboard } from '../../shared/models/interfaces';
+import { ILabelForDashboard, IResponse, ITask, ITaskForDashboard } from 'src/app/modules/shared/models/interfaces';
+import { RestService } from 'src/app/modules/shared/services';
 import { TaskStore } from '.';
 import { LabelService } from '../../labels/store';
 
