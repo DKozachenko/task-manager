@@ -14,6 +14,7 @@ export class AuthorizationGuard implements CanActivate {
     private authorizationQuery: AuthorizationQuery
   ) {}
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot
   ): boolean {
     /** Если есть токен, все ок, если нет - редирект на страницу входа */

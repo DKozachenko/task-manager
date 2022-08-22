@@ -16,6 +16,7 @@ import { catchError, Observable, of } from 'rxjs';
 export abstract class BaseDashboardComponent<
   T extends { name: string },
   ST extends { getAllForDashboard(): Observable<T[]> },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   QT extends QueryEntity<any>
 > implements OnInit
 {
@@ -41,6 +42,7 @@ export abstract class BaseDashboardComponent<
         EntityActions.Update,
         EntityActions.Remove,
       ])
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .subscribe((action: EntityAction<any>) => {
         this.reload();
       });

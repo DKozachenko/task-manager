@@ -10,6 +10,7 @@ export class TokenInterceptor implements HttpInterceptor{
               private router: Router) {
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     /** Если есть токен, то устанавливаем его в заголовках */
     if (this.authorizationQuery.hasToken) {

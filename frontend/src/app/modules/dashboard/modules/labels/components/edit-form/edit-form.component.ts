@@ -8,7 +8,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { IResponse, ITaskDto } from 'src/app/modules/shared/models/interfaces';
 import { TaskService } from '../../../tasks/store';
-import { ILabelForDashboard, ISendLabel } from '../../models/interfaces';
+import { ISendLabel } from '../../models/interfaces';
 import { BaseEditFormComponent } from 'src/app/modules/shared/classes';
 
 @UntilDestroy()
