@@ -127,10 +127,11 @@ const updateById = async (req, res) => {
 
   const taskId = req.params.id;
   const existedTask = await Tasks.findById(taskId);
-  const existedLabelIds = existedTask.labelIds;
 
   /** Если задача существует - меняем значения, если нет - посылаем клиенту сообщение */
   if (existedTask) {
+    const existedLabelIds = existedTask.labelIds;
+    
     /** Проверка на принадлежность получаемой задачи текущему пользователю */
     if (existedTask.userId.toString() !== req.user._id.toString()) {
       res.status(403).json(generateResponseWithError(

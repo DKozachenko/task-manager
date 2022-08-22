@@ -151,10 +151,11 @@ const updateById = async (req, res) => {
 
   const labelId = req.params.id;
   const existedLabel = await Labels.findById(labelId);
-  const existedTaskIds = existedLabel.taskIds;
 
   /** Если метка существует - меняем значения, если нет - посылаем клиенту сообщение */
   if (existedLabel) {
+    const existedTaskIds = existedLabel.taskIds;
+
     /** Проверка на принадлежность получаемой метки текущему пользователю */
     if (existedLabel.userId.toString() !== req.user._id.toString()) {
       res.status(403).json(generateResponseWithError(

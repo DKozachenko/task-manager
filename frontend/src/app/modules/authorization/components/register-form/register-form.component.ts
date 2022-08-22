@@ -10,8 +10,7 @@ import { AuthorizationService } from '../../store';
 
 @Component({
   selector: 'authorization-register-form',
-  templateUrl: './register-form.component.html',
-  styleUrls: ['./register-form.component.sass'],
+  templateUrl: './register-form.component.html'
 })
 export class RegisterFormComponent {
   /** Форма регистрации */
@@ -48,6 +47,7 @@ export class RegisterFormComponent {
    * Регистрация
    */
   public register() {
+    this.form.disable();
     const newUser: IUser = {
       ...this.form.value,
       dateRegistration: undefined,
@@ -66,8 +66,9 @@ export class RegisterFormComponent {
         })
       )
       .subscribe((response: IResponse<IUser | undefined>) => {
+        this.form.enable();
         if (response.error) {
-          this.notificationService.error('Ошибка', response.message ?? '');
+          this.notificationService.error('Ошибка', `Ошибка при регистрации: ${response.message ?? ''}`);
         } else {
           this.notificationService.success('Успешно', 'Вы зарегистрировались');
           this.form.reset();

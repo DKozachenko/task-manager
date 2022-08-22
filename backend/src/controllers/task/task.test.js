@@ -145,6 +145,7 @@ describe('/getById controller', () => {
     
     expect(response.status).toBe(404);
     expect(response.body.message).toBe(`Task with id ${nonExistentId} was not found`);
+    expect(response.body.error).toBeTruthy();
   });
 });
 
@@ -193,6 +194,7 @@ describe('/add controller', () => {
 
     expect(response.status).toBe(404);
     expect(response.body.message).toBe(`Label with id ${nonExistentId} was not found`);
+    expect(response.body.error).toBeTruthy();
   });
 });
 
@@ -260,6 +262,7 @@ describe('/updateById controller', () => {
 
     expect(response.status).toBe(404);
     expect(response.body.message).toBe(`Label with id ${nonExistentId} was not found`);
+    expect(response.body.error).toBeTruthy();
   });
 
   
@@ -293,6 +296,7 @@ describe('/deleteById controller', () => {
 
     expect(response.status).toBe(404);
     expect(response.body.message).toBe(`Task with id ${nonExistentId} was not found`);
+    expect(response.body.error).toBeTruthy();
   });
 });
 

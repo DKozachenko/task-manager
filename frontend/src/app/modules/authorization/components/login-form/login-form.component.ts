@@ -1,5 +1,4 @@
-import { AuthorizationQuery } from './../../store/authorization.query';
-import { IToken } from './../../../shared/models/interfaces/token.interface';
+import { IToken } from '../../models/interfaces';
 import { IResponse } from './../../../shared/models/interfaces/response.interface';
 import { ILoginInfo } from './../../models/interfaces/login-info.interface';
 import { Component } from '@angular/core';
@@ -13,8 +12,7 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'authorization-login-form',
-  templateUrl: './login-form.component.html',
-  styleUrls: ['./login-form.component.sass'],
+  templateUrl: './login-form.component.html'
 })
 export class LoginFormComponent {
   /** Форма входа */
@@ -47,6 +45,7 @@ export class LoginFormComponent {
    * Вход
    */
   public login() {
+    this.form.disable();
     const loginInfo: ILoginInfo = this.form.value;
 
     this.authorizationService.login(loginInfo)
@@ -60,8 +59,9 @@ export class LoginFormComponent {
         })
       )
       .subscribe((response: IResponse<IToken | undefined>) => {
+        this.form.enable();
         if (response.error) {
-          this.notificationService.error('Ошибка', response.message ?? '');
+          this.notificationService.error('Ошибка', `Ошибка входа: ${response.message ?? ''}`);
         } else {
           this.notificationService.success('Успешно', 'Вы вошли');
           this.form.reset();

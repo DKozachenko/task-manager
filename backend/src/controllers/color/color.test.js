@@ -57,7 +57,7 @@ beforeAll(async () => {
 
 /** Тесты для получения всех записей */
 describe('/getAll controller', () => {
-  /** Тест получения всех меток без токена */
+  /** Тест получения всех цветов без токена */
   it('should return colors', async () => {
     const response = await request
       .get(`/${CONFIG.prefix}/colors`);
@@ -66,7 +66,7 @@ describe('/getAll controller', () => {
     expect(response.status).toBe(401);
   });
 
-  /** Тест получения всех меток */
+  /** Тест получения всех цветов */
   it('should return colors', async () => {
     const response = await request
       .get(`/${CONFIG.prefix}/colors`)
@@ -79,7 +79,7 @@ describe('/getAll controller', () => {
 
 /** Тесты для получения записи */
 describe('/getById controller', () => {
-  /** Тест получения метки по существующему id */
+  /** Тест получения цвета по существующему id */
   it('should return color by id if color exists', async () => {
     const response = await request
       .get(`/${CONFIG.prefix}/colors/${colorId}`)
@@ -88,7 +88,7 @@ describe('/getById controller', () => {
     expect(response.status).toBe(200);
   });
 
-  /** Тест получения метки по несуществующему id */
+  /** Тест получения цвета по несуществующему id */
   it('should return color by id if color does not exist', async () => {
     const response = await request
       .get(`/${CONFIG.prefix}/colors/${nonExistentId}`)
@@ -96,6 +96,7 @@ describe('/getById controller', () => {
     
     expect(response.status).toBe(404);
     expect(response.body.message).toBe(`Color with id ${nonExistentId} was not found`);
+    expect(response.body.error).toBeTruthy();
   });
 });
 

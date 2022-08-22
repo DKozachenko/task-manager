@@ -10,7 +10,6 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NZ_I18N, en_US } from 'ng-zorro-antd/i18n';
 import { OverlayModule } from '@angular/cdk/overlay';
-
 import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
 import { NzModalService } from 'ng-zorro-antd/modal';

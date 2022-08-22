@@ -14,7 +14,8 @@ const testLabel = {
   name: 'test label',
   color: {
     hexCode: 'test hexCode'
-  }
+  },
+  taskIds: []
 };
 
 /** Изначальное кол-во меток до тестов */
@@ -116,6 +117,7 @@ describe('/getById controller', () => {
     
     expect(response.status).toBe(404);
     expect(response.body.message).toBe(`Label with id ${nonExistentId} was not found`);
+    expect(response.body.error).toBeTruthy();
   });
 });
 
@@ -144,6 +146,7 @@ describe('/updateById controller', () => {
       .put(`/${CONFIG.prefix}/labels/${labelIds[0]}`)
       .set('Authorization', testUserToken)
       .send({
+        ...testLabel,
         name: testLabel.name + 'updated',
         color: testLabel.color
       });
@@ -159,12 +162,14 @@ describe('/updateById controller', () => {
       .put(`/${CONFIG.prefix}/labels/${nonExistentId}`)
       .set('Authorization', testUserToken)
       .send({
+        ...testLabel,
         name: testLabel.name + 'updated',
         color: testLabel.color
       });
 
     expect(response.status).toBe(404);
     expect(response.body.message).toBe(`Label with id ${nonExistentId} was not found`);
+    expect(response.body.error).toBeTruthy();
   });
 });
 
@@ -196,6 +201,7 @@ describe('/deleteById controller', () => {
 
     expect(response.status).toBe(404);
     expect(response.body.message).toBe(`Label with id ${nonExistentId} was not found`);
+    expect(response.body.error).toBeTruthy();
   });
 });
 

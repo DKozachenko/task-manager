@@ -7,13 +7,13 @@ const routes: Routes = [
     path: 'tasks',
     component: LayoutComponent,
     loadChildren: () =>
-      import('../tasks/tasks.module').then((m) => m.TasksModule),
+      import('./modules/tasks/tasks.module').then((m) => m.TasksModule),
   },
   {
     path: 'labels',
     component: LayoutComponent,
     loadChildren: () =>
-      import('../labels/labels.module').then((m) => m.LabelsModule),
+      import('./modules/labels/labels.module').then((m) => m.LabelsModule),
   },
 ];
 
