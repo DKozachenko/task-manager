@@ -8,6 +8,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ILabelDto, IResponse } from 'src/app/modules/shared/models/interfaces';
 import { ILabelForDashboard, ISendLabel } from '../../models/interfaces';
+import { BaseElementComponent } from 'src/app/modules/shared/classes';
 
 @UntilDestroy()
 @Component({
@@ -15,19 +16,23 @@ import { ILabelForDashboard, ISendLabel } from '../../models/interfaces';
   templateUrl: './label.component.html',
   styleUrls: ['./label.component.sass'],
 })
-export class LabelComponent {
+export class LabelComponent extends BaseElementComponent<LabelService> {
+  /** Передаваемая метка */
   @Input() public label: ILabelForDashboard = {
     name: '',
     colorHexCode: '',
   };
 
   constructor(
-    private readonly modalService: NzModalService,
-    private readonly notificationService: NzNotificationService,
-    private readonly viewContainerRef: ViewContainerRef,
-    private readonly labelService: LabelService
-  ) {}
+    public readonly modalService: NzModalService,
+    public override readonly notificationService: NzNotificationService,
+    public viewContainerRef: ViewContainerRef,
+    public readonly labelService: LabelService
+  ) {
+    super(labelService, notificationService);
+  }
 
+  /** Редактирование */
   public edit(id: string): void {
     this.modalService
       .create({
@@ -38,50 +43,38 @@ export class LabelComponent {
         },
       })
       .afterClose.subscribe((sendLabel: ISendLabel) => {
-
         if (sendLabel) {
-          this.labelService.updateById(sendLabel)
+          this.labelService
+            .updateById(sendLabel)
             .pipe(
               catchError((err: HttpErrorResponse) => {
-                this.notificationService.error('Ошибка', 'Ошибка при редактировании записи');
+                this.notificationService.error(
+                  'Ошибка',
+                  'Ошибка при редактировании записи'
+                );
                 return of({
                   data: {
                     name: '',
                     colorId: '',
                     tasksIds: [],
-                    userId: ''
+                    userId: '',
                   },
                   error: true,
-                  message: ''
+                  message: '',
                 });
               }),
               untilDestroyed(this)
             )
             .subscribe((response: IResponse<ILabelDto>) => {
-              if (!response.error) {
+              if (response.error) {
+                this.notificationService.error(
+                  'Ошибка',
+                  'Ошибка при редактировании записи'
+                );
+              } else {
                 this.notificationService.success('Успешно', 'Запись была успешно обновлена');
               }
             });
-        }
-      });
-  }
-
-  public delete(id: string): void {
-    this.labelService.deleteById(id)
-      .pipe(
-        catchError((err: HttpErrorResponse) => {
-          this.notificationService.error('Ошибка', 'Ошибка при удалении записи');
-          return of({
-            data: undefined,
-            error: true,
-            message: ''
-          });
-        }),
-        untilDestroyed(this)
-      )
-      .subscribe((response: IResponse) => {
-        if (!response.error) {
-          this.notificationService.success('Успешно', 'Запись была успешно удалена');
         }
       });
   }
