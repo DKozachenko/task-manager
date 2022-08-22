@@ -1,9 +1,6 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { EntityAction, EntityActions } from '@datorama/akita';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Component } from '@angular/core';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { catchError, of } from 'rxjs';
 import { BaseDashboardComponent } from 'src/app/modules/shared/classes';
 import { ITaskForDashboard } from '../../models/interfaces';
 import { TaskQuery, TaskService } from '../../store';

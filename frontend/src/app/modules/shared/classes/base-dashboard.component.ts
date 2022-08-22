@@ -6,6 +6,12 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { catchError, Observable, of } from 'rxjs';
 
+/**
+ * Базовый класс дашборда
+ * T - тип данных
+ * ST - тип сервиса
+ * QT - тип класса с запросами
+ */
 @UntilDestroy()
 export abstract class BaseDashboardComponent<
   T extends { name: string },

@@ -1,5 +1,5 @@
 <div *nzModalTitle>
-  {{ task.name || 'Новая задача' }}
+  {{ model?.name || 'Новая задача' }}
 </div>
 
 <form *ngIf="form" nz-form [formGroup]="form" errorTailor>

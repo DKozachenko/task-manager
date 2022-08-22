@@ -9,6 +9,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { IResponse, ITaskDto } from 'src/app/modules/shared/models/interfaces';
 import { TaskService } from '../../../tasks/store';
 import { ILabelForDashboard, ISendLabel } from '../../models/interfaces';
+import { BaseEditFormComponent } from 'src/app/modules/shared/classes';
 
 @UntilDestroy()
 @Component({
@@ -16,32 +17,41 @@ import { ILabelForDashboard, ISendLabel } from '../../models/interfaces';
   templateUrl: './edit-form.component.html',
   styleUrls: ['./edit-form.component.sass'],
 })
-export class EditFormComponent implements OnInit {
+export class EditFormComponent
+  extends BaseEditFormComponent<ISendLabel>
+  implements OnInit
+{
+  /** Id записи */
   @Input() public id: string = '';
 
+  /** Модель цвета для колорпикера */
   public hexCode: string = '#ffffff';
 
-  public label: ISendLabel = {
-    name: '',
-    color: {
-      hexCode: this.hexCode,
-    },
-    taskIds: [],
-    userId: '',
-  };
-
-  public allTasks: Observable<IResponse<ITaskDto[]>> = this.taskService.getAll();
-
-  public form!: FormGroup;
+  /** Все задачи для селекта */
+  public allTasks: Observable<IResponse<ITaskDto[]>> =
+    this.taskService.getAll();
 
   constructor(
-    private readonly modalRef: NzModalRef,
+    public override readonly modalRef: NzModalRef,
     private readonly labelService: LabelService,
     private readonly taskService: TaskService,
     private readonly notificationService: NzNotificationService
-  ) {}
+  ) {
+    super(modalRef);
+  }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
+    /** Заполнение модели дефолтными значениями */
+    this.model = {
+      name: '',
+      color: {
+        hexCode: this.hexCode,
+      },
+      taskIds: [],
+      userId: '',
+    };
+
+    /** Если есть id, то получаем модель, если нет - просто заполняем форму */
     if (this.id) {
       this.labelService
         .getById(this.id)
@@ -51,12 +61,12 @@ export class EditFormComponent implements OnInit {
               'Ошибка',
               'Ошибка при получении записи'
             );
-            return of(this.label);
+            return of(this.model);
           }),
           untilDestroyed(this)
         )
         .subscribe((label: ISendLabel) => {
-          this.label = label;
+          this.model = label;
           this.fillForm();
         });
     } else {
@@ -64,22 +74,20 @@ export class EditFormComponent implements OnInit {
     }
   }
 
-  private fillForm(): void {
+  /** Заполнение формы */
+  public fillForm(): void {
     this.form = new FormGroup({
-      name: new FormControl(this.label.name, [Validators.required]),
-      taskIds: new FormControl(this.label?.taskIds)
+      name: new FormControl(this.model.name, [Validators.required]),
+      taskIds: new FormControl(this.model?.taskIds),
     });
 
-    this.hexCode = this.label.color.hexCode;
+    this.hexCode = this.model.color.hexCode;
   }
 
-  public close(): void {
-    this.modalRef.close(null);
-  }
-
-  public save(): void {
+  /** Перезаписанный метод сохранения для метки */
+  public override save(): void {
     this.modalRef.close({
-      _id: this.id ?? undefined,
+      ...this.model,
       ...this.form.value,
       color: {
         hexCode: this.hexCode,
@@ -87,7 +95,8 @@ export class EditFormComponent implements OnInit {
     });
   }
 
-  public trackByFunc(index: number, label: ILabelForDashboard) {
-    return label.name;
+  /** Функция trackBy для задач в селекте */
+  public trackByFunc(index: number, task: ITaskDto) {
+    return task.name;
   }
 }

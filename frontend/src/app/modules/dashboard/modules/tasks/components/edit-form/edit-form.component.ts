@@ -8,6 +8,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { ILabelDto, IResponse, ITaskDto } from 'src/app/modules/shared/models/interfaces';
 import { LabelService } from '../../../labels/store';
+import { BaseEditFormComponent } from 'src/app/modules/shared/classes';
 
 @UntilDestroy()
 @Component({
@@ -15,40 +16,43 @@ import { LabelService } from '../../../labels/store';
   templateUrl: './edit-form.component.html',
   styleUrls: ['./edit-form.component.sass'],
 })
-export class EditFormComponent implements OnInit {
+export class EditFormComponent
+  extends BaseEditFormComponent<ITaskDto>
+  implements OnInit
+{
+  /** Id записи */
   @Input() public id: string = '';
 
-  public task: ITaskDto = {
-    name: '',
-    description: '',
-    dateCreation: new Date(),
-    labelIds: [],
-    userId: '',
-  };
-
+  /** Все метки для селекта */
   public allLabels: Observable<IResponse<ILabelDto[]>> = this.labelService.getAll();
-
-  public form!: FormGroup;
 
   constructor(
     private readonly taskService: TaskService,
     private readonly labelService: LabelService,
-    private readonly modalRef: NzModalRef,
+    public override readonly modalRef: NzModalRef,
     private readonly notificationService: NzNotificationService
-  ) {}
+  ) {
+    super(modalRef);
+  }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
+    /** Заполнение модели дефолтными значениями */
+    this.model = {
+      name: '',
+      description: '',
+      dateCreation: new Date(),
+      labelIds: [],
+      userId: '',
+    };
+
+    /** Если есть id, то получаем модель, если нет - просто заполняем форму */
     if (this.id) {
       this.taskService
         .getById(this.id)
         .pipe(
           catchError((err: HttpErrorResponse) => {
-            this.notificationService.error(
-              'Ошибка',
-              'Ошибка при получении записи'
-            );
             return of({
-              data: this.task,
+              data: this.model,
               error: true,
               message: '',
             });
@@ -56,8 +60,13 @@ export class EditFormComponent implements OnInit {
           untilDestroyed(this)
         )
         .subscribe((response: IResponse<ITaskDto>) => {
-          if (!response.error) {
-            this.task = response.data;
+          if (response.error) {
+            this.notificationService.error(
+              'Ошибка',
+              'Ошибка при получении записи'
+            );
+          } else {
+            this.model = response.data;
             this.fillForm();
           }
         });
@@ -66,26 +75,17 @@ export class EditFormComponent implements OnInit {
     }
   }
 
-  private fillForm(): void {
+  /** Заполнение формы */
+  public fillForm(): void {
     this.form = new FormGroup({
-      name: new FormControl(this.task.name, [Validators.required]),
-      description: new FormControl(this.task.description, [Validators.required]),
-      labelIds: new FormControl(this.task?.labelIds),
+      name: new FormControl(this.model.name, [Validators.required]),
+      description: new FormControl(this.model.description, [Validators.required]),
+      labelIds: new FormControl(this.model?.labelIds),
     });
   }
 
-  public close(): void {
-    this.modalRef.close(null);
-  }
-
-  public save(): void {
-    this.modalRef.close({
-      _id: this.id ?? undefined,
-      ...this.form.value,
-    });
-  }
-
-  public trackByFunc(index: number, label: ILabelDto) {
+  /** Функция trackBy для меток в селекте */
+  public trackByFunc(index: number, label: ILabelDto): string {
     return label.name;
   }
 }
