@@ -23,10 +23,10 @@ export abstract class BaseElementComponent
     this.service
       .deleteById(id)
       .pipe(
-        catchError((err: HttpErrorResponse) => of({
+        catchError((response: HttpErrorResponse) => of({
           data: undefined,
           error: true,
-          message: '',
+          message: response.error.message,
         })),
         untilDestroyed(this)
       )
@@ -34,7 +34,7 @@ export abstract class BaseElementComponent
         if (response.error) {
           this.notificationService.error(
             'Ошибка',
-            'Ошибка при удалении записи'
+            `Ошибка при удалении записи: ${response.message}`
           );
         } else {
           this.notificationService.success('Успешно', 'Запись была успешно удалена');

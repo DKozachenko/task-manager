@@ -61,7 +61,7 @@ export class LoginFormComponent {
       .subscribe((response: IResponse<IToken | undefined>) => {
         this.form.enable();
         if (response.error) {
-          this.notificationService.error('Ошибка', response.message ?? '');
+          this.notificationService.error('Ошибка', `Ошибка входа: ${response.message ?? ''}`);
         } else {
           this.notificationService.success('Успешно', 'Вы вошли');
           this.form.reset();

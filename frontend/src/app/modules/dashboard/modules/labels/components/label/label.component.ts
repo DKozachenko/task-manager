@@ -47,12 +47,8 @@ export class LabelComponent extends BaseElementComponent<LabelService> {
           this.labelService
             .updateById(sendLabel)
             .pipe(
-              catchError((err: HttpErrorResponse) => {
-                this.notificationService.error(
-                  'Ошибка',
-                  'Ошибка при редактировании записи'
-                );
-                return of({
+              catchError((response: HttpErrorResponse) =>
+                of({
                   data: {
                     name: '',
                     colorId: '',
@@ -60,19 +56,22 @@ export class LabelComponent extends BaseElementComponent<LabelService> {
                     userId: '',
                   },
                   error: true,
-                  message: '',
-                });
-              }),
+                  message: response.error.message,
+                })
+              ),
               untilDestroyed(this)
             )
             .subscribe((response: IResponse<ILabelDto>) => {
               if (response.error) {
                 this.notificationService.error(
                   'Ошибка',
-                  'Ошибка при редактировании записи'
+                  `Ошибка при редактировании записи: ${response.message}`
                 );
               } else {
-                this.notificationService.success('Успешно', 'Запись была успешно обновлена');
+                this.notificationService.success(
+                  'Успешно',
+                  'Запись была успешно обновлена'
+                );
               }
             });
         }

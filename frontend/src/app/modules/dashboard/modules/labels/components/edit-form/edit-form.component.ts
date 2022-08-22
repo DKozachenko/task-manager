@@ -56,10 +56,10 @@ export class EditFormComponent
       this.labelService
         .getById(this.id)
         .pipe(
-          catchError((err: HttpErrorResponse) => {
+          catchError((response: HttpErrorResponse) => {
             this.notificationService.error(
               'Ошибка',
-              'Ошибка при получении записи'
+              `Ошибка при получении записи: ${response.error.message}`
             );
             return of(this.model);
           }),

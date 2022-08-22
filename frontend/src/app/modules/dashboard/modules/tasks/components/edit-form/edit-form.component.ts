@@ -50,11 +50,11 @@ export class EditFormComponent
       this.taskService
         .getById(this.id)
         .pipe(
-          catchError((err: HttpErrorResponse) => {
+          catchError((response: HttpErrorResponse) => {
             return of({
               data: this.model,
               error: true,
-              message: '',
+              message: response.error.message,
             });
           }),
           untilDestroyed(this)
@@ -63,7 +63,7 @@ export class EditFormComponent
           if (response.error) {
             this.notificationService.error(
               'Ошибка',
-              'Ошибка при получении записи'
+              `Ошибка при получении записи: ${response.message}`
             );
           } else {
             this.model = response.data;

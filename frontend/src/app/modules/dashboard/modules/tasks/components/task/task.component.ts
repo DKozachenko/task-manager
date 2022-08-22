@@ -48,7 +48,7 @@ export class TaskComponent extends BaseElementComponent<TaskService> {
           this.taskService
             .updateById(updateTask)
             .pipe(
-              catchError((err: HttpErrorResponse) => of({
+              catchError((response: HttpErrorResponse) => of({
                 data: {
                   name: '',
                   description: '',
@@ -56,7 +56,7 @@ export class TaskComponent extends BaseElementComponent<TaskService> {
                   userId: '',
                 },
                 error: true,
-                message: '',
+                message: response.error.message,
               })),
               untilDestroyed(this)
             )
@@ -64,7 +64,7 @@ export class TaskComponent extends BaseElementComponent<TaskService> {
               if (response.error) {
                 this.notificationService.error(
                   'Ошибка',
-                  'Ошибка при редактировании записи'
+                  `Ошибка при редактировании записи: ${response.message}`
                 );
               } else {
                 this.notificationService.success(

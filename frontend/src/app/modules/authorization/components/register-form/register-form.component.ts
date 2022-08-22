@@ -68,7 +68,7 @@ export class RegisterFormComponent {
       .subscribe((response: IResponse<IUser | undefined>) => {
         this.form.enable();
         if (response.error) {
-          this.notificationService.error('Ошибка', response.message ?? '');
+          this.notificationService.error('Ошибка', `Ошибка при регистрации: ${response.message ?? ''}`);
         } else {
           this.notificationService.success('Успешно', 'Вы зарегистрировались');
           this.form.reset();

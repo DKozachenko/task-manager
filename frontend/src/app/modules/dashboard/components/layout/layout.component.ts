@@ -56,7 +56,7 @@ export class LayoutComponent implements OnInit {
             this.labelService
               .add(sendLabel)
               .pipe(
-                catchError((err: HttpErrorResponse) =>
+                catchError((response: HttpErrorResponse) =>
                   of({
                     data: {
                       name: '',
@@ -65,7 +65,7 @@ export class LayoutComponent implements OnInit {
                       userId: '',
                     },
                     error: true,
-                    message: '',
+                    message: response.error.message,
                   })
                 ),
                 untilDestroyed(this)
@@ -74,7 +74,7 @@ export class LayoutComponent implements OnInit {
                 if (response.error) {
                   this.notificationService.error(
                     'Ошибка',
-                    'Ошибка при добавлении записи'
+                    `Ошибка при добавлении записи: ${response.message}`
                   );
                 } else {
                   this.notificationService.success(
@@ -97,7 +97,7 @@ export class LayoutComponent implements OnInit {
             this.taskService
               .add(task)
               .pipe(
-                catchError((err: HttpErrorResponse) =>
+                catchError((response: HttpErrorResponse) =>
                   of({
                     data: {
                       name: '',
@@ -107,7 +107,7 @@ export class LayoutComponent implements OnInit {
                       userId: '',
                     },
                     error: true,
-                    message: '',
+                    message: response.error.message,
                   })
                 ),
                 untilDestroyed(this)
@@ -116,7 +116,7 @@ export class LayoutComponent implements OnInit {
                 if (response.error) {
                   this.notificationService.error(
                     'Ошибка',
-                    'Ошибка при добавлении записи'
+                    `Ошибка при добавлении записи: ${response.message}`
                   );
                 } else {
                   this.notificationService.success(

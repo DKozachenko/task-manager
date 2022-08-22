@@ -53,10 +53,10 @@ export abstract class BaseDashboardComponent<
     this.service
       .getAllForDashboard()
       .pipe(
-        catchError((err: HttpErrorResponse) => {
+        catchError((response: HttpErrorResponse) => {
           this.notificationService.error(
             'Ошибка',
-            'Ошибка при получении всех записей'
+            `Ошибка при получении всех записей: ${response.error.message}`
           );
           return of([]);
         }),
