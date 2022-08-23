@@ -41,7 +41,7 @@ describe('/register controller', () => {
       });
     
     expect(response.status).toBe(403);
-    expect(response.body.message).toBe(`User with mail ${testUser.mail} is already exists`);
+    expect(response.body.message).toBe(`Пользователь с почтой ${testUser.mail} уже существует`);
     expect(response.body.error).toBeTruthy();
   });
 
@@ -55,7 +55,7 @@ describe('/register controller', () => {
       });
     
     expect(response.status).toBe(403);
-    expect(response.body.message).toBe(`User with nickname ${testUser.nickname} is already exists`);
+    expect(response.body.message).toBe(`Пользователь с ником ${testUser.nickname} уже существует`);
     expect(response.body.error).toBeTruthy();
   });
 
@@ -99,7 +99,7 @@ describe('/login controller', () => {
         password: testUser.password
       });
     expect(response.status).toBe(404);
-    expect(response.body.message).toBe(`User with nickname ${testUser.nickname + 'fdgdfgdfg'} was not found`);
+    expect(response.body.message).toBe(`Пользователь ${testUser.nickname + 'fdgdfgdfg'} не найден`);
     expect(response.body.error).toBeTruthy();
   });
 
@@ -112,7 +112,7 @@ describe('/login controller', () => {
         password: testUser.password + 'fdsfd'
       });
     expect(response.status).toBe(401);
-    expect(response.body.message).toBe(`Password for user with nickname ${testUser.nickname} is not correct`);
+    expect(response.body.message).toBe(`Пароль для пользователя ${testUser.nickname} неправильный`);
     expect(response.body.error).toBeTruthy();
   });
 

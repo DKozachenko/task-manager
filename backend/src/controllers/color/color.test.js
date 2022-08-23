@@ -95,7 +95,7 @@ describe('/getById controller', () => {
       .set('Authorization', testUserToken);
     
     expect(response.status).toBe(404);
-    expect(response.body.message).toBe(`Color with id ${nonExistentId} was not found`);
+    expect(response.body.message).toBe(`Цвет с id ${nonExistentId} не найден`);
     expect(response.body.error).toBeTruthy();
   });
 });

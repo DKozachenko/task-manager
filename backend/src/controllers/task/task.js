@@ -32,7 +32,7 @@ const getById = async (req, res) => {
     /** Проверка на принадлежность получаемой задачи текущему пользователю */
     if (requiredTask.userId.toString() !== req.user._id.toString()) {
       res.status(403).json(generateResponseWithError(
-        `Task with id ${taskId} does not belong to user ${req.user.nickname}`
+        `Задача с id ${taskId} не принадлежит пользователю ${req.user.nickname}`
       ));
       return;
     }
@@ -40,7 +40,7 @@ const getById = async (req, res) => {
     res.status(200).json(generateResponseWithData(requiredTask));
   } else {
     res.status(404).json(generateResponseWithError(
-      `Task with id ${taskId} was not found`
+      `Задача с id ${taskId} не найдена`
     ));
   }
 };
@@ -60,7 +60,7 @@ const add = async (req, res) => {
       /** Проверка на принадлежность присланных меток текущему пользователю */
       if (existedLabel.userId.toString() !== req.user._id.toString()) {
         res.status(403).json(generateResponseWithError(
-          `Label for task with id ${existedLabel._id} does not belong to user ${req.user.nickname}`
+          `Метка для задачи с id ${existedLabel._id} не принадлежит пользователю ${req.user.nickname}`
         ));
         return;
       }
@@ -68,7 +68,7 @@ const add = async (req, res) => {
       existedLabelIds.push(comeLabelId);
     } else {
       res.status(404).json(generateResponseWithError(
-        `Label with id ${comeLabelId} was not found`
+        `Метка с id ${comeLabelId} не найдена`
       ));
       return;
     }
@@ -111,7 +111,7 @@ const updateById = async (req, res) => {
       /** Проверка на принадлежность присланных меток текущему пользователю */
       if (existedLabel.userId.toString() !== req.user._id.toString()) {
         res.status(403).json(generateResponseWithError(
-          `Label for task with id ${existedLabel._id} does not belong to user ${req.user.nickname}`
+          `Метка для задачи с id ${existedLabel._id} не принадлежит пользователю ${req.user.nickname}`
         ));
         return;
       }
@@ -119,7 +119,7 @@ const updateById = async (req, res) => {
       existedComeLabelIds.push(comeLabelId);
     } else {
       res.status(404).json(generateResponseWithError(
-        `Label with id ${comeLabelId} was not found`
+        `Метка с id ${comeLabelId} не найдена`
       ));
       return;
     }
@@ -135,7 +135,7 @@ const updateById = async (req, res) => {
     /** Проверка на принадлежность получаемой задачи текущему пользователю */
     if (existedTask.userId.toString() !== req.user._id.toString()) {
       res.status(403).json(generateResponseWithError(
-        `Task with id ${taskId} does not belong to user ${req.user.nickname}`
+        `Задача с id ${taskId} не принадлежит пользователю ${req.user.nickname}`
       ));
       return;
     }
@@ -169,7 +169,7 @@ const updateById = async (req, res) => {
     res.status(200).json(generateResponseWithData(existedTask));
   } else {
     res.status(404).json(generateResponseWithError(
-      `Task with id ${taskId} was not found`
+      `Задача с id ${taskId} не найдена`
     ));
   }
 };
@@ -188,7 +188,7 @@ const deleteById = async (req, res) => {
     /** Проверка на принадлежность получаемой задачи текущему пользователю */
     if (existedTask.userId.toString() !== req.user._id.toString()) {
       res.status(403).json(generateResponseWithError(
-        `Task with id ${taskId} does not belong to user ${req.user.nickname}`
+        `Задача с id ${taskId} не принадлежит пользователю ${req.user.nickname}`
       ));
       return;
     }
@@ -205,11 +205,11 @@ const deleteById = async (req, res) => {
 
     logger.info(`Task with name ${existedTask.name} was deleted`);
     res.status(200).json(generateResponseWithData({
-      message: `Task with id ${taskId} was deleted`
+      message: `Задача с id ${taskId} удалена`
     }));
   } else {
     res.status(404).json(generateResponseWithError(
-      `Task with id ${taskId} was not found`
+      `Задача с id ${taskId} не найдена`
     ));
   }
 };

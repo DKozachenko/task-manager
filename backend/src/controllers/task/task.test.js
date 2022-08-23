@@ -144,7 +144,7 @@ describe('/getById controller', () => {
       .set('Authorization', testUserToken);
     
     expect(response.status).toBe(404);
-    expect(response.body.message).toBe(`Task with id ${nonExistentId} was not found`);
+    expect(response.body.message).toBe(`Задача с id ${nonExistentId} не найдена`);
     expect(response.body.error).toBeTruthy();
   });
 });
@@ -193,7 +193,7 @@ describe('/add controller', () => {
       });
 
     expect(response.status).toBe(404);
-    expect(response.body.message).toBe(`Label with id ${nonExistentId} was not found`);
+    expect(response.body.message).toBe(`Метка с id ${nonExistentId} не найдена`);
     expect(response.body.error).toBeTruthy();
   });
 });
@@ -212,7 +212,8 @@ describe('/updateById controller', () => {
       });
 
     expect(response.status).toBe(404);
-    expect(response.body.message).toBe(`Task with id ${nonExistentId} was not found`);
+    expect(response.body.message).toBe(`Задача с id ${nonExistentId} не найдена`);
+    expect(response.body.error).toBeTruthy();
   });
 
   /** Тест обновления задачи без меток */
@@ -261,7 +262,7 @@ describe('/updateById controller', () => {
       });
 
     expect(response.status).toBe(404);
-    expect(response.body.message).toBe(`Label with id ${nonExistentId} was not found`);
+    expect(response.body.message).toBe(`Метка с id ${nonExistentId} не найдена`);
     expect(response.body.error).toBeTruthy();
   });
 
@@ -280,7 +281,7 @@ describe('/deleteById controller', () => {
       .set('Authorization', testUserToken);
 
     expect(response.status).toBe(200);
-    expect(response.body.data.message).toBe(`Task with id ${taskIds[2]} was deleted`);
+    expect(response.body.data.message).toBe(`Задача с id ${taskIds[2]} удалена`);
     
     const allTasksAfterDelete = await Tasks.find();
     const tasksLengthAfterDelete = allTasksAfterDelete.length;
@@ -295,7 +296,7 @@ describe('/deleteById controller', () => {
       .set('Authorization', testUserToken);
 
     expect(response.status).toBe(404);
-    expect(response.body.message).toBe(`Task with id ${nonExistentId} was not found`);
+    expect(response.body.message).toBe(`Задача с id ${nonExistentId} не найдена`);
     expect(response.body.error).toBeTruthy();
   });
 });
