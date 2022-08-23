@@ -116,7 +116,7 @@ describe('/getById controller', () => {
       .set('Authorization', testUserToken);
     
     expect(response.status).toBe(404);
-    expect(response.body.message).toBe(`Label with id ${nonExistentId} was not found`);
+    expect(response.body.message).toBe(`Метка с id ${nonExistentId} не найдена`);
     expect(response.body.error).toBeTruthy();
   });
 });
@@ -168,7 +168,7 @@ describe('/updateById controller', () => {
       });
 
     expect(response.status).toBe(404);
-    expect(response.body.message).toBe(`Label with id ${nonExistentId} was not found`);
+    expect(response.body.message).toBe(`Метка с id ${nonExistentId} не найдена`);
     expect(response.body.error).toBeTruthy();
   });
 });
@@ -185,7 +185,7 @@ describe('/deleteById controller', () => {
       .set('Authorization', testUserToken);
 
     expect(response.status).toBe(200);
-    expect(response.body.data.message).toBe(`Label with id ${labelIds[0]} was deleted`);
+    expect(response.body.data.message).toBe(`Метка с id ${labelIds[0]} удалена`);
     
     const allLabelsAfterDelete = await Labels.find();
     const labelsLengthAfterDelete = allLabelsAfterDelete.length;
@@ -200,7 +200,7 @@ describe('/deleteById controller', () => {
       .set('Authorization', testUserToken);
 
     expect(response.status).toBe(404);
-    expect(response.body.message).toBe(`Label with id ${nonExistentId} was not found`);
+    expect(response.body.message).toBe(`Метка с id ${nonExistentId} не найдена`);
     expect(response.body.error).toBeTruthy();
   });
 });

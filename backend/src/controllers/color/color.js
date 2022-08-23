@@ -28,7 +28,7 @@ const getById = async (req, res) => {
     res.status(200).json(generateResponseWithData(requiredColor));
   } else {
     res.status(404).json(generateResponseWithError(
-      `Color with id ${colorId} was not found`
+      `Цвет с id ${colorId} не найден`
     ));
   }
 };
