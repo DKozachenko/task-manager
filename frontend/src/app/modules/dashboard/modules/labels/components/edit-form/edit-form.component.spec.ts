@@ -1,15 +1,29 @@
+import { OverlayModule } from '@angular/cdk/overlay';
+import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NzModalModule, NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 import { EditFormComponent } from './edit-form.component';
 
-describe('EditFormComponent', () => {
+xdescribe('EditFormComponent (labels)', () => {
   let component: EditFormComponent;
   let fixture: ComponentFixture<EditFormComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EditFormComponent ]
+      declarations: [ EditFormComponent ],
+      imports: [
+        OverlayModule,
+        HttpClientModule,
+        NzModalModule,
+      ],
+      providers: [
+        NzNotificationService,
+        NzModalService,
+      ],
     }).compileComponents();
+
 
     fixture = TestBed.createComponent(EditFormComponent);
     component = fixture.componentInstance;
