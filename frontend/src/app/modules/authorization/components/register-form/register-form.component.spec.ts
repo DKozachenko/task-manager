@@ -34,4 +34,11 @@ describe('RegisterFormComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should disable form and button after register clicked', () => {
+    component.register();
+    expect(component.form.disabled).toBeTruthy();
+    const button: HTMLButtonElement = fixture.nativeElement.querySelector('button');
+    expect(button.disabled).toBeTruthy();
+  });
 });

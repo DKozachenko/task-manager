@@ -21,7 +21,7 @@ import { ISendLabel } from '../../modules/labels/models/interfaces';
   styleUrls: ['./layout.component.sass'],
 })
 export class LayoutComponent implements OnInit {
-  /** Отркрытая вкладка */
+  /** Открытая вкладка */
   public state: DashboardState = 'tasks';
 
   constructor(

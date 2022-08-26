@@ -31,4 +31,17 @@ describe('LabelComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should has label', () => {
+    expect(component.label).toBeTruthy();
+    expect(Object.keys(component.label).length).toBeGreaterThan(0);
+  });
+
+  it('should has edit method', () => {
+    expect(component.edit).toBeTruthy();
+  });
+
+  it('should has delete method', () => {
+    expect(component.delete).toBeTruthy();
+  });
 });

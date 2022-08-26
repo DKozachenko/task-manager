@@ -31,4 +31,17 @@ describe('TaskComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should has task', () => {
+    expect(component.task).toBeTruthy();
+    expect(Object.keys(component.task).length).toBeGreaterThan(0);
+  });
+
+  it('should has edit method', () => {
+    expect(component.edit).toBeTruthy();
+  });
+
+  it('should has delete method', () => {
+    expect(component.delete).toBeTruthy();
+  });
 });

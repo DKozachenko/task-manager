@@ -31,4 +31,17 @@ describe('DashboardComponent (labels)', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should has no initial data', () => {
+    expect(component.dataForDashboard.length).toBe(0);
+  });
+
+  it('should set loading to true when reload', () => {
+    component.reload();
+    expect(component.isLoading).toBeTruthy();
+  });
+
+  it('should has trackBy function', () => {
+    expect(component.trackByFunc).toBeTruthy();
+  });
 });

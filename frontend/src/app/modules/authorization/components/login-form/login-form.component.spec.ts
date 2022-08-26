@@ -34,4 +34,15 @@ describe('LoginFormComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should set visible to false', () => {
+    expect(component.passwordVisible).toBeFalsy();
+  });
+
+  it('should disable form and button after login clicked', () => {
+    component.login();
+    expect(component.form.disabled).toBeTruthy();
+    const button: HTMLButtonElement = fixture.nativeElement.querySelector('button');
+    expect(button.disabled).toBeTruthy();
+  });
 });
