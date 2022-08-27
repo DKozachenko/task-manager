@@ -11,8 +11,11 @@ import { TaskQuery, TaskService } from '../../store';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.sass'],
 })
-export class DashboardComponent extends BaseDashboardComponent
-  <ITaskForDashboard, TaskService, TaskQuery> {
+export class DashboardComponent extends BaseDashboardComponent<
+  ITaskForDashboard,
+  TaskService,
+  TaskQuery
+> {
   constructor(
     private readonly taskService: TaskService,
     private readonly taskQuery: TaskQuery,

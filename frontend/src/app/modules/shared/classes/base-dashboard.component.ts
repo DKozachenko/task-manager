@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { HttpErrorResponse } from '@angular/common/http';
 import { OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { EntityAction, EntityActions, QueryEntity } from '@datorama/akita';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { catchError, Observable, of } from 'rxjs';
+import { catchError, debounceTime, Observable, of } from 'rxjs';
 
 /**
  * Базовый класс дашборда
@@ -17,7 +18,8 @@ export abstract class BaseDashboardComponent<
   T extends { name: string },
   ST extends { getAllForDashboard(): Observable<T[]> },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  QT extends QueryEntity<any>
+  QT extends QueryEntity<any>,
+  FT = undefined,
 > implements OnInit
 {
   /** Данные для дашборда */
@@ -25,6 +27,10 @@ export abstract class BaseDashboardComponent<
 
   /** Показатель загрузки */
   public isLoading: boolean = false;
+
+  public searchForm!: FormGroup;
+
+  public filter!: FT;
 
   constructor(
     private readonly service: ST,
@@ -46,6 +52,12 @@ export abstract class BaseDashboardComponent<
       .subscribe((action: EntityAction<any>) => {
         this.reload();
       });
+
+    this.searchForm.valueChanges
+      .pipe(
+        debounceTime(1000)
+      )
+      .subscribe(value => this.filter = value);
   }
 
   /** Получение данных */
