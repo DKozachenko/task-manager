@@ -10,6 +10,7 @@ import { catchError, debounceTime, Observable, of } from 'rxjs';
 /**
  * Базовый класс дашборда
  * T - тип данных
+ * FT - тип фильтра
  * ST - тип сервиса
  * QT - тип класса с запросами
  */
@@ -28,8 +29,10 @@ export abstract class BaseDashboardComponent<
   /** Показатель загрузки */
   public isLoading: boolean = false;
 
+  /** Форма поиска */
   public searchForm!: FormGroup;
 
+  /** Фильтр */
   public filter!: FT;
 
   constructor(
@@ -53,14 +56,12 @@ export abstract class BaseDashboardComponent<
         this.reload();
       });
 
+    /** При изменении формы поиска устанавливаем в фильтр ее значения */
     this.searchForm.valueChanges
       .pipe(
         debounceTime(1000)
       )
-      .subscribe(value => {
-        console.log(value);
-        this.filter = value;
-      });
+      .subscribe(value => this.filter = value);
   }
 
   /** Получение данных */

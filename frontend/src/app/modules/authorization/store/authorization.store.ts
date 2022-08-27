@@ -2,6 +2,9 @@ import { AuthorizationState } from './../models/states/authorization.state';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
+/**
+ * Стор авторизации
+ */
 @Injectable({
   providedIn: 'root'
 })

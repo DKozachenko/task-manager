@@ -7,6 +7,9 @@ import { ILabelForDashboard } from '../../labels/models/interfaces';
 import { LabelService } from '../../labels/store';
 import { ITaskForDashboard } from '../models/interfaces';
 
+/**
+ * Сервис для задач
+ */
 @Injectable({
   providedIn: 'root',
 })

@@ -10,9 +10,12 @@ import { ILabelDto, IResponse, ITaskDto } from 'src/app/modules/shared/models/in
 import { LabelService } from '../../../labels/store';
 import { BaseEditFormComponent } from 'src/app/modules/shared/classes';
 
+/**
+ * Компонент формы редактирования задач
+ */
 @UntilDestroy()
 @Component({
-  selector: 'app-edit-form',
+  selector: 'tasks-edit-form',
   templateUrl: './edit-form.component.html',
   styleUrls: ['./edit-form.component.sass'],
 })
@@ -24,7 +27,8 @@ export class EditFormComponent
   @Input() public id: string = '';
 
   /** Все метки для селекта */
-  public allLabels: Observable<IResponse<ILabelDto[]>> = this.labelService.getAll();
+  public allLabels$: Observable<IResponse<ILabelDto[]>> =
+    this.labelService.getAll();
 
   constructor(
     private readonly taskService: TaskService,

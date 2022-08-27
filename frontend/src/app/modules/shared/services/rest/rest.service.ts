@@ -4,6 +4,9 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { IResponse } from '../../models/interfaces';
 
+/**
+ * Базовый сервис для выполнения REST запросов
+ */
 @Injectable({
   providedIn: 'root'
 })

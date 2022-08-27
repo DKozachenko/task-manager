@@ -14,9 +14,12 @@ import { EditFormComponent as EditLabelForm} from 'src/app/modules/dashboard/mod
 import { EditFormComponent as EditTaskForm } from 'src/app/modules/dashboard/modules/tasks/components';
 import { ISendLabel } from '../../modules/labels/models/interfaces';
 
+/**
+ * Компонент разметки главного дашборда
+ */
 @UntilDestroy()
 @Component({
-  selector: 'app-layout',
+  selector: 'dashboard-layout',
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.sass'],
 })

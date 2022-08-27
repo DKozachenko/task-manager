@@ -10,6 +10,9 @@ import { ILabelDto, IResponse } from 'src/app/modules/shared/models/interfaces';
 import { ILabelForDashboard, ISendLabel } from '../../models/interfaces';
 import { BaseElementComponent } from 'src/app/modules/shared/classes';
 
+/**
+ * Компонент метки
+ */
 @UntilDestroy()
 @Component({
   selector: 'labels-label',

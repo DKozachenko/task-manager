@@ -3,6 +3,9 @@ import { QueryEntity } from '@datorama/akita';
 import { TaskStore } from '.';
 import { TaskState } from '../states';
 
+/**
+ * Класс для получения данных из стора задач
+ */
 @Injectable({
   providedIn: 'root',
 })

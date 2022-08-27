@@ -4,11 +4,14 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { BaseDashboardComponent } from 'src/app/modules/shared/classes';
-import { LabelService, LabelStore } from '../../../labels/store';
+import { LabelService } from '../../../labels/store';
 import { ITaskForDashboard, ITaskFilter } from '../../models/interfaces';
 import { TaskQuery, TaskService } from '../../store';
 import { ILabelDto, IResponse } from 'src/app/modules/shared/models/interfaces';
 
+/**
+ * Компонент дашборда задач
+ */
 @UntilDestroy()
 @Component({
   selector: 'tasks-dashboard',

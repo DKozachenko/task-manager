@@ -5,6 +5,9 @@ import { RestService } from '../../shared/services';
 import { IResponse } from '../../shared/models/interfaces';
 import { ILoginInfo, IUser, IToken } from '../models/interfaces';
 
+/**
+ * Сервис для авторизации
+ */
 @Injectable({
   providedIn: 'root',
 })

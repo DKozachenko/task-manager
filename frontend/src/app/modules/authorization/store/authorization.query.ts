@@ -3,6 +3,9 @@ import { Query } from '@datorama/akita';
 import { AuthorizationStore } from '.';
 import { AuthorizationState } from '../models/states';
 
+/**
+ * Класс получения данных из стора авторизации
+ */
 @Injectable({
   providedIn: 'root',
 })

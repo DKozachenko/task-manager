@@ -8,6 +8,9 @@ import { IResponse } from './../../../shared/models/interfaces/response.interfac
 import { IUser } from '../../models/interfaces';
 import { AuthorizationService } from '../../store';
 
+/**
+ * Компонент формы регистрации
+ */
 @Component({
   selector: 'authorization-register-form',
   templateUrl: './register-form.component.html'
@@ -46,7 +49,7 @@ export class RegisterFormComponent {
   /**
    * Регистрация
    */
-  public register() {
+  public register(): void {
     this.form.disable();
     const newUser: IUser = {
       ...this.form.value,

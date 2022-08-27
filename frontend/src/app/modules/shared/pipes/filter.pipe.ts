@@ -2,6 +2,9 @@ import { ITaskForDashboard } from '../../dashboard/modules/tasks/models/interfac
 import { Pipe, PipeTransform } from '@angular/core';
 import { ILabelForDashboard } from '../../dashboard/modules/labels/models/interfaces';
 
+/**
+ * Пайп для фильтрации
+ */
 @Pipe({ name: 'filter' })
 export class Filter implements PipeTransform {
   transform(value: any[], filter: any): any[] {
@@ -13,6 +16,8 @@ export class Filter implements PipeTransform {
     }
 
     if (filter?.labelIds) {
+      /** Для каждой задачи собираем id ее меток, проверяем все ли id меток
+       * из фильтра содержатся в id метках задачи */
       filteredData = filteredData.filter((item: ITaskForDashboard) => {
         const taskLabelIds = item?.labelsForTask?.map((item: ILabelForDashboard) => item?._id);
 

@@ -2,10 +2,16 @@
  * Модель задачи в БД
  */
 export interface ITaskDto {
-  _id?: string,
-  name: string,
-  description: string,
-  dateCreation?: Date,
-  labelIds?: string[],
-  userId?: string
+  /** Id записи */
+  _id?: string;
+  /** Название */
+  name: string;
+  /** Описание */
+  description: string;
+  /** Дата создания */
+  dateCreation?: Date;
+  /** Массив с id меток */
+  labelIds?: string[];
+  /** Id пользователя */
+  userId?: string;
 }

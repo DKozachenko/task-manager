@@ -1,11 +1,14 @@
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { LabelQuery } from '../../store/label.query';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { LabelService } from '../../store';
 import { ILabelFilter, ILabelForDashboard } from '../../models/interfaces';
 import { BaseDashboardComponent } from 'src/app/modules/shared/classes';
 import { FormControl, FormGroup } from '@angular/forms';
 
+/**
+ * Компонент дашборда меток
+ */
 @Component({
   selector: 'labels-dashboard',
   templateUrl: './dashboard.component.html',

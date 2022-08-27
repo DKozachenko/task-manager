@@ -21,7 +21,7 @@
     <nz-form-label [nzSpan]="6" nzFor="labelIds">Метки</nz-form-label>
     <nz-form-control [nzSpan]="16">
       <nz-select nzMode="multiple" nzPlaceHolder="Метки" formControlName="labelIds" nzAllowClear>
-        <nz-option *ngFor="let label of (allLabels | async)?.data; trackBy:trackByFunc"
+        <nz-option *ngFor="let label of (allLabels$ | async)?.data; trackBy:trackByFunc"
           [nzValue]="label._id" [nzLabel]="label.name"
         ></nz-option>
       </nz-select>

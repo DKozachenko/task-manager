@@ -10,6 +10,9 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 
+/**
+ * Компонент формы входа
+ */
 @Component({
   selector: 'authorization-login-form',
   templateUrl: './login-form.component.html'
@@ -44,7 +47,7 @@ export class LoginFormComponent {
   /**
    * Вход
    */
-  public login() {
+  public login(): void {
     this.form.disable();
     const loginInfo: ILoginInfo = this.form.value;
 

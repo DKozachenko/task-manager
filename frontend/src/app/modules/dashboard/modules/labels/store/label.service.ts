@@ -6,6 +6,9 @@ import { IColorDto, ILabelDto, IResponse }
   from 'src/app/modules/shared/models/interfaces';
 import { ILabelForDashboard, ISendLabel } from '../models/interfaces';
 
+/**
+ * Сервис для меток
+ */
 @Injectable({
   providedIn: 'root',
 })
@@ -120,7 +123,9 @@ export class LabelService {
         }),
         map(
           ([
-            labelResponse, colorResponse]: [
+            labelResponse,
+            colorResponse
+          ]: [
             IResponse<ILabelDto[]>,
             IResponse<IColorDto[]>
           ]) => {

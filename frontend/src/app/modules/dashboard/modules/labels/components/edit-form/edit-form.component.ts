@@ -11,9 +11,10 @@ import { TaskService } from '../../../tasks/store';
 import { ISendLabel } from '../../models/interfaces';
 import { BaseEditFormComponent } from 'src/app/modules/shared/classes';
 
+/** Компонент формы редактирования метки */
 @UntilDestroy()
 @Component({
-  selector: 'app-edit-form',
+  selector: 'labels-edit-form',
   templateUrl: './edit-form.component.html',
   styleUrls: ['./edit-form.component.sass'],
 })

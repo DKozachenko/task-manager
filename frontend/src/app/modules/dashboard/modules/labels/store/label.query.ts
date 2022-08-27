@@ -3,6 +3,9 @@ import { QueryEntity } from '@datorama/akita';
 import { LabelStore } from '.';
 import { LabelState } from '../states';
 
+/**
+ * Класс получения данных из стора меток
+ */
 @Injectable({
   providedIn: 'root',
 })

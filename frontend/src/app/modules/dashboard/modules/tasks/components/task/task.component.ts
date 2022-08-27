@@ -10,6 +10,9 @@ import { IResponse, ITaskDto } from 'src/app/modules/shared/models/interfaces';
 import { ITaskForDashboard } from '../../models/interfaces';
 import { BaseElementComponent } from 'src/app/modules/shared/classes';
 
+/**
+ * Компонент задачи
+ */
 @UntilDestroy()
 @Component({
   selector: 'tasks-task',

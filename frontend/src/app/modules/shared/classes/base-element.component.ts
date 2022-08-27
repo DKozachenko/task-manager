@@ -4,6 +4,10 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { catchError, Observable, of } from 'rxjs';
 import { IResponse } from '../models/interfaces';
 
+/**
+ * Базовый класс элемента
+ * ST - тип сервиса
+ */
 @UntilDestroy()
 export abstract class BaseElementComponent
   <ST extends { deleteById(id: string): Observable<IResponse> }>
