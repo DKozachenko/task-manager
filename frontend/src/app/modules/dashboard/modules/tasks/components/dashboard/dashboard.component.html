@@ -17,6 +17,15 @@
             </ng-template>
           </nz-form-control>
         </nz-form-item>
+
+        <nz-form-item class="form-item select">
+          <nz-form-control [nzSpan]="24">
+            <nz-select nzMode="multiple" nzPlaceHolder="Метки" formControlName="labelIds" nzAllowClear>
+              <nz-option *ngFor="let label of (allLabels$ | async)?.data" [nzValue]="label._id"
+                [nzLabel]="label.name"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
       </form>
     </div>
   </div>

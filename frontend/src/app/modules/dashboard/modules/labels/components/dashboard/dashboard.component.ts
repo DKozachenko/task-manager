@@ -12,9 +12,9 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class DashboardComponent extends BaseDashboardComponent<
   ILabelForDashboard,
+  ILabelFilter,
   LabelService,
-  LabelQuery,
-  ILabelFilter
+  LabelQuery
 > {
   constructor(
     private readonly labelService: LabelService,

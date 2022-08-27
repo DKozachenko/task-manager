@@ -16,10 +16,10 @@ import { catchError, debounceTime, Observable, of } from 'rxjs';
 @UntilDestroy()
 export abstract class BaseDashboardComponent<
   T extends { name: string },
+  FT,
   ST extends { getAllForDashboard(): Observable<T[]> },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  QT extends QueryEntity<any>,
-  FT = undefined,
+  QT extends QueryEntity<any>
 > implements OnInit
 {
   /** Данные для дашборда */
@@ -57,7 +57,10 @@ export abstract class BaseDashboardComponent<
       .pipe(
         debounceTime(1000)
       )
-      .subscribe(value => this.filter = value);
+      .subscribe(value => {
+        console.log(value);
+        this.filter = value;
+      });
   }
 
   /** Получение данных */

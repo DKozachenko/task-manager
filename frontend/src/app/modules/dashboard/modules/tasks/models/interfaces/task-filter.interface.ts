@@ -1,4 +1,5 @@
 /** Модель фильтра задач */
 export interface ITaskFilter {
-  name: string
+  name: string,
+  labelIds: string[]
 }
