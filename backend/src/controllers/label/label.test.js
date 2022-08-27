@@ -14,7 +14,8 @@ const testLabel = {
   name: 'test label',
   color: {
     hexCode: 'test hexCode'
-  }
+  },
+  taskIds: []
 };
 
 /** Изначальное кол-во меток до тестов */
@@ -50,7 +51,9 @@ beforeAll(async () => {
   
   testUserToken = response2.body.data.token;
 
-  const allLabels = await Labels.find();
+  const allLabels = await Labels.find({
+    userId: testUserId 
+  });
   initialLabelsLength = allLabels.length;
 
   const testDbColor = new Colors({ 
@@ -115,7 +118,8 @@ describe('/getById controller', () => {
       .set('Authorization', testUserToken);
     
     expect(response.status).toBe(404);
-    expect(response.body.message).toBe(`Label with id ${nonExistentId} was not found`);
+    expect(response.body.message).toBe(`Метка с id ${nonExistentId} не найдена`);
+    expect(response.body.error).toBeTruthy();
   });
 });
 
@@ -144,6 +148,7 @@ describe('/updateById controller', () => {
       .put(`/${CONFIG.prefix}/labels/${labelIds[0]}`)
       .set('Authorization', testUserToken)
       .send({
+        ...testLabel,
         name: testLabel.name + 'updated',
         color: testLabel.color
       });
@@ -159,12 +164,14 @@ describe('/updateById controller', () => {
       .put(`/${CONFIG.prefix}/labels/${nonExistentId}`)
       .set('Authorization', testUserToken)
       .send({
+        ...testLabel,
         name: testLabel.name + 'updated',
         color: testLabel.color
       });
 
     expect(response.status).toBe(404);
-    expect(response.body.message).toBe(`Label with id ${nonExistentId} was not found`);
+    expect(response.body.message).toBe(`Метка с id ${nonExistentId} не найдена`);
+    expect(response.body.error).toBeTruthy();
   });
 });
 
@@ -180,7 +187,7 @@ describe('/deleteById controller', () => {
       .set('Authorization', testUserToken);
 
     expect(response.status).toBe(200);
-    expect(response.body.data.message).toBe(`Label with id ${labelIds[0]} was deleted`);
+    expect(response.body.data.message).toBe(`Метка с id ${labelIds[0]} удалена`);
     
     const allLabelsAfterDelete = await Labels.find();
     const labelsLengthAfterDelete = allLabelsAfterDelete.length;
@@ -195,7 +202,8 @@ describe('/deleteById controller', () => {
       .set('Authorization', testUserToken);
 
     expect(response.status).toBe(404);
-    expect(response.body.message).toBe(`Label with id ${nonExistentId} was not found`);
+    expect(response.body.message).toBe(`Метка с id ${nonExistentId} не найдена`);
+    expect(response.body.error).toBeTruthy();
   });
 });
 

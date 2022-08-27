@@ -4,6 +4,9 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { IResponse } from '../../models/interfaces';
 
+/**
+ * Базовый сервис для выполнения REST запросов
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -46,14 +49,15 @@ export class RestService {
 
   /**
    * Обновление элемента по id
-   * Т - тип обновляемого значения
+   * Т - тип отправляемого значения, по умолчанию К
+   * К - тип получаемого значения
    * @param route - адрес запроса
    * @param id - id записи
    * @param updatedItem - обновленный элемент
    * @returns обновленный в БД элемент или сообщение об ошибке
    */
-  public updateById<T>(route: string, id: string, updatedItem: T): Observable<IResponse<T>> {
-    return this.httpClient.put<IResponse<T>>(`/${environment.apiUrl}/${route}/${id}`, updatedItem);
+  public updateById<T, K = T>(route: string, id: string, updatedItem: T): Observable<IResponse<K>> {
+    return this.httpClient.put<IResponse<K>>(`/${environment.apiUrl}/${route}/${id}`, updatedItem);
   }
 
   /**

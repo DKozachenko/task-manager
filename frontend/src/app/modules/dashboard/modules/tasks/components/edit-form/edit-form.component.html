@@ -1,0 +1,35 @@
+<div *nzModalTitle>
+  {{ model?.name || 'Новая задача' }}
+</div>
+
+<form *ngIf="form" nz-form [formGroup]="form" errorTailor>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="6" nzRequired nzFor="name">Название</nz-form-label>
+    <nz-form-control [nzSpan]="16">
+      <input nz-input formControlName="name" placeholder="Название" />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label [nzSpan]="6" nzRequired nzFor="description">Описание</nz-form-label>
+    <nz-form-control [nzSpan]="16">
+      <textarea nz-input formControlName="description" placeholder="Описание"></textarea>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label [nzSpan]="6" nzFor="labelIds">Метки</nz-form-label>
+    <nz-form-control [nzSpan]="16">
+      <nz-select nzMode="multiple" nzPlaceHolder="Метки" formControlName="labelIds" nzAllowClear>
+        <nz-option *ngFor="let label of (allLabels$ | async)?.data; trackBy:trackByFunc"
+          [nzValue]="label._id" [nzLabel]="label.name"
+        ></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+</form>
+
+<div *nzModalFooter>
+  <button nz-button nzType="default" (click)="close()">Закрыть</button>
+  <button nz-button nzType="primary" (click)="save()" [disabled]="form ? form.invalid : true">Сохранить</button>
+</div>

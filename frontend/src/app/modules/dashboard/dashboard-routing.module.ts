@@ -4,20 +4,16 @@ import { LayoutComponent } from './components';
 
 const routes: Routes = [
   {
-    path: '',
-    component: LayoutComponent
-  },
-  {
     path: 'tasks',
     component: LayoutComponent,
     loadChildren: () =>
-      import('../tasks/tasks.module').then((m) => m.TasksModule),
+      import('./modules/tasks/tasks.module').then((m) => m.TasksModule),
   },
   {
     path: 'labels',
     component: LayoutComponent,
     loadChildren: () =>
-      import('../labels/labels.module').then((m) => m.LabelsModule),
+      import('./modules/labels/labels.module').then((m) => m.LabelsModule),
   },
 ];
 
