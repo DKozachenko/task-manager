@@ -46,13 +46,13 @@ const login = async (req, res) => {
       }));
     } else {
       res.status(401).json(generateResponseWithError(
-        `Password for user with nickname ${req.body.nickname} is not correct`
+        `Пароль для пользователя ${req.body.nickname} неправильный`
       ));
     }
 
   } else {
     res.status(404).json(generateResponseWithError(
-      `User with nickname ${req.body.nickname} was not found`
+      `Пользователь ${req.body.nickname} не найден`
     ));
   }
 };
@@ -74,7 +74,7 @@ const register = async (req, res) => {
 
   if (existedMailUser) {
     res.status(403).json(generateResponseWithError(
-      `User with mail ${req.body.mail} is already exists`
+      `Пользователь с почтой ${req.body.mail} уже существует`
     ));
     return;
   }
@@ -85,7 +85,7 @@ const register = async (req, res) => {
 
   if (existedNicknameUser) {
     res.status(403).json(generateResponseWithError(
-      `User with nickname ${req.body.nickname} is already exists`
+      `Пользователь с ником ${req.body.nickname} уже существует`
     ));
     return;
   }

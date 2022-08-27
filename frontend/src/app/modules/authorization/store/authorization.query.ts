@@ -1,17 +1,26 @@
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { Observable } from 'rxjs';
 import { AuthorizationStore } from '.';
 import { AuthorizationState } from '../models/states';
 
+/**
+ * Класс получения данных из стора авторизации
+ */
 @Injectable({
   providedIn: 'root',
 })
 export class AuthorizationQuery extends Query<AuthorizationState> {
-  /** Есть ли токен */
-  public hasToken$: Observable<boolean> = this.select((state: AuthorizationState) => !!state.token);
-
   constructor(protected override store: AuthorizationStore) {
     super(store);
+  }
+
+  /** Есть ли токен */
+  public get hasToken(): boolean {
+    return !!this.getValue().token;
+  }
+
+  /** Получение токена */
+  public get getToken(): string {
+    return this.getValue().token ?? '';
   }
 }

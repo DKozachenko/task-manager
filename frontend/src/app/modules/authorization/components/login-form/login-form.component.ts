@@ -1,5 +1,4 @@
-import { AuthorizationQuery } from './../../store/authorization.query';
-import { IToken } from './../../../shared/models/interfaces/token.interface';
+import { IToken } from '../../models/interfaces';
 import { IResponse } from './../../../shared/models/interfaces/response.interface';
 import { ILoginInfo } from './../../models/interfaces/login-info.interface';
 import { Component } from '@angular/core';
@@ -9,11 +8,14 @@ import { AuthorizationService } from './../../store/authorization.service';
 import { catchError, of } from 'rxjs';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
+/**
+ * Компонент формы входа
+ */
 @Component({
   selector: 'authorization-login-form',
-  templateUrl: './login-form.component.html',
-  styleUrls: ['./login-form.component.sass'],
+  templateUrl: './login-form.component.html'
 })
 export class LoginFormComponent {
   /** Форма входа */
@@ -38,13 +40,15 @@ export class LoginFormComponent {
 
   constructor(
     private authorizationService: AuthorizationService,
-    private notificationService: NzNotificationService
+    private notificationService: NzNotificationService,
+    private readonly router: Router
   ) {}
 
   /**
    * Вход
    */
-  public login() {
+  public login(): void {
+    this.form.disable();
     const loginInfo: ILoginInfo = this.form.value;
 
     this.authorizationService.login(loginInfo)
@@ -58,11 +62,13 @@ export class LoginFormComponent {
         })
       )
       .subscribe((response: IResponse<IToken | undefined>) => {
+        this.form.enable();
         if (response.error) {
-          this.notificationService.error('Ошибка', response.message ?? '');
+          this.notificationService.error('Ошибка', `Ошибка входа: ${response.message ?? ''}`);
         } else {
           this.notificationService.success('Успешно', 'Вы вошли');
           this.form.reset();
+          this.router.navigate(['/dashboard/tasks']);
         }
       });
   }

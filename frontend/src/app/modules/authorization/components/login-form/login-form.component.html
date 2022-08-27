@@ -1,4 +1,5 @@
 <form nz-form
+    class="auth-form"
     nzLayout="vertical"
     errorTailor
     [formGroup]="form"
@@ -44,7 +45,7 @@
           </nz-input-group>
 
           <ng-template #passwordTemplate>
-            <i nz-icon
+            <i class="visible-icon" nz-icon
                 [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
                 (click)="passwordVisible = !passwordVisible"
               ></i>
@@ -70,7 +71,7 @@
           nzShape="round"
           type="submit"
           [nzSize]="'large'"
-          [disabled]="form.invalid"
+          [disabled]="form.invalid || form.disabled"
         >
           Войти
       </button>

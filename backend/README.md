@@ -15,6 +15,8 @@ Backend of app "Task Manager"
     - Bcryptjs
 - Logging:
     - Morgan
+    - Winston
+- Testing
     - Jest
     - Supertest
 

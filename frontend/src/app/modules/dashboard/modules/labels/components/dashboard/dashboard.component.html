@@ -1,0 +1,31 @@
+<div class="loader" *ngIf="isLoading; else content">
+  <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
+</div>
+
+<ng-template #content>
+  <div nz-row [nzGutter]="24">
+    <div nz-col [nzSpan]="24">
+      <form class="search-form" nz-form [formGroup]="searchForm" errorTailor>
+        <nz-form-item class="form-item">
+          <nz-form-control [nzSpan]="23">
+            <nz-input-group [nzSuffix]="suffixIconSearch">
+              <input formControlName="name" type="text" nz-input placeholder="Название" />
+            </nz-input-group>
+
+            <ng-template #suffixIconSearch>
+              <span nz-icon nzType="search"></span>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+  </div>
+
+  <div nz-row [nzGutter]="24">
+    <div nz-col [nzSpan]="24">
+      <nz-card *ngFor="let label of dataForDashboard | filter:filter; trackBy:trackByFunc" class="card">
+        <labels-label [label]="label"></labels-label>
+      </nz-card>
+    </div>
+  </div>
+</ng-template>

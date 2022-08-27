@@ -1,6 +1,11 @@
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { OverlayModule } from '@angular/cdk/overlay';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterModule } from '@angular/router';
+import { NzModalService } from 'ng-zorro-antd/modal';
 
 import { LayoutComponent } from './layout.component';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('LayoutComponent', () => {
   let component: LayoutComponent;
@@ -8,9 +13,18 @@ describe('LayoutComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LayoutComponent ]
+      declarations: [ LayoutComponent ],
+      imports: [
+        RouterModule.forRoot([]),
+        OverlayModule,
+        HttpClientModule
+      ],
+      providers: [
+        NzModalService,
+        NzNotificationService
+      ]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(LayoutComponent);
     component = fixture.componentInstance;

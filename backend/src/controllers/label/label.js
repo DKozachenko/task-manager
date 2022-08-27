@@ -33,7 +33,7 @@ const getById = async (req, res) => {
     /** Проверка на принадлежность получаемой метки текущему пользователю */
     if (requiredLabel.userId.toString() !== req.user._id.toString()) {
       res.status(403).json(generateResponseWithError(
-        `Label with id ${labelId} does not belong to user ${req.user.nickname}`
+        `Метка с id ${labelId} не принадлежит пользователю ${req.user.nickname}`
       ));
       return;
     }
@@ -41,7 +41,7 @@ const getById = async (req, res) => {
     res.status(200).json(generateResponseWithData(requiredLabel));
   } else {
     res.status(404).json(generateResponseWithError(
-      `Label with id ${labelId} was not found`
+      `Метка с id ${labelId} не найдена`
     ));
   }
 };
@@ -52,6 +52,30 @@ const getById = async (req, res) => {
  * @param {ответ} res - ответ 
  */
 const add = async (req, res) => {
+  /** Если задачи, приходящие от клиента, существуют, создаем метку, если нет - посылаем сообщение клиенту */
+  const existedTaskIds = [];
+
+  for (const comeTaskId of req.body.taskIds) {
+    const existedTask = await Tasks.findById(comeTaskId);
+
+    if (existedTask) {
+      /** Проверка на принадлежность присланных меток текущему пользователю */
+      if (existedTask.userId.toString() !== req.user._id.toString()) {
+        res.status(403).json(generateResponseWithError(
+          `Задача для метки с id ${existedTask._id} не принадлежит пользователю ${req.user.nickname}`
+        ));
+        return;
+      }
+
+      existedTaskIds.push(comeTaskId);
+    } else {
+      res.status(404).json(generateResponseWithError(
+        `Задача с id ${comeTaskId} не найдена`
+      ));
+      return;
+    }
+  }
+
   /** Определение, существует ли цвет метки */
   let comeColor = req.body.color;
   const existedColor = await Colors.findOne({
@@ -79,6 +103,14 @@ const add = async (req, res) => {
 
   await newLabel.save();
 
+  /** Связь задач с меткой */
+  for (const existedTaskId of existedTaskIds) {
+    const existedTask = await Tasks.findById(existedTaskId);
+
+    existedTask.labelIds.push(newLabel._id);
+    await existedTask.save();
+  }
+
   /** Связь цвета с меткой */
   comeColor.labelIds.push(newLabel._id);
   await comeColor.save();
@@ -93,15 +125,41 @@ const add = async (req, res) => {
  * @param {ответ} res - ответ 
  */
 const updateById = async (req, res) => {
+  /** Если задачи, приходящие от клиента, существуют, создаем метку, если нет - посылаем сообщение клиенту */
+  const existedComeTaskIds = [];
+
+  for (const comeTaskId of req.body.taskIds) {
+    const existedTask = await Tasks.findById(comeTaskId);
+
+    if (existedTask) {
+      /** Проверка на принадлежность присланных меток текущему пользователю */
+      if (existedTask.userId.toString() !== req.user._id.toString()) {
+        res.status(403).json(generateResponseWithError(
+          `Задача для метки с id ${existedTask._id} не принадлежит пользователю ${req.user.nickname}`
+        ));
+        return;
+      }
+
+      existedComeTaskIds.push(comeTaskId);
+    } else {
+      res.status(404).json(generateResponseWithError(
+        `Задача с id ${comeTaskId} не найдена`
+      ));
+      return;
+    }
+  }
+
   const labelId = req.params.id;
   const existedLabel = await Labels.findById(labelId);
 
   /** Если метка существует - меняем значения, если нет - посылаем клиенту сообщение */
   if (existedLabel) {
+    const existedTaskIds = existedLabel.taskIds;
+
     /** Проверка на принадлежность получаемой метки текущему пользователю */
     if (existedLabel.userId.toString() !== req.user._id.toString()) {
       res.status(403).json(generateResponseWithError(
-        `Label with id ${labelId} does not belong to user ${req.user.nickname}`
+        `Метка с id ${labelId} не принадлежит пользователю ${req.user.nickname}`
       ));
       return;
     }
@@ -124,9 +182,28 @@ const updateById = async (req, res) => {
 
     /** Редактирование метки */
     existedLabel.name = req.body.name;
-    existedColor.colorId = comeColor._id;
+    existedLabel.colorId = comeColor._id;
     existedLabel.taskIds = req.body.taskIds;
     await existedLabel.save();
+
+    /** Связь задач с меткой */
+    for (const existedComeTaskId of existedComeTaskIds) {
+      if (!existedTaskIds.includes(existedComeTaskId)) {
+        const existedTask = await Tasks.findById(existedComeTaskId);
+
+        existedTask.labelIds.push(labelId);
+        await existedTask.save();
+      }      
+    }
+
+    for (const existedTaskId of existedTaskIds) {
+      if (!existedComeTaskIds.includes(existedTaskId)) {
+        const existedTask = await Tasks.findById(existedTaskId);
+
+        existedTask.labelIds = existedTask.labelIds.filter(id => id.toString() !== labelId);
+        await existedTask.save();
+      }      
+    }
 
     /** Связь цвета с меткой, если цвет еще не привязан */
     if (!comeColor.labelIds.includes(labelId)) {
@@ -138,7 +215,7 @@ const updateById = async (req, res) => {
     res.status(200).json(generateResponseWithData(existedLabel));
   } else {
     res.status(404).json(generateResponseWithError(
-      `Label with id ${labelId} was not found`
+      `Метка с id ${labelId} не найдена`
     ));
   }
 };
@@ -157,7 +234,7 @@ const deleteById = async (req, res) => {
     /** Проверка на принадлежность получаемой метки текущему пользователю */
     if (existedLabel.userId.toString() !== req.user._id.toString()) {
       res.status(403).json(generateResponseWithError(
-        `Label with id ${labelId} does not belong to user ${req.user.nickname}`
+        `Метка с id ${labelId} не принадлежит пользователю ${req.user.nickname}`
       ));
       return;
     }
@@ -179,11 +256,11 @@ const deleteById = async (req, res) => {
 
     logger.info(`Label with name ${existedLabel.name} was deleted`);
     res.status(200).json(generateResponseWithData({
-      message: `Label with id ${labelId} was deleted`
+      message: `Метка с id ${labelId} удалена`
     }));
   } else {
     res.status(404).json(generateResponseWithError(
-      `Label with id ${labelId} was not found`
+      `Метка с id ${labelId} не найдена`
     ));
   }
 };
