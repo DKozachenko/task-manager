@@ -60,7 +60,9 @@ beforeAll(async () => {
   
   testUserToken = response2.body.data.token;
   
-  const allTasks = await Tasks.find();
+  const allTasks = await Tasks.find({
+    userId: testUserId
+  });
   initialTasksLength = allTasks.length;
 
   /** Сохранение тестового цвета */

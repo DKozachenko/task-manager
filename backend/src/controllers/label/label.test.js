@@ -51,7 +51,9 @@ beforeAll(async () => {
   
   testUserToken = response2.body.data.token;
 
-  const allLabels = await Labels.find();
+  const allLabels = await Labels.find({
+    userId: testUserId 
+  });
   initialLabelsLength = allLabels.length;
 
   const testDbColor = new Colors({ 
