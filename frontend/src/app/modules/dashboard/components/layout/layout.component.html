@@ -10,9 +10,13 @@
           <div nz-col [nzSpan]="24">
             <a nz-button nzType="link" [routerLink]="['/dashboard/labels']">Метки</a>
           </div>
+        </div>
 
-          <div class="exit__button" nz-col [nzSpan]="24">
-            <button nz-button nzType="dashed" (click)="logout()">Выйти</button>
+        <div nz-row [nzGutter]="24">
+          <div nz-col [nzSpan]="24">
+            <div class="exit__button" nz-col [nzSpan]="24">
+              <button nz-button nzType="dashed" (click)="logout()">Выйти</button>
+            </div>
           </div>
         </div>
 
