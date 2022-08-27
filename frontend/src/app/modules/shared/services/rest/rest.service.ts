@@ -21,7 +21,7 @@ export class RestService {
    * @returns все элементы
    */
   public getAll<T>(route: string): Observable<IResponse<T>> {
-    return this.httpClient.get<IResponse<T>>(`/${environment.apiUrl}/${route}`);
+    return this.httpClient.get<IResponse<T>>(`${environment.apiUrl}/${route}`);
   }
 
   /**
@@ -32,7 +32,7 @@ export class RestService {
    * @returns элемент или сообщение об ошибке
    */
   public getById<T>(route: string, id: string): Observable<IResponse<T>> {
-    return this.httpClient.get<IResponse<T>>(`/${environment.apiUrl}/${route}/${id}`);
+    return this.httpClient.get<IResponse<T>>(`${environment.apiUrl}/${route}/${id}`);
   }
 
   /**
@@ -44,7 +44,7 @@ export class RestService {
    * @returns добавленный в БД элемент
    */
   public add<T, K = T>(route: string, newItem: T): Observable<IResponse<K>> {
-    return this.httpClient.post<IResponse<K>>(`/${environment.apiUrl}/${route}`, newItem);
+    return this.httpClient.post<IResponse<K>>(`${environment.apiUrl}/${route}`, newItem);
   }
 
   /**
@@ -57,7 +57,7 @@ export class RestService {
    * @returns обновленный в БД элемент или сообщение об ошибке
    */
   public updateById<T, K = T>(route: string, id: string, updatedItem: T): Observable<IResponse<K>> {
-    return this.httpClient.put<IResponse<K>>(`/${environment.apiUrl}/${route}/${id}`, updatedItem);
+    return this.httpClient.put<IResponse<K>>(`${environment.apiUrl}/${route}/${id}`, updatedItem);
   }
 
   /**
@@ -67,6 +67,6 @@ export class RestService {
    * @returns сообщение
    */
   public deleteById(route: string, id: string): Observable<IResponse> {
-    return this.httpClient.delete<IResponse>(`/${environment.apiUrl}/${route}/${id}`);
+    return this.httpClient.delete<IResponse>(`${environment.apiUrl}/${route}/${id}`);
   }
 }

@@ -55,7 +55,6 @@ export class LayoutComponent implements OnInit {
         })
         .afterClose.subscribe((sendLabel: ISendLabel) => {
           if (sendLabel) {
-            console.log(sendLabel);
             this.labelService
               .add(sendLabel)
               .pipe(
