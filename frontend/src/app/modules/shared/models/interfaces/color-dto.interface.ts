@@ -4,7 +4,7 @@
 export interface IColorDto {
   /** Id записи */
   _id?: string,
-  /** hexCode цвета */
+  /** Hex-код цвета */
   hexCode: string,
   /** Массив с id меток */
   labelsIds?: string[]
