@@ -14,9 +14,10 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { Filter } from './pipes';
 
 @NgModule({
-  declarations: [],
+  declarations: [Filter],
   imports: [
     CommonModule,
     FormsModule,
@@ -52,6 +53,7 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
     NzToolTipModule,
     NzNotificationModule,
     NzModalModule,
+    Filter
   ],
 })
 export class SharedModule {}

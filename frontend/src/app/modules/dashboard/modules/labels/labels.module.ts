@@ -7,7 +7,6 @@ import { DeleteOutline, EditOutline, SearchOutline } from '@ant-design/icons-ang
 import { ColorPickerModule } from 'ngx-color-picker';
 import { EditFormComponent, LabelComponent, DashboardComponent } from './components';
 import { SharedModule } from 'src/app/modules/shared/shared.module';
-import { Filter } from './pipes';
 
 const icons: IconDefinition[] = [
   EditOutline,
@@ -19,8 +18,7 @@ const icons: IconDefinition[] = [
   declarations: [
     DashboardComponent,
     LabelComponent,
-    EditFormComponent,
-    Filter
+    EditFormComponent
   ],
   imports: [
     CommonModule,
