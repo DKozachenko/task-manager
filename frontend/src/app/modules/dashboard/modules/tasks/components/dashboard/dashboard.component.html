@@ -7,7 +7,7 @@
     <div nz-col [nzSpan]="24">
       <form class="search-form" nz-form [formGroup]="searchForm" errorTailor>
         <nz-form-item class="form-item">
-          <nz-form-control [nzSpan]="24">
+          <nz-form-control [nzSpan]="23">
             <nz-input-group [nzSuffix]="suffixIconSearch">
               <input formControlName="name" type="text" nz-input placeholder="Название" />
             </nz-input-group>
@@ -19,7 +19,7 @@
         </nz-form-item>
 
         <nz-form-item class="form-item select">
-          <nz-form-control [nzSpan]="24">
+          <nz-form-control [nzSpan]="23">
             <nz-select nzMode="multiple" nzPlaceHolder="Метки" formControlName="labelIds" nzAllowClear>
               <nz-option *ngFor="let label of (allLabels$ | async)?.data" [nzValue]="label._id"
                 [nzLabel]="label.name"></nz-option>
