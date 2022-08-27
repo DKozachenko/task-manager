@@ -8,7 +8,7 @@ Frontend of app "Task Manager"
     - Angular
 - UI Library:
     - NgZorro
-- Tesing:
+- Testing:
     - Karma
 
 ### Commands
